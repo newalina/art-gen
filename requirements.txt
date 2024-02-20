@@ -1,3 +1,1 @@
-asgiref==3.7.2
-Django==5.0.2
-sqlparse==0.4.4
+pip~=23.2.1
