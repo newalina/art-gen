@@ -1,6 +1,16 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-uri = "mongodb+srv://<username>:<password>@art-gen.bxqjsqp.mongodb.net/?retryWrites=true&w=majority"
+
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Accessing variables
+database_url = os.getenv('DATABASE_URL')\
+    #= "mongodb+srv://<username>:<password>@art-gen.bxqjsqp.mongodb.net/?retryWrites=true&w=majority"
+secret_key = os.getenv('SECRET_KEY')
 # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'))
 # Send a ping to confirm a successful connection
