@@ -7,3 +7,6 @@ pip install -r requirements.txt
 cd server
 python manage.py runserver
 ```
+
+TODO:
+- api endpoints to alina
