@@ -8,5 +8,5 @@ class Image(models.Model):
 
 
 class Idk(models.Model):
-    artist = models.ForeignKey(Image, on_delete=models.CASCADE)
+    image = models.ForeignKey(Image, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
