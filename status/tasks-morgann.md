@@ -1,6 +1,13 @@
 # momothain, backend server & api lead
 
-## 2/20/24: Backend Django setup
+## 2/20/24: Backend Frameworks Setup: 
+- venv, 
+- .env.example and instructions in slack, 
+- README, 
+- Django, 
+- input ORM ideas, 
+- pydantic output class ideas, 
+- package structure
 
 ### Backend
 ```bash
@@ -10,7 +17,6 @@ cd server
 FILL OUT THE .env
 python manage.py runserver
 ```
-
 
 TODO:
 - api endpoints to alina
