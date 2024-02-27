@@ -1,7 +1,29 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import { useState, useEffect } from "react";
+import { fetchImage } from "./controllers/data";
 
 export default function Home() {
+  const [data, setData] = useState(null);
+  const [isLoading, setLoading] = useState(true);
+
+  // useEffect(() => {
+  //   fetchImage
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setData(data);
+  //       setLoading(false);
+  //     });
+  // }, []);
+
+  // async function getImage(username: string) {
+  //   const res = await fetch(`https://api.example.com/image/${username}`);
+  //   return res.json();
+  // }
+
+  if (isLoading) return <p>Loading...</p>;
+  if (!data) return <p>No profile data</p>;
+
   return (
     <main className={styles.main}>
       <div className={styles.description}>
