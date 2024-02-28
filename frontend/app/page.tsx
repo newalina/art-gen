@@ -1,10 +1,18 @@
+"use client"
 import Image from "next/image";
 import styles from "./page.module.css";
 import { useState, useEffect } from "react";
-import { fetchImage } from "./controllers/data";
+// import { fetchImage } from "./controllers/data";
+
+interface NasaApiResponse {
+  url: string;
+  hdurl: string;
+  title: string;
+  explanation: string;
+}
 
 export default function Home() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<NasaApiResponse | null>(null);
   const [isLoading, setLoading] = useState(true);
 
   // useEffect(() => {
@@ -20,9 +28,27 @@ export default function Home() {
   //   const res = await fetch(`https://api.example.com/image/${username}`);
   //   return res.json();
   // }
+  const fetchImage = async () => {
+    // Replace the api key with your own
+    const apiUrl = "https://api.nasa.gov/planetary/apod?api_key=REPLACE_THIS_WITH_YOUR_API_KEY";
+    try {
+      const res = await fetch(apiUrl);
+      const data = await res.json();
+      setData(data);
+    } catch (error) {
+      console.error("Error fetching data from NASA API:", error);
+    } finally {
+      setLoading(false);
+    }
+      
+  };
 
-  if (isLoading) return <p>Loading...</p>;
-  if (!data) return <p>No profile data</p>;
+  // useEffect (() => {
+  //   fetchImage();
+  // }, []);
+
+  // if (isLoading) return <p>Loading...</p>;
+  // if (!data) return <p>No profile data</p>;
 
   return (
     <main className={styles.main}>
@@ -31,6 +57,20 @@ export default function Home() {
           Get started by editing&nbsp;
           <code className={styles.code}>app/page.tsx</code>
         </p>
+
+        {/* The fetch data button */}
+        <div>
+          <button onClick={fetchImage}> 
+            Fetch data
+          </button>
+          <h1>{data?.title}</h1>
+          {!isLoading && data && <img src={data.url} alt={data.title} />}
+          {isLoading && <p>Loading...</p>}
+
+          {/* display the explaination of the image if we have the data */}
+          {data? <p>{data.explanation}</p> : <p>No profile data</p>}
+        </div>
+
         <div>
           <a
             href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
