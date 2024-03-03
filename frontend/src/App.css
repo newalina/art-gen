@@ -1,0 +1,73 @@
+/* Overall layout styles */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Style for the header (Art Generator) */
+.header {
+  text-align: center;
+  padding: 5px;
+  background-color: #c7efff;
+  border-bottom: 1px solid #ddd;  
+  font-size: 24px;
+}
+
+/* Style for the description area */
+.description {
+  flex: 1;
+  margin: 5px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  height: 50px;
+  font-size: 20px;
+}
+
+/* Style for the main content area */
+.main-content {
+  flex: 1;
+  display: flex;
+  /* border: 1px solid #ddd; */
+  padding: 0px;
+  margin: 5px;
+}
+
+/* Style for the output area */
+.output {
+  flex: 2;
+  margin: 0px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  height: 700px; 
+}
+
+/* Style for the control panel area */
+.control-panel {
+  flex: 1;
+  margin: 0px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  height: 700px; 
+}
+
+/* Style for the generate art button */
+.generate-button {
+  background-color: #e86e2c; 
+  border: none; 
+  color: white; 
+  padding: 15px 32px; /* Top and bottom padding, left and right padding */
+  text-align: center;   
+  font-size: 18px; 
+  margin: 5px;
+  cursor: pointer; /* Cursor indicates clickable item */
+  border-radius: 8px; 
+  transition-duration: 0.4s; /* Smooth transition for hover effect */
+}
+.generate-button:hover {
+  background-color: #cc4a02; /* Darker shade of orange on hover */
+}
+.generate-button:active {
+  background-color: #a53e02; /* Even darker shade of orange to indicate click */
+  transform: scale(0.98); /* Slightly reduce the scale to mimic a press effect */
+}

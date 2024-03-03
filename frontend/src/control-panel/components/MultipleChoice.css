@@ -1,0 +1,30 @@
+/* Container for the multiple choice question */
+.multiple-choice-container {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-width: 400px;
+    margin-bottom: 5px;
+}
+
+.choice {
+    font-size: 17px;
+    font-weight: 600;
+    color:rgb(46, 157, 241);
+}
+
+/* Container for each option */
+.option-container {
+    display: block;
+    margin: 5px;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Style for the radio input */
+input[type="radio"] {
+    margin-right: 10px;
+  }
