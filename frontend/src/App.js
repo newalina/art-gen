@@ -1,13 +1,31 @@
 import React from 'react';
 import './App.css';
+import Axios from 'axios';
+
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import SliderWithInput from './control-panel/components/SliderWithInput';
 import MultipleChoice from './control-panel/components/MultipleChoice';
 
 function App() {
 
-  const handleGenerateArt = () => {
+  const handleGenerateArt = async() => {
     console.log("Art generated!");
+    
+    const url = "BACKEND_ENDPOINT_URL"; // put backend endpoint url here
+
+    // Create an object with the data you want to send
+    const data = {
+      parameter1: 55.5,
+      parameter2: 33.3,
+      // other parameters goes on here...
+    };
+  
+    try{
+      const response = await Axios.post(url, data);
+      console.log(response);
+    } catch(error){
+      console.log(error);
+    }
   }
 
   return (
