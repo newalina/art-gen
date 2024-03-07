@@ -1,27 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './MultipleChoice.css';
 
-function MultipleChoice() {
-
-    const [selectedOption, setSelectedOption] = useState('None');
-    const options = ['Database A', 'Database B', 'Database C', 'Database D'];
+function MultipleChoice({ value, onValueChange, optionList }) {
 
     const hanldeOptionChange = (e) => {
-        setSelectedOption(e.target.value);
+        onValueChange(e.target.value);
     };
 
     return(
         <div className="multiple-choice-container">
 
-            <div className='choice'>Selected Database: {selectedOption}</div>
+            <div className='choice'>Selected Database: {value}</div>
             <form>
-                {options.map((option, index) => (
+                {optionList.map((option, index) => (
                     <label key={index} className="option-container">
                         <input
                             type="radio"
                             name="multipleChoice"
                             value={option}
-                            checked={selectedOption === option}
+                            checked={value === option}
                             onChange={hanldeOptionChange}                         
                         />
                         {option}

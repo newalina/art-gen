@@ -1,20 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './SliderWithInput.css';
 
-function SliderWithInput() {
-  
-  const [value, setValue] = useState(50);
+function SliderWithInput({ value, onValueChange }) { 
 
   // Handle change from the slider
   const handleSliderChange = (event) => {
-    setValue(event.target.value);
+    onValueChange(event.target.value);
   };
 
   // Handle change from the input box
   const handleInputChange = (event) => {
     // Ensure the value is within the 1 to 100 range
     const newValue = Math.max(1, Math.min(100, Number(event.target.value)));
-    setValue(newValue);
+    onValueChange(newValue);
   };
 
   return (
