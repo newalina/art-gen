@@ -1,0 +1,13 @@
+/* Styles for the file upload button */
+input[type="file"]::file-selector-button {   
+    margin-top: 20px; 
+    padding: 15px 32px;
+    border-radius: 8px;
+    background-color: #a29bfe;
+    transition: 0.4s;
+}
+
+input[type="file"]::file-selector-button:hover {
+    background-color: #81ecec;
+    border: 2px solid #00cec9;
+}

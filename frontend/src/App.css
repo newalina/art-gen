@@ -35,7 +35,11 @@
 
 /* Style for the output area */
 .output {
+  display: flex;
   flex: 2;
+  flex-direction: column;
+  align-items: center; /* Centers children horizontally */
+  justify-content: center; /* Centers children vertically */
   margin: 0px;
   padding: 20px;
   border: 1px solid #ddd;

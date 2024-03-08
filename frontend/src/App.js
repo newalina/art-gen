@@ -5,6 +5,7 @@ import Axios from 'axios';
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import SliderWithInput from './control-panel/components/SliderWithInput';
 import MultipleChoice from './control-panel/components/MultipleChoice';
+import ImageUpload from './generator/components/ImageUpload';
 
 function App() {
 
@@ -60,6 +61,8 @@ function App() {
 
           <section className="output">            
             {/* Output image/video/cam will be here */}
+            <h2>Upload Image Here!</h2>
+            <ImageUpload />
           </section>
 
           <aside className="control-panel">
