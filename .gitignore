@@ -236,3 +236,12 @@ fabric.properties
 
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
+
+#datasets
+data_preprocess/parse_HDF/datasets_info.csv
+data_preprocess/parse_HDF/nasa.hdf
+data_preprocess/parse_tract/cb_2022_us_tract_500k
+data_preprocess/parse_tract/merged_data.csv
+data_preprocess/parse_tract/output_data.csv
+data_preprocess/parse_txt/HAQES_NA_v1.0_3h_PM25_BC_CENSUS.20240306.21z.txt
+data_preprocess/parse_txt/pm2.5.csv
