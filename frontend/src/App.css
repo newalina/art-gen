@@ -75,3 +75,10 @@
   background-color: #a53e02; /* Even darker shade of orange to indicate click */
   transform: scale(0.98); /* Slightly reduce the scale to mimic a press effect */
 }
+
+/* Style for image presentation */
+.image-fit-container {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
