@@ -49,6 +49,23 @@ def api():
         request_data = requests.get('https://api.nasa.gov/planetary/apod?api_key=' + API_KEY)
         return request_data.json()['url']
     
+@app.route('/api/slider1', methods=['GET', 'POST'])
+def slider1():
+    if request.method == 'POST':
+        # get the data from the request
+        data = request.json
+        # send the data to the front end
+        socketio.emit('slider1', data)
+        return data
+    else:
+        return 'GET request'
+    
+@socketio.on('data')
+def handle_data(data):
+    # decode the data base64
+
+    # send the data to the front end
+    requests.post('http://localhost:3000', data=data)
 
 # more api endpoints per request
     
@@ -74,37 +91,10 @@ def api():
 #             return {'message': 'Invalid credentials'}, 401
 
 
-# @socketio.on('message_to_td')
-# def handle_message(data):
-#     print('received message: ' + data)
-#     socketio.emit('message_to_td', data)
 
-# @app.route('/api/imageData', methods=['GET', 'POST'])
-# def image_data():
-#     if request.method == 'GET':
-#         requests.post('wss://echo.websocket.org', data={'Hello': 'World'})
-#         return 'Hello, World'
-        
-
-@socketio.on('my event')  # Listening for the event named "my event"
+@socketio.on('TD event')  # Listening for the event named "my event"
 def handle_my_custom_event(json):
     print('received json: ' + str(json))
     # You can emit back a response to the client or broadcast to all clients
-    socketio.emit('my response', json)
-
-async def websocket_test():
-    uri = "wss://echo.websocket.org"
-    try:
-        async with websockets.connect(uri) as websocket:
-            await websocket.send("Hello, World")
-            response = await websocket.recv()
-            return response
-    except Exception as e:
-        return f"An error occurred: {e}"
-
-@app.route('/api/test_websocket', methods=['GET'])
-def test_websocket_route():
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    result = loop.run_until_complete(websocket_test())
-    return result
+    requests.post('http://localhost:3000', data=json)
+# ws://127.0.0.1:5000
