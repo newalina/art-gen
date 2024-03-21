@@ -19,13 +19,15 @@ function App() {
   const [parameter2, setParameter2] = useState(40);
   const [parameter3, setParameter3] = useState(80);
 
-  // State for storing the image URL
+  const [file, setFile] = useState(null);
   const [imageUrl, setImageUrl] = useState('');
 
   const handleGenerateArt = async() => {
     console.log("Art generated!");
     
-    const url = "BACKEND_ENDPOINT_URL"; // put backend endpoint url here
+    // const url = "BACKEND_ENDPOINT_URL"; // put backend endpoint url here
+    const url = "http://127.0.0.1:5000/api/slider1";
+    
 
     // Create an object with the data you want to send
     const data = {
@@ -36,10 +38,9 @@ function App() {
       // other parameters goes on here...
     };
   
-    try{      
+    try{
       const response = await Axios.post(url, data);
       console.log(response);
-      // update the image URL state with the new URL from the backend      
       setImageUrl(response.data);
     } catch(error){
       console.log(error);
@@ -66,11 +67,8 @@ function App() {
 
           <section className="output">            
             {/* Output image/video/cam will be here */}
-            
-            {/* Display the image using the imageUrl state */}
-            {imageUrl && <img src={imageUrl} alt="Generated Art" className="image-fit-container" />}
-            {/* temporarily disable the upload image feature */}
-            {/* <ImageUpload /> */}
+            {/* <h2>Upload Image Here!</h2> */}
+            {/* <ImageUpload  file={file} onFileChange={setFile}/> */}
           </section>
 
           <aside className="control-panel">
@@ -96,3 +94,5 @@ function App() {
 }
 
 export default App;
+
+

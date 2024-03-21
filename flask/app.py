@@ -12,7 +12,7 @@ from flask import request
 import requests
 from flask_cors import CORS
 from datetime import date
-import db
+# import db
 from flask_socketio import SocketIO
 
 from flask_sqlalchemy import SQLAlchemy
