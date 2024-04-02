@@ -68,33 +68,30 @@ def handle_data(data):
     requests.post('http://localhost:3000', data=data)
 
 # more api endpoints per request
-    
-# example login function
-# @app.route('/api/login', methods=['POST'])
-# def login():
-#     db.create_all()
-#     if request.method == 'POST':
-#         username = request.json['username']
-#         password = request.json['password']
-        
-#         # Query the database for the user
-#         user = User.query.filter_by(username=username).first()
-        
-#         # Check if user exists and password matches
-#         if user and user.password == password:
-#             # Successful login
-#             requests.post('http://localhost:3000', data='Logged in')
-#             return {'message': 'Logged in'}, 200
-#         else:
-#             # Failed login
-#             requests.post('http://localhost:3000', data='Invalid credentials')
-#             return {'message': 'Invalid credentials'}, 401
 
 
+ 
+# ws://127.0.0.1:5000
 
 @socketio.on('TD event')  # Listening for the event named "my event"
 def handle_my_custom_event(json):
     print('received json: ' + str(json))
     # You can emit back a response to the client or broadcast to all clients
     requests.post('http://localhost:3000', data=json)
-# ws://127.0.0.1:5000
+
+async def websocket_test():
+    uri = "wss://echo.websocket.org"
+    try:
+        async with websockets.connect(uri) as websocket:
+            await websocket.send("Hello, World")
+            response = await websocket.recv()
+            return response
+    except Exception as e:
+        return f"An error occurred: {e}"
+
+@app.route('/api/test_websocket', methods=['GET'])
+def test_websocket_route():
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    result = loop.run_until_complete(websocket_test())
+    return result
