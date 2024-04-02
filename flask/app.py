@@ -19,6 +19,7 @@ from flask_sqlalchemy import SQLAlchemy
 import sqlite3
 import asyncio
 import websockets
+import base64
 
 # Create the Flask app
 app = Flask(__name__)
@@ -74,10 +75,12 @@ def handle_data(data):
 # ws://127.0.0.1:5000
 
 @socketio.on('TD event')  # Listening for the event named "my event"
-def handle_my_custom_event(json):
-    print('received json: ' + str(json))
-    # You can emit back a response to the client or broadcast to all clients
-    requests.post('http://localhost:3000', data=json)
+def handle_my_custom_event(binaryData):  # The function that will run when the event is received
+    print('received binary data:')
+    # decode the data base64
+    decoded_data = base64.b64decode(binaryData)
+    # send the data to the front end
+    requests.post('http://localhost:3000', data=decoded_data)
 
 async def websocket_test():
     uri = "wss://echo.websocket.org"
