@@ -1,24 +1,10 @@
-# requirements.txt
-# pip install -U Flask
-# pip install requests
-# pip install -U flask-cors
-# pip install flask flask-socketio
-# pip install Flask-SQLAlchemy
-# pip install websockets
-
-# in terminal to start the server: flask run 
 
 # File imports
 from flask import Flask
 from flask import request
 import requests
 from flask_cors import CORS
-from datetime import date
-# import db
 from flask_socketio import SocketIO
-
-from flask_sqlalchemy import SQLAlchemy
-import sqlite3
 import asyncio
 import websockets
 import base64
