@@ -6,6 +6,8 @@
 # pip install Flask-SQLAlchemy
 # pip install websockets
 
+# in terminal to start the server: flask run 
+
 # File imports
 from flask import Flask
 from flask import request
@@ -60,6 +62,15 @@ def slider1():
         return data
     else:
         return 'GET request'
+    
+# requested parameters
+# @app.route('/api/particle_cloud/forest
+# @app.route('/api/particle_cloud/ocean', methods=['GET', 'POST'])
+# @app.route('/api/particle_cloud/fire', methods=['GET', 'POST'])
+    
+
+
+# ************************************************** SOCKET FUNCTION **************************************************
     
 @socketio.on('data')
 def handle_data(data):
