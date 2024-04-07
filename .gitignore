@@ -65,6 +65,9 @@ db.sqlite3-journal
 instance/
 .webassets-cache
 
+#GCP stuff
+Flask/gcp-key.json
+
 # Scrapy stuff:
 .scrapy
 
