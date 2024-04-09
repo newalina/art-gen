@@ -4,13 +4,11 @@
 ## 4/9
 
 - Show hex-quake td samples
-- Detail output formats: 
+- Detail output formats:
   - image=.png
   - video=.mp4/.mov
-- Clarify shaders/graphics that don't work with 
+- Clarify shaders/graphics that don't work with Macs
 - Review Erik's td samples
-
-- Integrate Malique's GCP API w/ Flask app
 <!--  -->
 ## 4/7
 
@@ -19,6 +17,7 @@ Coordinate td graphics & socket connections; explain how to control graphics par
 > what's the socket input or connection generally look like? my understanding is that td has DATs that can take strings and tabular (aka csv) inputs and CHOPs that can take mice and other continuous inputs. Then in td we can use these to control the parameters of other td nodes/functions and ultimately fully control the visuals. i just dont really understand how that works with a websocket or like how to get input from you and/or give images and videos back?
 
 ## 2/20/24: Backend Frameworks Setup: 
+
 - venv, 
 - .env.example and instructions in slack, 
 - README, 
@@ -28,6 +27,7 @@ Coordinate td graphics & socket connections; explain how to control graphics par
 - package structure
 
 ### Backend
+
 ```bash
 python3 -m venv venv
 pip install -r requirements.txt
@@ -37,9 +37,11 @@ python manage.py runserver
 ```
 
 TODO:
+
 - api endpoints to alina
 
 ### Frameworks
+
 - Django 
   - API (http endpoints)
   - ORM (database models and interaction)
@@ -49,6 +51,7 @@ TODO:
 
 
 ## 2/20/24: Architecture
+
 Frontend - Site: Next.js (Gus, Erik, Robert, Alina)
 Pages/Routes
 UI: Buttons, Sliders
@@ -89,6 +92,7 @@ Noise
 
 
 ## Next.tsx Coding Standards
+
 Morgann: Next.tsx (React, TypeScript). Since the interaction and generation are real-time, we want to run most stuff client-side which means JavaScript. Probably, we'll make an API call for data at the start and every few minutes, so we can definitely pre-process the data however we want through a backend server at each API call. I'm learning this rn and it seems like the easiest and modern, but lmk about express.js or other options. 
 
 or if we can generate videos or images backend then play or interpolate or interact with them in a simple way for minutes?
