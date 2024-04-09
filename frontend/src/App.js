@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import './App.css';
 import Axios from 'axios';
-
 import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import SliderWithInput from './control-panel/components/SliderWithInput';
 import MultipleChoice from './control-panel/components/MultipleChoice';
 import UserIconPopup from './user-profile/component/UserIconPopup'
@@ -19,7 +19,6 @@ function App() {
   const [parameter1, setParameter1] = useState(20);
   const [parameter2, setParameter2] = useState(40);
   const [parameter3, setParameter3] = useState(80);
-
   const [file, setFile] = useState(null);
   const [imageUrl, setImageUrl] = useState('');
 
@@ -48,8 +47,9 @@ function App() {
     }
 
   }
-
+  
   return (
+    <GoogleOAuthProvider clientId="778362968492-9u0tlr2tahg6bnbvelc16gdhib5ognhg.apps.googleusercontent.com">
     <Router>
       <div className="app-container">
 
@@ -92,6 +92,7 @@ function App() {
         </main>
       </div>
     </Router>
+    </GoogleOAuthProvider>
   );
 }
 
