@@ -1,1 +1,15 @@
-# In terminal to start the server: flask run 
+# flask app
+
+## reqs
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+# flask
+
+```bash
+flask run 
+```

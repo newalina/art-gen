@@ -1,6 +1,6 @@
 # mac cache?
 .DS_Store
-
+*.DS_Store*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -67,6 +67,9 @@ db.sqlite3-journal
 # Flask stuff:
 instance/
 .webassets-cache
+
+#GCP stuff
+Flask/gcp-key.json
 
 # Scrapy stuff:
 .scrapy
