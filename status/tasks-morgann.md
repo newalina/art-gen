@@ -3,7 +3,14 @@
 <!--  -->
 ## 4/9
 
-a
+- Show hex-quake td samples
+- Detail output formats: 
+  - image=.png
+  - video=.mp4/.mov
+- Clarify shaders/graphics that don't work with 
+- Review Erik's td samples
+
+- Integrate Malique's GCP API w/ Flask app
 <!--  -->
 ## 4/7
 
