@@ -14,8 +14,6 @@ from pymongo import MongoClient
 
 from flask import Flask, jsonify, request
 
-# import cv2
-
 # Create the Flask app
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret key'
