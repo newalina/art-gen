@@ -5,6 +5,7 @@ import Axios from 'axios';
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import SliderWithInput from './control-panel/components/SliderWithInput';
 import MultipleChoice from './control-panel/components/MultipleChoice';
+import UserIconPopup from './user-profile/component/UserIconPopup'
 import ImageUpload from './generator/components/ImageUpload';
 
 function App() {
@@ -53,6 +54,7 @@ function App() {
       <div className="app-container">
 
         <header className="header">
+          <UserIconPopup />
           Art Generator
         </header>
 
