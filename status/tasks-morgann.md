@@ -1,4 +1,15 @@
-# momothain, backend server & api lead
+# momothain, Backend Server & API Lead; TouchDesigner Graphics Core
+
+<!--  -->
+## 4/9
+
+a
+<!--  -->
+## 4/7
+
+Coordinate td graphics & socket connections; explain how to control graphics parameters
+
+> what's the socket input or connection generally look like? my understanding is that td has DATs that can take strings and tabular (aka csv) inputs and CHOPs that can take mice and other continuous inputs. Then in td we can use these to control the parameters of other td nodes/functions and ultimately fully control the visuals. i just dont really understand how that works with a websocket or like how to get input from you and/or give images and videos back?
 
 ## 2/20/24: Backend Frameworks Setup: 
 - venv, 
