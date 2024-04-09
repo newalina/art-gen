@@ -80,23 +80,24 @@ def google_cloud_api():
         username, file, filetype = request.args.get('username'), request.files.get('media'), requests.args.get('filetype')
         # Upload the file to Google Cloud Storage
         pub_url = gcs_upload_media(file, filetype)
+        if filetype == 'video/mp4':
+            # calculate thumbnail
+            thumbnail = extract_first_frame(file.stream)
+            # upload to gcp
+            thumbnail_url = gcs_upload_media(thumbnail, filetype) # how to convert from jpg to file
+            new_media = (thumbnail_url,pub_url)
+        else: 
+            new_media = (pub_url,pub_url)
+
         # check if user exists in db
         user = collection.find_one({'username': username})
         if user is not None:
             # Update user's media field
-            if filetype == 'video/mp4':
-                # calculate thumbnail
-                thumbnail = extract_first_frame(file.stream)
-                # upload to gcp
-                thumbnail_url = gcs_upload_media(file, filetype)
-                collection.update_one({"username": username}, {"$push": {"media": pub_url}})
-            else:
-                # push duplicate image urls
-                collection.update_one({"username": username}, {"$push": {"media": [pub_url, pub_url]}})
+            collection.update_one({"username": username}, {"$push": {"media": new_media}})
 
         else:
             # Add new user to the db
-            user = {'username': username, 'media': [pub_url]}
+            user = {'username': username, 'media': [new_media]}
             collection.insert_one(user)
             
         return jsonify({'message': 'Image uploaded successfully', 'username': username}), 200
