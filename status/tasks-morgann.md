@@ -3,7 +3,9 @@
 <!--  -->
 ## 4/9
 
-a
+- Review Erik's td samples
+- Show hex-quake td samples
+- Integrate Malique's GCP API w/ Flask app
 <!--  -->
 ## 4/7
 
