@@ -90,12 +90,14 @@ def fire():
 
 
 # ************************************************** SOCKET FUNCTION **************************************************
-    
+
+# https://127.0.0.1:5000/socket/initMessage
 @app.route('/socket/initMessage', methods=['GET'])
 def init_message():
     toSend = {"Slider1" : 0.56, "Slider2" : 0.72}
     jsonToSend = json.dumps(toSend)
-    socketio.emit('initMessage', jsonToSend)
+    # socketio.emit('initMessage', jsonToSend)
+    socketio.send(jsonToSend, json=True)
     return 'Message sent'
 
 @socketio.on('data')
