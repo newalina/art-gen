@@ -1,16 +1,18 @@
 
 # File imports
-from flask import Flask
-from flask import request, jsonify
+import asyncio
+import base64
+
 import numpy as np
-from pymongo import MongoClient
 import requests
+import websockets
 from flask_cors import CORS
 from flask_socketio import SocketIO
 from google.cloud import storage
-import asyncio
-import websockets
-import base64
+from opencv import cv2
+from pymongo import MongoClient
+
+from flask import Flask, jsonify, request
 
 # Create the Flask app
 app = Flask(__name__)
@@ -103,7 +105,7 @@ def google_cloud_api():
         return jsonify({'message': 'Image uploaded successfully', 'username': username}), 200
     
 # function to upload file to GCS
-def gcs_upload_media(file, type):
+def gcs_upload_media(file : str, type):
     bucket = storage_client.bucket('artgen-storage')
     blob: storage.Blob = bucket.blob(file.filename.split("/")[-1])
     blob.content_type = type # example: 'image/jpeg'
