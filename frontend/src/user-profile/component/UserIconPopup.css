@@ -1,0 +1,35 @@
+/* User icon and popup styles */
+.user-icon-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px;
+    z-index: 100; /* Ensure it's above other elements */
+}
+  
+.user-icon {
+    cursor: pointer;
+}
+
+.user-popup {
+    position: fixed;
+    top: 0; 
+    right: 0;
+    width: 350px; 
+    height: 400px; 
+    background-color: white; 
+    border-left: 1px solid #ccc; 
+    box-shadow: -5px 0 5px rgba(0, 0, 0, 0.2); 
+    z-index: 100;    
+}
+
+/* .user-popup h2 {
+    margin-top: 0;
+} */
+  
+/* Style the paragraphs for user info */
+.user-popup p {
+    font-size: 18px; /* Adjust font size as needed */
+    margin: 10px 0; /* Spacing between paragraphs */
+}
+  
