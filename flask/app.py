@@ -11,6 +11,7 @@ from google.cloud import storage
 import asyncio
 import websockets
 import base64
+import cv2
 
 # Create the Flask app
 app = Flask(__name__)
@@ -84,7 +85,7 @@ def google_cloud_api():
             # calculate thumbnail
             thumbnail = extract_first_frame(file.stream)
             # upload to gcp
-            thumbnail_url = gcs_upload_media(thumbnail, filetype) # how to convert from jpg to file
+            thumbnail_url = gcs_upload_thumbnail(thumbnail, file) # how to convert from jpg to file
             new_media = (thumbnail_url,pub_url)
         else: 
             new_media = (pub_url,pub_url)
@@ -108,6 +109,15 @@ def gcs_upload_media(file, type):
     blob: storage.Blob = bucket.blob(file.filename.split("/")[-1])
     blob.content_type = type # example: 'image/jpeg'
     blob.upload_from_file(file.stream)
+    public_url: str = blob.public_url
+    return public_url
+
+# function to upload file to GCS
+def gcs_upload_thumbnail(file_stream,file):
+    bucket = storage_client.bucket('artgen-storage')
+    blob: storage.Blob = bucket.blob(file.filename.split("/")[-1]+'-thumbnail')
+    blob.content_type = type # example: 'image/jpeg'
+    blob.upload_from_file(file_stream)
     public_url: str = blob.public_url
     return public_url
 
