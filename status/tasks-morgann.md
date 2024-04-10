@@ -3,12 +3,13 @@
 <!--  -->
 ## 4/9
 
-- Show hex-quake td samples
+- Show [hex-quake & other td samples](https://github.com/newalina/art-gen/blob/momothain/TouchDesigner/TD%20Reactive%20Graphics%20Samples.md)
 - Detail output formats:
   - image=.png
   - video=.mp4/.mov
 - Clarify shaders/graphics that don't work with Macs
 - Review Erik's td samples
+- Work w/ Malique to debug GCS image vs video vs thumbnail bytes upload (filename generation scheme and separate functions)
 <!--  -->
 ## 4/7
 
@@ -16,7 +17,7 @@ Coordinate td graphics & socket connections; explain how to control graphics par
 
 > what's the socket input or connection generally look like? my understanding is that td has DATs that can take strings and tabular (aka csv) inputs and CHOPs that can take mice and other continuous inputs. Then in td we can use these to control the parameters of other td nodes/functions and ultimately fully control the visuals. i just dont really understand how that works with a websocket or like how to get input from you and/or give images and videos back?
 
-## 2/20/24: Backend Frameworks Setup: 
+## 2/20/24: Backend Frameworks Setup
 
 - venv, 
 - .env.example and instructions in slack, 
