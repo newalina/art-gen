@@ -1,0 +1,33 @@
+/* Container styles */
+.slider-container {
+  flex-direction: column;   
+  padding: 0px;
+  position: fixed;  
+}
+  
+/* Styles for the value display above the slider */
+.value-display {
+  font-size: 20px; 
+  color: #333; 
+  margin-bottom: 10px;
+}
+  
+/* Styles for the slider */
+input[type="range"] {    
+  width: 70%; 
+  height: 10px; 
+  background: #ddd; 
+  outline: none; 
+  opacity: 0.7; 
+}
+
+
+/* Styles for the input box */
+input[type="number"] {
+  font-size: 14px; 
+  padding: 5px;
+  margin-left: 5px; 
+  border: 1px solid #ccc; 
+  border-radius: 5px;
+}
+  
