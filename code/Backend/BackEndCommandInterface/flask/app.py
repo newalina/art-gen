@@ -2,6 +2,7 @@
 # File imports
 import base64
 import json
+import sys
 
 import numpy as np
 import requests
@@ -18,7 +19,7 @@ from flask import Flask, jsonify, request
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret key'
 socketio = SocketIO(app, logger=True)
-socketio.run(app, host='127.0.0.1', port=5001)
+socketio.run(app, host='wss://websocket-csci2340-78f5f096308b.herokuapp.com', port=443)
 CORS(app)
 
 # ********************************************************* DATABASE (INC) **************************************************
@@ -185,13 +186,12 @@ def fire():
 
 # ************************************************** SOCKET FUNCTION **************************************************
 
-# https://127.0.0.1:5000/socket/initMessage
+# http://127.0.0.1:5000/socket/initMessage
 @app.route('/socket/initMessage', methods=['GET'])
 def init_message():
-    toSend = {"Slider1" : 0.56, "Slider2" : 0.72}
-    jsonToSend = json.dumps(toSend)
+
     # socketio.emit('initMessage', jsonToSend)
-    socketio.send(jsonToSend, json=True)
+    # socketio.send(jsonToSend, json=True)
     return 'Message sent'
 
 @socketio.on('data')
@@ -215,19 +215,23 @@ def handle_my_custom_event(binaryData):  # The function that will run when the e
     # send the data to the front end
     requests.post('http://localhost:3000', data=decoded_data)
 
-# async def websocket_test():
-#     uri = "ws://127.0.0.1:5001/socket.io/?EIO=4&transport=websocket"
-#     try:
-#         async with websockets.connect(uri) as websocket:
-#             await websocket.send("Hello, World")
-#             response = await websocket.recv()
-#             return response
-#     except Exception as e:
-#         return f"An error occurred: {e}"
+async def websocket_test():
+    uri = "wss://websocket-csci2340-78f5f096308b.herokuapp.com:443"
+    try:
+        async with websockets.connect(uri) as websocket:
+            toSend = {"Slider1" : 0.56, "Slider2" : 0.72}
+            jsonToSend = json.dumps(toSend)
+            await websocket.send(jsonToSend)
+            response = None;
+            #while response != 'ping':
+            response = await websocket.recv()
+            response = json.loads(response)
+            print(response, file=sys.stdout)
+            return "Received: " + str(response)
+            return response
+    except Exception as e:
+        return f"An error occurred: {e}"
 
-# @app.route('/api/test_websocket', methods=['GET'])
-# def test_websocket_route():
-#     loop = asyncio.new_event_loop()
-#     asyncio.set_event_loop(loop)
-#     result = loop.run_until_complete(websocket_test())
-#     return result
+@app.route('/api/test_websocket', methods=['GET'])
+def test_websocket_route():
+    return asyncio.run(websocket_test());
