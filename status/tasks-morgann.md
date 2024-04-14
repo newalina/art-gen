@@ -1,7 +1,20 @@
 # momothain, Backend Server & API Lead; TouchDesigner Graphics Core
 
-<!--  -->
-## 4/9
+## 4/10 launch project from cmd line not gui
+
+- Research – There is NO option for TouchDesigner -> export -> .exe
+- Test & fail launch from cli [py repo](https://github.com/jacobmartinez3d/TD_Unit_Test_Launcher)
+- Direct Alec for help from his windows pc
+  
+If it works, we could potentially
+
+1. setup our laptops as servers (since TD can't run on linux for the dept PCs)
+2. be able to launch ONE TD instance per laptop from cmd line
+3. Pass input parameters in the way it's calling py unittest scripts?
+4. Terminate w/ output dir() (of TD or of py test scripts?) written to disk
+5. fetch and upload the output from our laptop to our actual deployed website for the user to see
+
+## 4/9.2 team work session
 
 - Show [hex-quake & other td samples](https://github.com/newalina/art-gen/blob/momothain/TouchDesigner/TD%20Reactive%20Graphics%20Samples.md)
 - Detail output formats:
@@ -10,6 +23,12 @@
 - Clarify shaders/graphics that don't work with Macs
 - Review Erik's td samples
 - Work w/ Malique to debug GCS image vs video vs thumbnail bytes upload (filename generation scheme and separate functions)
+
+## 4/9.1
+
+- Research Licenses
+- Decided on GNU GPL > MIT
+- Include LICENSE, COPYING, update README.md
 <!--  -->
 ## 4/7
 
