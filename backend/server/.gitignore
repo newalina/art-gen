@@ -1,0 +1,21 @@
+# Installed dependencies
+node_modules/
+
+# Yarn error logs
+yarn-error.log
+
+# Mac files
+*.DS_Store
+
+# Dotenv files
+.env
+
+# Serverside test coverage files
+server/coverage/*
+coverage
+
+# MongoMemorySaver (local database in memory): https://github.com/nodkz/mongodb-memory-server#available-options related env files
+globalConfig.json
+
+# Production build files
+dist/
