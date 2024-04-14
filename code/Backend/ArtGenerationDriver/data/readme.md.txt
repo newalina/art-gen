@@ -1,0 +1,1 @@
+A folder storing data relavant for art generation
