@@ -1,3 +1,15 @@
+### Project Specific Excludes ###
+
+# TD Data Files and Backup Project Files
+code/TouchDesigner/Patches/Backup
+code/Backend/ArtGenerationDriver/data/artGenerationDataInput.json
+code/Backend/ArtGenerationDriver/data/artGenerationOutput*mov
+
+
+
+
+### Generic Excludes ? ###
+
 # mac cache?
 .DS_Store
 
