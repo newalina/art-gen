@@ -74,9 +74,6 @@ function App() {
                   </div>
               ))}
             </div>
-            <div className="ok">
-              <button className={'sign-out-button'} onClick={toggleView}>Sign Out</button>
-            </div>
           </div>) :
               <div className="slider">
                 <div id="px-8 slides" className="slide-track">
@@ -89,6 +86,10 @@ function App() {
                   ))}
                 </div>
               </div>}
+
+          <div className="ok">
+            <button className={'sign-out-button'} onClick={toggleView}>Sign Out</button>
+          </div>
 
         </main>
       </div>
