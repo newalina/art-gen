@@ -64,19 +64,31 @@ function App() {
                 <rect width="13.61" height="13.61" transform="matrix(-1 0 0 1 13.6099 17.3892)" fill="#D9D9D9"/>
               </svg>)}
           </div>
-          <div className="container">
-            <div id="image-grid" className={`grid-container ${isGrid ? 'grid' : 'carousel'}`}>
+          {isGrid ?
+              (<div className="container">
+            <div id="image-grid" className={`grid-container grid`}>
               {/* Images will be dynamically added here */}
               {responseFromApi.map((image, index) => (
                   <div key={index} className="grid-item">
-                    <img src={image[0]} alt={`Image ${index}`} />
+                    <img className="grid-item-img "src={image[0]} alt={`Image ${index}`} />
                   </div>
               ))}
             </div>
             <div className="ok">
               <button className={'sign-out-button'} onClick={toggleView}>Sign Out</button>
             </div>
-          </div>
+          </div>) :
+              <div className="slider">
+                <div id="px-8 slides" className="slide-track">
+                  {/* Map through responseFromApi and create divs for each image */}
+                  {responseFromApi.map((imageUrl, index) => (
+                      <div key={index} className="px-8 slide text-center">
+                        <img className="grid-item-img" src={imageUrl[0]} alt={`Image ${index}`} />
+                        {/* You can add additional content here if needed */}
+                      </div>
+                  ))}
+                </div>
+              </div>}
 
         </main>
       </div>
