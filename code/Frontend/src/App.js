@@ -7,6 +7,7 @@ import UserIconPopup from './user-profile/component/UserIconPopup'
 import ImageUpload from './generator/components/ImageUpload';
 import Home from './home-page/pages/Home'
 import ControlPanel from './control-panel/pages/control-panel';
+import UserProfile from './user-profile/pages/UserProfile'
 
 const App = () => {
 
@@ -27,7 +28,7 @@ const App = () => {
       </Route>
 
       <Route path="/user" exact>
-        <h2>This is user profile</h2>
+        <UserProfile />
       </Route>
 
       <Redirect to="/home" />
