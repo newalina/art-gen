@@ -1,0 +1,241 @@
+# momothain, Backend Server & API Lead; TouchDesigner Graphics Core
+
+## 4/10 launch project from cmd line not gui
+
+- Research – There is NO option for TouchDesigner -> export -> .exe
+- Test & fail launch from cli [py repo](https://github.com/jacobmartinez3d/TD_Unit_Test_Launcher)
+- Direct Alec for help from his windows pc
+  
+If it works, we could potentially
+
+1. setup our laptops as servers (since TD can't run on linux for the dept PCs)
+2. be able to launch ONE TD instance per laptop from cmd line
+3. Pass input parameters in the way it's calling py unittest scripts?
+4. Terminate w/ output dir() (of TD or of py test scripts?) written to disk
+5. fetch and upload the output from our laptop to our actual deployed website for the user to see
+
+## 4/9.2 team work session
+
+- Show [hex-quake & other td samples](https://github.com/newalina/art-gen/blob/momothain/TouchDesigner/TD%20Reactive%20Graphics%20Samples.md)
+- Detail output formats:
+  - image=.png
+  - video=.mp4/.mov
+- Clarify shaders/graphics that don't work with Macs
+- Review Erik's td samples
+- Work w/ Malique to debug GCS image vs video vs thumbnail bytes upload (filename generation scheme and separate functions)
+
+## 4/9.1
+
+- Research Licenses
+- Decided on GNU GPL > MIT
+- Include LICENSE, COPYING, update README.md
+<!--  -->
+## 4/7
+
+Coordinate td graphics & socket connections; explain how to control graphics parameters
+
+> what's the socket input or connection generally look like? my understanding is that td has DATs that can take strings and tabular (aka csv) inputs and CHOPs that can take mice and other continuous inputs. Then in td we can use these to control the parameters of other td nodes/functions and ultimately fully control the visuals. i just dont really understand how that works with a websocket or like how to get input from you and/or give images and videos back?
+
+## 2/20/24: Backend Frameworks Setup
+
+- venv, 
+- .env.example and instructions in slack, 
+- README, 
+- Django, 
+- input ORM ideas, 
+- pydantic output class ideas, 
+- package structure
+
+### Backend
+
+```bash
+python3 -m venv venv
+pip install -r requirements.txt
+cd server
+FILL OUT THE .env
+python manage.py runserver
+```
+
+TODO:
+
+- api endpoints to alina
+
+### Frameworks
+
+- Django 
+  - API (http endpoints)
+  - ORM (database models and interaction)
+- MongoDB - Database
+- Pydantic - Classes: Data validation / type-checking 
+
+
+
+## 2/20/24: Architecture
+
+Frontend - Site: Next.js (Gus, Erik, Robert, Alina)
+Pages/Routes
+UI: Buttons, Sliders
+Gateway: data requirement definitions
+API Call: http GET/POST request w/ parameters (user input)
+app -> lib -> data.js
+/routes, /controllers, /models
+
+Backend Server/API: Python Django (Morgann, Malique, Alec, David, Alina)
+API Endpoints
+Data Transformation: Algorithm/Logic: 
+Generate Image
+Use some package?
+calc ea pixel?
+how to map input to ea pixel (location
+Real-time Image Editing (TODO: is this server-side or client/frontend-side??)
+Filtering: malique opencv
+user input: mouse location, selected parameter
+Get Data from Database: MongoDB
+
+In
+Ran noise
+input data
+out
+Image r,g,b[][]
+pixelation / low resolution! grid, artsy and efficient
+
+NASA data
+ext: Image
+
+Topics/Data
+Oceans
+Climate
+Trees
+..
+Noise
+
+
+
+## Next.tsx Coding Standards
+
+Morgann: Next.tsx (React, TypeScript). Since the interaction and generation are real-time, we want to run most stuff client-side which means JavaScript. Probably, we'll make an API call for data at the start and every few minutes, so we can definitely pre-process the data however we want through a backend server at each API call. I'm learning this rn and it seems like the easiest and modern, but lmk about express.js or other options. 
+
+or if we can generate videos or images backend then play or interpolate or interact with them in a simple way for minutes?
+
+Git Branches:
+Use local branch (e.g backend, morgann, feature-X), 
+Pull from more core branch (e.g. main)
+Resolve merge conflicts locally (use your discretion and just ask whoever wrote it if you have a conflicting design decision)
+Push your branch to remote
+Pull Request to core branch (main) to update it 
+
+Naming Conventions:
+root = github-project-kebab-case
+root/components/ComponentInPascalCase.tsx
+interface ComponentPascalProps {
+        children?: ReactNode;
+        a: number;
+        b-optional?: string;
+}
+
+export default function ComponentPascal({ children, a, b = 'hi' } : ComponentPascalProps)  {
+        return (
+                <div>
+                …
+                </div>
+        )
+}
+root/app/<more-structure>/page-in-kebab-case.ts
+root/styles/<more-structure>/styles-matching-page?
+root/types/type-pascal.ts
+quense/yup: Dead simple Object schema validation
+export const typeSchemaCamel = object({
+export type TypePascal = InferType<typeof typeSchemaCamel>;
+
+import { object, string, number, date, InferType } from 'yup';
+
+let userSchema = object({
+        name: string().required(),
+        age: number().required().positive().integer(),
+        email: string().email(),
+        website: string().url().nullable(),
+        createdOn: date().default(() => new Date()),
+});
+
+// parse and assert validity
+
+const user = await userSchema.validate(await fetchUser());
+
+type User = InferType<typeof userSchema>;
+
+ {
+name: string;
+age: number;
+email?: string | undefined
+website?: string | null | undefined
+createdOn: Date
+} 
+root/constants.ts 
+CONSTANT_UPPER_CASE = … . 
+
+
+
+## Core Data Types → Algorithms:
+(Image1, Image2) 
+Morph Cutting → .mp4
+Linear Interpolation → .mp4
+Continuous/real-time webcam Image
+Filter/fire → Image
+"Semi-gross color palette. Animating the building blocks with little squiggles and then adding color / feedback effects." Ref 
+float[] (e.g. climate values)
+
+## User Input Types:
+Geographic Location
+Configurations
+Data Source: Choose among our pre-filled Database
+Speed / refresh rate 
+Static
+Query/Topic → "English String"
+Click → 
+1/0  toggle boolean buttons
+(int x, int y, int time)
+Geographic Location →
+ Coordinates (float latitude, float longitude)
+String "description"
+Real-time
+Mouse Location (int x, int y)
+Video .mp4 
+Audio .mp3
+
+
+## Coding Conventions
+### Git Branches:
+Use local branch (e.g backend, morgann, feature-X), 
+Pull from more core branch (e.g. main)
+Resolve merge conflicts locally (use your discretion and just ask whoever wrote it if you have a conflicting design decision)
+Push your branch to remote
+Pull Request to core branch (main) to update it 
+
+
+
+## review of alina's visulations/topic/output ideas
+https://docs.google.com/document/d/1gcYQGo0ZjbXbko7RR7RnifXmDvDyCpB8QSy4GBBE2-U/edit?disco=AAABGMLrJXQ
+
+
+## 2/6/24 
+### votes on alinas ideas
+Morgann:
+Physics w/ atoms, colors, forces, magic/etc. gen by data
+simple: point-masses (loc, velocity), elastic collisions, 
+Evolution one? B/c input is two strings, it could be easy to input any data? and use prev and curr data.
+
+### ideas, IO, data specs
+Input:
+Configurations
+Choose among our datasets
+Speed / refresh rate
+Physics: collisions, gravity, 
+Static
+Query/Topic → "English String"
+Click → 1/0 = toggle boolean buttons
+Location →
+ Coordinates, 
+String description
+Real-time
+Video .mp4 
+Audio .mp3

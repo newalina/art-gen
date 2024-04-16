@@ -1,0 +1,1 @@
+A folder to store recently created logs. 

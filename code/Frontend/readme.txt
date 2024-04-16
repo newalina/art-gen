@@ -1,0 +1,1 @@
+A folder for front end work. Additional folders can be introduced to separate front end into subcomponents

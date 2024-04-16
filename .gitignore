@@ -1,10 +1,36 @@
+### Project Specific Excludes ###
+
+# TD Data Files and Backup Project Files
+code/TouchDesigner/Patches/Backup
+code/Backend/ArtGenerationDriver/data/artGenerationDataInput.json
+code/Backend/ArtGenerationDriver/data/artGenerationOutput*mov
+
+
+
+
+### Generic Excludes ? ###
+
 # mac cache?
 .DS_Store
-
+*.DS_Store*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+
+# vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
 
 # C extensions
 *.so
@@ -67,6 +93,9 @@ db.sqlite3-journal
 # Flask stuff:
 instance/
 .webassets-cache
+
+#GCP stuff
+Flask/gcp-key.json
 
 # Scrapy stuff:
 .scrapy
@@ -239,3 +268,5 @@ fabric.properties
 
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
+status/gcp-key.json
+code/Backend/BackEndCommandInterface/flask/.DS_Store
