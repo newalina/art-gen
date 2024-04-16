@@ -10,7 +10,7 @@
   text-align: center;
   padding: 5px;
   background-color: #c7efff;
-  border-bottom: 1px solid #ddd;  
+  border-bottom: 1px solid #ddd;
   font-size: 24px;
 }
 
@@ -28,9 +28,12 @@
 .main-content {
   flex: 1;
   display: flex;
+  flex-direction: column;
   /* border: 1px solid #ddd; */
   padding: 0px;
-  margin: 5px;
+  margin: 0px;
+  background-color: #181818;
+  align-items: center;
 }
 
 /* Style for the output area */
