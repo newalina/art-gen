@@ -1,9 +1,5 @@
 
 # File imports
-import base64
-import json
-import sys
-
 import numpy as np
 import requests
 import websockets
@@ -15,17 +11,24 @@ from pymongo import MongoClient
 
 from flask import Flask, jsonify, request
 
+# move to common file eventually
 import sys
-from pathlib import Path
+import os
+def findTopLevelDirectory(startPath):
+    currentPath = startPath
+    while currentPath != os.path.dirname(currentPath):
+        if os.path.basename(currentPath) == 'art-gen':
+            return currentPath 
+    
+        currentPath = os.path.dirname(currentPath) 
+    return None
 
-current_dir = Path(__file__).resolve().parent
-backend_dir = current_dir.parent / 'Backend' / 'ArtGenerationDriver' / 'src'
-# print('Backend directory:', backend_dir)
-# Add the parent directory to sys.path
-sys.path.insert(0, str(backend_dir))
-# print('sys.path:', sys.path)
+currentFilePath = os.path.abspath(__file__)
+artGenPath = findTopLevelDirectory(currentFilePath)
+sys.path.insert(0, artGenPath)
 
-from AGD_Subsystem import AGD_Subsystem
+from projectCode.Backend.ArtGenerationDriver.src import AGD_Subsystem
+
 # ********************************************************* INIT SERVER ******************************************
 artSubSystem = AGD_Subsystem()
 

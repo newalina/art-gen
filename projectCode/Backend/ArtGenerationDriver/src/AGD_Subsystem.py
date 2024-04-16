@@ -1,5 +1,5 @@
  # Project Modules
-from AGD_ArtGenerator import AGD_ArtGenerator
+from projectCode.Backend.ArtGenerationDriver.src.AGD_ArtGenerator import AGD_ArtGenerator
 from AGD_Definitions import AGD_Definitions as AGD_DEF;
 import threading
 from collections import deque
