@@ -78,14 +78,14 @@ def google_cloud_api():
         return list(results['media'])
 
     else:
-        username, file, filetype = request.args.get('username'), request.files.get('media'), requests.args.get('filetype')
+        username, file, filetype = request.args.get('username'), request.files.get('media'), request.args.get('filetype')
         # Upload the file to Google Cloud Storage
         pub_url = gcs_upload_media(file, filetype)
         if filetype == 'video/mp4':
             # calculate thumbnail
             thumbnail = extract_first_frame(file.stream)
             # upload to gcp
-            thumbnail_url = gcs_upload_thumbnail(thumbnail, file) # how to convert from jpg to file
+            thumbnail_url = gcs_upload_thumbnail(thumbnail, file.filename.split("/")[-1].split('.')[0]+'-thumbnail.jpeg')
             new_media = (thumbnail_url,pub_url)
         else: 
             new_media = (pub_url,pub_url)
@@ -101,7 +101,7 @@ def google_cloud_api():
             user = {'username': username, 'media': [new_media]}
             collection.insert_one(user)
             
-        return jsonify({'message': 'Image uploaded successfully', 'username': username}), 200
+        return jsonify({'message': 'Image uploaded successfully', 'username': username, 'filename': file.filename.split("/")[-1].split('.')[0]+'-thumbnail.jpeg'}), 200
     
 # function to upload file to GCS
 def gcs_upload_media(file, type):
@@ -113,10 +113,10 @@ def gcs_upload_media(file, type):
     return public_url
 
 # function to upload file to GCS
-def gcs_upload_thumbnail(file_stream,file):
+def gcs_upload_thumbnail(file_stream,filename):
     bucket = storage_client.bucket('artgen-storage')
-    blob: storage.Blob = bucket.blob(file.filename.split("/")[-1]+'-thumbnail')
-    blob.content_type = type # example: 'image/jpeg'
+    blob: storage.Blob = bucket.blob(filename)
+    blob.content_type = "image/jpeg"
     blob.upload_from_file(file_stream)
     public_url: str = blob.public_url
     return public_url
