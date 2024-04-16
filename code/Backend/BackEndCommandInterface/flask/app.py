@@ -15,27 +15,35 @@ from pymongo import MongoClient
 
 from flask import Flask, jsonify, request
 
-import sys
-from pathlib import Path
-
-current_dir = Path(__file__).resolve().parent
-backend_dir = current_dir.parent / 'Backend' / 'ArtGenerationDriver' / 'src'
-
-# Add the parent directory to sys.path
-sys.path.insert(0, str(backend_dir))
-
-from AGD_Subsystem import AGD_Subsystem
-
-# ********************************************************* INIT SERVER ******************************************
-AGD_Subsystem = AGD_Subsystem()
-
+# ********************************************************* INIT SERVER **************************************************
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret key'
 socketio = SocketIO(app, logger=True)
 socketio.run(app, host='wss://websocket-csci2340-78f5f096308b.herokuapp.com', port=443)
 CORS(app)
 
-# ********************************************************* DATABASE INIT ****************************************
+# ********************************************************* DATABASE (INC) **************************************************
+
+# database with whoever does that
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+# db = SQLAlchemy(app)
+
+# class User(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     username = db.Column(db.String(80), unique=True, nullable=False)
+#     password = db.Column(db.String(80), nullable=False)
+
+### User NoSQL representation ###
+# User:
+# {
+#     "username": "string",
+#     "media": ["string"]
+# }
+
+CORS(app)
+
+API_KEY = '3x1ffNiowcASHEnfhbH7KkcylZTkRfQfytyyL4JE'
+
 # Initialize Google Cloud Storage client
 storage_client = storage.Client.from_service_account_json('gcp-key.json')
 # MongoDB connection 
@@ -43,7 +51,20 @@ MONGO_URI = 'mongodb+srv://malique-bodie:86zb67pNK3U3BgEt@art-gen.bxqjsqp.mongod
 db = MongoClient(MONGO_URI).test # Using test DB 
 collection = db["product"]
 
-# ********************************************************* GCP **************************************************
+
+
+# makes it so that the url is http://127.0.0.1:5000/api/????
+@app.route('/api/apod', methods=['GET', 'POST'])
+def api():
+    if request.method == 'GET':
+        request_data = requests.get('https://api.nasa.gov/planetary/apod?api_key=' + API_KEY)
+        requests.post('http://localhost:3000', data=request_data.json()['url'])
+        return request_data.json()['url']
+    else:
+        request_data = requests.get('https://api.nasa.gov/planetary/apod?api_key=' + API_KEY)
+        return request_data.json()['url']
+    
+
 # Route to connect to Google Cloud API
 @app.route('/api/google-cloud', methods=['GET', 'POST'])
 def google_cloud_api():
@@ -124,39 +145,93 @@ def extract_first_frame(mp4_stream):
 
 
 
-@app.route('/api/artGeneration', methods=['GET'])
-def artGeneration():
-    try:        
-        userData = request.json
-        modelSelection = userData['modelSelection']
-        slider1Value = userData['slider1']
-        slider2Value = userData['slider2']
-        slider3Value = userData['slider3']
-
-        curLen = len(AGD_Subsystem.generatedOutput)
-        AGD_Subsystem.appendGenerationRequest([modelSelection, slider1Value, slider2Value, slider3Value])
-
-        # wait for the art to be generated
-        while len(AGD_Subsystem.generatedOutput) == curLen:
-            pass
-
-        generatedArtPath = AGD_Subsystem.popleft().pathToOutputData
-
-        requests.post('http://localhost:3000', data=generatedArtPath)
-
-        # upload the generated art to GCS (add caching elements in the future?)
-        # gcs_upload_media(generated_art.pathToOutputData, 'video/mp4')
-        # gcs_upload_thumbnail(generated_art.pathToOutputData, 'image/jpeg')
-
-        return 'artGenerated'
-    
-    except Exception as e:
-        # app.logger.error('An error occurred: %s', e)
-        return f'An error occurred {e}', 500
-
-
-# API Endpoints that I was using
-# MAP_KEY = 'e8aa84fba48bdd97c918f27b26ad74c6'
-# request_data = requests.get('https://firms.modaps.eosdis.nasa.gov/api/area/csv/' + MAP_KEY + '/VIIRS_SNPP_NRT/world/1')
-# request_data = requests.get('https://www.ncei.noaa.gov/access/services/data/v1?dataset=global-marine&amp;dataTypes=WIND_DIR,WIND_SPEED&amp;stations=AUCE&amp;startDate=2016-01-01&amp;endDate=2016-01-02&amp;boundingBox=90,-180,-90,180')
+# requested parameters
 # get more data from datasets here: https://www.ncei.noaa.gov/access/search/dataset-search?observationTypes=Land%20Surface
+# @app.route('/api/particle_cloud/forest', methods=['GET'])
+@app.route('/api/particle_cloud/ocean', methods=['GET'])
+def ocean():
+    request_data = requests.get('https://www.ncei.noaa.gov/access/services/data/v1?dataset=global-marine&amp;dataTypes=WIND_DIR,WIND_SPEED&amp;stations=AUCE&amp;startDate=2016-01-01&amp;endDate=2016-01-02&amp;boundingBox=90,-180,-90,180')
+    # STATION	DATE	LATITUDE	LONGITUDE	WIND_DIR	WIND_SPEED
+    tosend = request_data.json().split('\n')
+    try:
+        websocket = websockets.connect("ws://127.0.0.1:5000")
+        for line in tosend:
+            websocket.send(line.split(',')[4:])
+    except Exception as e:
+        return f"An error occurred: {e}"
+
+MAP_KEY = 'e8aa84fba48bdd97c918f27b26ad74c6'
+@app.route('/api/particle_cloud/fire', methods=['GET'])
+def fire():
+    # format /api/area/csv/[MAP_KEY]/[SOURCE]/[AREA_COORDINATES]/[DAY_RANGE]
+    # area coordinates expect [-90...90]
+    # ex: https://firms.modaps.eosdis.nasa.gov/api/area/csv/e8aa84fba48bdd97c918f27b26ad74c6/VIIRS_SNPP_NRT/world/1
+    request_data = requests.get('https://firms.modaps.eosdis.nasa.gov/api/area/csv/' + MAP_KEY + '/VIIRS_SNPP_NRT/world/1')
+    # gives latitude,longitude,bright_ti4,scan,track,acq_date,acq_time,satellite,instrument,confidence,version,bright_ti5,frp,daynight
+
+    # send latitude, longitude, and brightness to touchdesigner the first three values in each line
+    tosend = request_data.json().split('\n')
+    # for line in tosend:
+    #     requests.post('http://localhost:3000', data=line.split(',')[0:3])
+    try:
+        websocket = websockets.connect("ws://127.0.0.1:5000")
+        for line in tosend:
+            websocket.send(line.split(',')[0:3])
+    except Exception as e:
+        return f"An error occurred: {e}"
+    # return request_data.json()['latitude']
+
+    
+
+
+# ************************************************** SOCKET FUNCTION **************************************************
+
+# http://127.0.0.1:5000/socket/initMessage
+@app.route('/socket/initMessage', methods=['GET'])
+def init_message():
+
+    # socketio.emit('initMessage', jsonToSend)
+    # socketio.send(jsonToSend, json=True)
+    return 'Message sent'
+
+@socketio.on('data')
+def handle_data(data):
+    # decode the data base64
+
+    # send the data to the front end
+    requests.post('http://localhost:3000', data=data)
+
+# more api endpoints per request
+
+
+ 
+# ws://127.0.0.1:5001/socket.io/?EIO=4&transport=websocket
+
+@socketio.on('TD event')  # Listening for the event named "my event"
+def handle_my_custom_event(binaryData):  # The function that will run when the event is received
+    print('received binary data:')
+    # decode the data base64
+    decoded_data = base64.b64decode(binaryData)
+    # send the data to the front end
+    requests.post('http://localhost:3000', data=decoded_data)
+
+async def websocket_test():
+    uri = "wss://websocket-csci2340-78f5f096308b.herokuapp.com:443"
+    try:
+        async with websockets.connect(uri) as websocket:
+            toSend = {"Slider1" : 0.56, "Slider2" : 0.72}
+            jsonToSend = json.dumps(toSend)
+            await websocket.send(jsonToSend)
+            response = None;
+            #while response != 'ping':
+            response = await websocket.recv()
+            response = json.loads(response)
+            print(response, file=sys.stdout)
+            return "Received: " + str(response)
+            return response
+    except Exception as e:
+        return f"An error occurred: {e}"
+
+@app.route('/api/test_websocket', methods=['GET'])
+def test_websocket_route():
+    return asyncio.run(websocket_test());

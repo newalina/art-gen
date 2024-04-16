@@ -1,10 +1,8 @@
 # Project Modules
 from AGD_ArtGenerator import AGD_ArtGenerator
 from AGD_Definitions import AGD_Definitions as AGD_DEF;
-import threading
-from collections import deque
-import logging
-import os
+
+
 
 # Object 0
 testArtGenerator = AGD_ArtGenerator(0, 125, 32, 51);
@@ -41,14 +39,9 @@ print("Succesfully Quit Program");
 class AGD_Subsystem:
 
     def __init__(self):
-        # expects a list of [modelSelection, param1, param2, param3]
-        self.generationQueue = deque();
-        self.generatedOutput = deque();
+        self.generationQueue = [];
 
-        # init a thread to handle the generation queue
-        self.generationThread = threading.Thread(target=self.processGenerationQueue);
-
-    def appendGenerationRequest(self, object) -> int:
+    def appendGenerationRequest(self, object):
 
         if( len(self.generationQueue) >= AGD_DEF.MAX_QUEUE_SIZE.value ):
             print("ERROR: Unable to append to queue");
@@ -59,32 +52,15 @@ class AGD_Subsystem:
         return 0;
 
     def popGenerationRequest(self):
-        logging.debug("Popping Generation Request");
-        return self.generationQueue.popleft();
+        self.generationQueue.pop();
+        return 0;
 
-    def checkIfFileExists(self, path):
-        return os.path.isfile(path);
-
-    def processGenerationQueue(self):
-        while(True):
-            if( len(self.generationQueue) > 0 ):
-
-                a, param1, param2, param3 = self.popGenerationRequest();
-                artGenerator = AGD_ArtGenerator(a, param1, param2, param3);
-                artGenerator.writeToJSON();
-                artGenerator.startTouchDesigner();
-
-                # check if the file exists
-                while( not self.checkIfFileExists(artGenerator.pathToOutputData) ):
-                    pass;
-
-                self.generatedOutput.append(artGenerator);                
 
     
 
 # DO ERROR CHECKING AND LOGGING EVERYHWERE THAT IS HUMANELY POSSIBLE. SET UP SYSTEM TO ALWAYS RETURN ERROR CODES AFTER EXECUTION!!!!!!
 
-# Ok, so the thought here is to create a main program that initializes everything that is used (The flask app, AGD, Databases, everything). Within this file / main program,
+# Ok, so the thought here is to create a main program taht initializes everything that is used (The flask app, AGD, Databases, everything). Within this file / main program,
 #  we will continually analyze a queue that contains a series of AGD_ArtGenerator elements. On reception of data from the website, we create a new object in the HTML interface.
 #  we then append this to the subsystem queue which was initialized in the main program. This queue is then analyzed to take the current front of queue for processing. When processing
 #  is complete in touch designer, there must be a signal sent from the TD application out to the main driver application to say object "X" has completed, which will remove it fromm the
