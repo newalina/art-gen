@@ -1,24 +1,27 @@
 # Project Modules
-from AGD_ArtGenerator import AGD_ArtGenerator
+from AGD_ArtGeneratorUnit import AGD_ArtGeneratorUnit
 from AGD_Definitions import AGD_Definitions as AGD_DEF;
 
 
-
 # Object 0
-testArtGenerator = AGD_ArtGenerator(0, 125, 32, 51);
+testArtGenerator = AGD_ArtGeneratorUnit(0, 125, 32, 51);
+# Do some API stuff here
+testArtGenerator.updateArtGenerationData();
 testArtGenerator.writeToJSON();
 testArtGenerator.startTouchDesigner();
 # Here do something with the data...
 print("Succesfully Quit Program");
 
 # Object 1
-test2 = AGD_ArtGenerator(0, 1, 24, 61);
+test2 = AGD_ArtGeneratorUnit(0, 1, 24, 61);
+
+# Do some API stuff here
+test2.updateArtGenerationData();
 test2.writeToJSON();
 test2.startTouchDesigner();
 # Here do something with the data...
 print("Succesfully Quit Program");
 
-# Need a way to clean up too many files being stored in data folder (Should only maintain 64-128 most recent files?)
 # Need to determine what to do with data output once the system has it in a file. Do we want this in JSON, Base-64, idk
 # Need to determine if current exit strategy is OK, or if we want a more SW heavy approach using personally declared files.
 #   This does not need to be OOP. Could use helper functions to determine if too much data in folder, program is stopped recording,
