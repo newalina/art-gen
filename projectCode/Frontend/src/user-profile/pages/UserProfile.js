@@ -1,12 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import videojs from 'video.js';
+import 'video.js/dist/video-js.css';
 import { Link } from 'react-router-dom';
-import './UserProfile.css'
+import './UserProfile.css';
 
 const UserProfile = () => {
     const [isGrid, setIsGrid] = useState(true);
+    const [mediaPopupOpen, setMediaPopupOpen] = useState(false);
+    const [selectedMedia, setSelectedMedia] = useState(null);
+    let player = null;
+
+    useEffect(() => {
+        // Initialize Video.js player when the media popup opens
+        if (mediaPopupOpen && selectedMedia) {
+            player = videojs('media-player');
+        }
+
+        return () => {
+            if (player) {
+                player.dispose();
+            }
+        };
+    }, [mediaPopupOpen, selectedMedia]);
+
+    useEffect(() => {
+        // Lock scroll when the media popup is open
+        if (mediaPopupOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+    }, [mediaPopupOpen]);
 
     const toggleView = () => {
         setIsGrid(!isGrid);
+    };
+
+    const openMediaPopup = (mediaUrl) => {
+        setSelectedMedia(mediaUrl);
+        setMediaPopupOpen(true);
+    };
+
+    const closeMediaPopup = () => {
+        setMediaPopupOpen(false);
+        setSelectedMedia(null);
     };
 
     const responseFromApi = [
@@ -38,37 +75,23 @@ const UserProfile = () => {
                 User Name
             </div>
             <div className={'view-toggle'} onClick={toggleView}>
-                {isGrid ?
-                    (<svg width="35" height="27" viewBox="0 0 35 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="0.516113" y="4.35498" width="6.09677" height="18.2903" fill="#D9D9D9"/>
-                        <rect x="10.0967" width="14.8065" height="27" fill="#D9D9D9"/>
-                        <rect x="28.387" y="4.35498" width="6.09677" height="18.2903" fill="#D9D9D9"/>
-                    </svg>)
-                    : (<svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="13.61" height="13.61" transform="matrix(-1 0 0 1 31.0005 0)" fill="#D9D9D9"/>
-                        <rect width="13.61" height="13.61" transform="matrix(-1 0 0 1 13.6099 0)" fill="#D9D9D9"/>
-                        <rect width="13.61" height="13.61" transform="matrix(-1 0 0 1 31.0002 17.3892)" fill="#D9D9D9"/>
-                        <rect width="13.61" height="13.61" transform="matrix(-1 0 0 1 13.6099 17.3892)" fill="#D9D9D9"/>
-                    </svg>)}
+                {/* Your view toggle SVG */}
             </div>
             {isGrid ?
                 (<div className="container">
                     <div id="image-grid" className={`grid-container grid`}>
-                        {/* Images will be dynamically added here */}
                         {responseFromApi.map((image, index) => (
-                            <div key={index} className="grid-item">
-                                <img className="grid-item-img "src={image[0]} alt={`Image ${index}`} />
+                            <div key={index} className="grid-item" onClick={() => openMediaPopup(image[0])}>
+                                <img className="grid-item-img" src={image[0]} alt={`Image ${index}`} />
                             </div>
                         ))}
                     </div>
                 </div>) :
                 <div className="slider">
                     <div id="px-8 slides" className="slide-track">
-                        {/* Map through responseFromApi and create divs for each image */}
                         {responseFromApi.map((imageUrl, index) => (
-                            <div key={index} className="px-8 slide text-center">
+                            <div key={index} className="px-8 slide text-center" onClick={() => openMediaPopup(imageUrl[0])}>
                                 <img className="grid-item-img" src={imageUrl[0]} alt={`Image ${index}`} />
-                                {/* You can add additional content here if needed */}
                             </div>
                         ))}
                     </div>
@@ -77,8 +100,22 @@ const UserProfile = () => {
             <div className="ok">
                 <button className={'sign-out-button'} onClick={toggleView}>Sign Out</button>
             </div>
+
+            {/* Media Player Popup */}
+            {mediaPopupOpen && (
+                <div className="media-popup">
+                    <div className="media-popup-content">
+                        <svg className={"close-btn"} onClick={closeMediaPopup} fill="#000000" height="28" width="28" viewBox="0 0 256 256" id="Flat" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="10.495999999999999"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="27.136000000000003"> <path d="M202.82861,197.17188a3.99991,3.99991,0,1,1-5.65722,5.65624L128,133.65723,58.82861,202.82812a3.99991,3.99991,0,0,1-5.65722-5.65624L122.343,128,53.17139,58.82812a3.99991,3.99991,0,0,1,5.65722-5.65624L128,122.34277l69.17139-69.17089a3.99991,3.99991,0,0,1,5.65722,5.65624L133.657,128Z"></path> </g><g id="SVGRepo_iconCarrier"> <path d="M202.82861,197.17188a3.99991,3.99991,0,1,1-5.65722,5.65624L128,133.65723,58.82861,202.82812a3.99991,3.99991,0,0,1-5.65722-5.65624L122.343,128,53.17139,58.82812a3.99991,3.99991,0,0,1,5.65722-5.65624L128,122.34277l69.17139-69.17089a3.99991,3.99991,0,0,1,5.65722,5.65624L133.657,128Z"></path> </g></svg>
+                        {/*<button className="close-btn" onClick={closeMediaPopup}>Close</button>*/}
+                        <video id="media-player" className="video-js vjs-default-skin" controls autoPlay>
+                            <source className={'source'} src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'} type="video/mp4" />
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+            )}
         </div>
     );
-}
+};
 
 export default UserProfile;

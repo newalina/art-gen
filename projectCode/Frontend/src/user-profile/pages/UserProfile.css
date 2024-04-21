@@ -93,3 +93,35 @@
 .slider-reverse .slide {
     transform: scaleX(-100%);
 }
+
+.media-popup {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Darker background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.media-popup-content {
+    position: relative; /* Set position relative */
+    background: transparent; /* Media player background */
+    width: 100%;
+    height: 100%;
+}
+
+.close-btn {
+    position: absolute; /* Set position absolute */
+    top: 26%; /* Adjust top position as needed */
+    right: 25%; /* Adjust right position as needed */
+    z-index: 101; /* Ensure the button appears above the video */
+}
+
+.video-js {
+    width: 50%;
+    height: 50%;
+    transform: translate(50%, 50%);
+    z-index: 100; /* Ensure the video appears below the close button */
+}

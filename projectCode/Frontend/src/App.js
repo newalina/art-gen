@@ -5,8 +5,8 @@ import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-d
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import UserIconPopup from './user-profile/component/UserIconPopup'
 import ImageUpload from './generator/components/ImageUpload';
-import Home from './home-page/pages/Home'
-import ControlPanel from './control-panel/pages/control-panel';
+// import Home from './home-page/pages/Home'
+// import ControlPanel from './control-panel/pages/control-panel';
 import UserProfile from './user-profile/pages/UserProfile'
 
 const App = () => {
@@ -15,13 +15,13 @@ const App = () => {
     <Router>
     <div className="app-container">
     <Switch>
-      <Route path="/home" exact>
-        <Home />
-      </Route>
+      {/*<Route path="/home" exact>*/}
+      {/*  <Home />*/}
+      {/*</Route>*/}
 
-      <Route path="/controls" exact>
-        <ControlPanel />
-      </Route>
+      {/*<Route path="/controls" exact>*/}
+      {/*  <ControlPanel />*/}
+      {/*</Route>*/}
 
       <Route path="/art-play" exact>
         <h2>This is art display</h2>
