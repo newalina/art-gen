@@ -16,10 +16,24 @@
     gap: 10px;
 }
 
+.grid-item {
+    display: flex;
+    width: 200px;
+    height: 200px;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
 .grid-item-img {
-    width: 152px;
-    height: 152px;
+    width: 80%;
+    height: 80%;
     object-fit: cover;
+    transition: width .5s ease, height .5s ease;}
+
+.grid-item-img:hover {
+    width: 100%;
+    height: 100%;
 }
 
 .grid-container {
@@ -130,4 +144,22 @@
     height: 50%;
     transform: translate(50%, 50%);
     z-index: 100;
+}
+
+.media-controls {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    top: 80%;
+    right: 50%;
+    transform: translate(50%);
+    z-index: 101;
+    width: 120px;
+    height: 60px;
+    gap: 5px;
+    padding: 0px 10px 0px 10px;
+    border-radius: 90px;
+    background-color: #99999995;
 }
