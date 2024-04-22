@@ -1,14 +1,39 @@
+##########################################################################
+#
+# File: AGD_TouchDesignerInstance.py
+# 
+# Purpose of File: The purpose of this file is to contain the class used
+#                   by Touch Designer to perform all processing for art
+#                   generation. 
+#
+# Creation Date: April 14th, 2024
+#
+# Author: Alec Pratt
+#       
+##########################################################################
+
+# Public Includes
 import json
 import sys
 import td
 
+# Private Includes
 from AGD_Definitions import AGD_LengthUnits as AGD_LU
 from AGD_Definitions import AGD_RecordingParameters as AGD_RP
 from AGD_Definitions import AGD_TouchDesignerNodes as AGD_TDN
 from AGD_Definitions import AGD_Directories as AGD_DIR
 
+# Class Definitions
 class AGD_TouchDesignerInstance:
 
+    #####################################################################
+    # Function:     __init__
+    # Purpose:      Initialize a new instance of the 
+    #                AGD_TouchDesignerInstance class
+    # Requirements: N/A
+    # Inputs:       self - current class member        
+    # Outputs:      None  
+    #####################################################################
     def __init__(self):
         # Give garabge data
         self.instance_id_ = -1;
@@ -20,7 +45,14 @@ class AGD_TouchDesignerInstance:
     
         self.readFromJSON();
 
-
+    #####################################################################
+    # Function:     run
+    # Purpose:      Run Touch Designer using the data from the current
+    #                class object.
+    # Requirements: N/A
+    # Inputs:       self - current class member        
+    # Outputs:      None  
+    #####################################################################
     def run(self):
 
         self.initializeTouchDesigner();
@@ -32,7 +64,14 @@ class AGD_TouchDesignerInstance:
         #  THe current implementation works for now.
         self.startGenerationDelay();
 
-
+    #####################################################################
+    # Function:     initializeTouchDesigner
+    # Purpose:      Set the parameters for required Touch Designer 
+    #                objects for correct processing. 
+    # Requirements: N/A
+    # Inputs:       self - current class member        
+    # Outputs:      None  
+    #####################################################################
     def initializeTouchDesigner(self):
 
         # Initialize Recording Node
@@ -50,21 +89,49 @@ class AGD_TouchDesignerInstance:
 
         return 0;
 
-
+    #####################################################################
+    # Function:     startArtGeneration
+    # Purpose:      Enable recording for art generation
+    # Requirements: N/A
+    # Inputs:       self - current class member        
+    # Outputs:      None  
+    #####################################################################
     def startArtGeneration(self):
         # Enable output recording
         td.op(AGD_TDN.AGD_TD_RECORD_NODE).par.record = AGD_RP.AGD_RECORDING_ON.value;
         return 0;
 
+    #####################################################################
+    # Function:     startGenerationDelay
+    # Purpose:      Start a fixed-time delay that is used to close Touch
+    #                Designer after generation is complete. 
+    # Requirements: N/A
+    # Inputs:       self - current class member        
+    # Outputs:      None  
+    #####################################################################
     def startGenerationDelay(self):
         # Start the timer
         td.op(AGD_TDN.AGD_TD_TIMER_TRIGGER).par.const0value = 1;
     
+    #####################################################################
+    # Function:     stopArtGeneration
+    # Purpose:      Stop art generation after a fixed amount of time.
+    # Requirements: N/A
+    # Inputs:       self - current class member        
+    # Outputs:      None  
+    #####################################################################
     def stopArtGeneration(self):
         # Disable output recording
         td.op(AGD_TDN.AGD_TD_RECORD_NODE).par.record = AGD_RP.AGD_RECORDING_OFF.value;
         return 0;
 
+    #####################################################################
+    # Function:     readFromJSON
+    # Purpose:      Read in data from JSON file to populate the class. 
+    # Requirements: N/A
+    # Inputs:       self - current class member        
+    # Outputs:      None  
+    #####################################################################
     def readFromJSON(self):
 
         with open(str(AGD_DIR.AGD_INPUT_JSON), "r") as jsonFile:

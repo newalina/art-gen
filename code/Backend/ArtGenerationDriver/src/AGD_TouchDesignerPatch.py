@@ -1,3 +1,5 @@
+# This should probably be moved into Definitions. 
+
 # Test file for Art Generation Driver
 # Public Modules
 from enum import Enum;
@@ -38,10 +40,6 @@ class AGD_TouchDesignerPatch(Enum):
         else:
             print("ERROR: Cannot print");
             return -1;
-
-
-print(AGD_TouchDesignerPatch.getPathToPatch(4))
-
 
 #execStr = AGD_DIR.TD_EXEC.value + " " + AGD_TouchDesignerPatch.TD_PATCH_RESERVED_1.value;
 #subprocess.run(execStr);
