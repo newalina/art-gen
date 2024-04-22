@@ -1,8 +1,18 @@
-
+##########################################################################
+#
+# File: app.py
+# 
+# Purpose of File: The purpose of this file is run the server, handle api 
+#                   requests to our generation endpoint
+#
+# Creation Date: March 20th, 2024
+#
+# Author: David Doan, Alec Pratt, Malique Bodie
+#       
+##########################################################################
 # File imports
 import numpy as np
 import requests
-import websockets
 from flask_cors import CORS
 from flask_socketio import SocketIO
 from google.cloud import storage
@@ -11,9 +21,17 @@ from pymongo import MongoClient
 
 from flask import Flask, jsonify, request
 
-# move to common file eventually
+# move to a common file eventually
 import sys
 import os
+
+##########################################################################
+# Function:     findTopLevelDirectory
+# Purpose:      Find the top level directory of the project
+# Requirements: N/A
+# Inputs:       startPath - the path to start the search from       
+# Outputs:      currentPath - the path to the top level directory
+##########################################################################
 def findTopLevelDirectory(startPath):
     currentPath = startPath
     while currentPath != os.path.dirname(currentPath):
@@ -21,32 +39,51 @@ def findTopLevelDirectory(startPath):
             return currentPath 
     
         currentPath = os.path.dirname(currentPath) 
-    return None
+    return currentPath
 
 currentFilePath = os.path.abspath(__file__)
 artGenPath = findTopLevelDirectory(currentFilePath)
 sys.path.insert(0, artGenPath)
 
 from projectCode.Backend.ArtGenerationDriver.src import AGD_Subsystem
+from projectCode.Backend.Common.src.CMN_ErrorLogging import CMN_LoggingLevels as CMN_LL
+from projectCode.Backend.Common.src.CMN_ErrorLogging import log
 
-# ********************************************************* INIT SERVER ******************************************
+# Open the log file
+log.openFile()
+
+# ########################### INIT SERVER ################################
+log.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the Subsystem")
 artSubSystem = AGD_Subsystem()
+log.log(CMN_LL.ERR_LEVEL_DEBUG, "Subsystem started")
 
+# Initialize the Flask app
+log.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the Flask Server")
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret key'
+app.config['SECRET_KEY'] = 'artgen-secret-key-csci2340'
 socketio = SocketIO(app, logger=True)
-socketio.run(app, host='wss://websocket-csci2340-78f5f096308b.herokuapp.com', port=443)
-CORS(app)
+socketio.run(app, 
+             host='wss://websocket-csci2340-78f5f096308b.herokuapp.com', 
+             port=443)
 
-# ********************************************************* DATABASE INIT ****************************************
+# Enable CORS to allow requests from the frontend
+CORS(app)
+log.log(CMN_LL.ERR_LEVEL_DEBUG, "Server started")
+
+# ############################ DATABASE INIT #############################
 # Initialize Google Cloud Storage client
+log.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the Google Cloud Storage Client")
 storage_client = storage.Client.from_service_account_json('gcp-key.json')
+
 # MongoDB connection 
+log.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the MongoDB Client")
 MONGO_URI = 'mongodb+srv://malique-bodie:86zb67pNK3U3BgEt@art-gen.bxqjsqp.mongodb.net/?retryWrites=true&w=majority'
 db = MongoClient(MONGO_URI).test # Using test DB 
 collection = db["product"]
 
-# ********************************************************* GCP **************************************************
+log.log(CMN_LL.ERR_LEVEL_DEBUG, "Database initialized")
+
+# ###############################  GCP ###################################
 # Route to connect to Google Cloud API
 @app.route('/api/google-cloud', methods=['GET', 'POST'])
 def google_cloud_api():
@@ -126,40 +163,51 @@ def extract_first_frame(mp4_stream):
     return jpeg_bytes
 
 
+# ######################## ART GENERATION ENDPOINT #######################
+
+##########################################################################
+# Function:     artGeneration
+# Purpose:      Generate art based on user input, starts an art generation
+#               object and waits for the art to be generated
+# Requirements: N/A
+# Inputs:       modelSelection - the model to be used for generation
+#               slider1Value - the value of the first slider
+#               slider2Value - the value of the second slider
+#               slider3Value - the value of the third slider
+#
+# Outputs:      None, sends the generated art to the frontend
+##########################################################################
 
 @app.route('/api/artGeneration', methods=['GET'])
 def artGeneration():
-    try:        
+    log.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation Endpoint requested")
+    try:
+        log.log(CMN_LL.ERR_LEVEL_DEBUG, "Getting user data from request")        
         userData = request.json
         modelSelection = userData['modelSelection']
         slider1Value = userData['slider1']
         slider2Value = userData['slider2']
         slider3Value = userData['slider3']
-
+        
+        log.log(CMN_LL.ERR_LEVEL_DEBUG, "Appending generation request to queue")
         curLen = len(artSubSystem.generatedOutput)
         artSubSystem.appendGenerationRequest([modelSelection, slider1Value, slider2Value, slider3Value])
 
         # wait for the art to be generated
         while len(artSubSystem.generatedOutput) == curLen:
             pass
-
+        
         generatedArtPath = artSubSystem.popleft().pathToOutputData
+        log.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation completed")
 
         requests.post('http://localhost:3000', data=generatedArtPath)
 
+        log.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation sent to frontend")
         # upload the generated art to GCS (add caching elements in the future?)
         # gcs_upload_media(generated_art.pathToOutputData, 'video/mp4')
         # gcs_upload_thumbnail(generated_art.pathToOutputData, 'image/jpeg')
-
         return 'artGenerated'
     
     except Exception as e:
-        # app.logger.error('An error occurred: %s', e)
+        log.log(CMN_LL.ERR_LEVEL_ERROR, f"An error occurred {e}")
         return f'An error occurred {e}', 500
-
-
-# API Endpoints that I was using
-# MAP_KEY = 'e8aa84fba48bdd97c918f27b26ad74c6'
-# request_data = requests.get('https://firms.modaps.eosdis.nasa.gov/api/area/csv/' + MAP_KEY + '/VIIRS_SNPP_NRT/world/1')
-# request_data = requests.get('https://www.ncei.noaa.gov/access/services/data/v1?dataset=global-marine&amp;dataTypes=WIND_DIR,WIND_SPEED&amp;stations=AUCE&amp;startDate=2016-01-01&amp;endDate=2016-01-02&amp;boundingBox=90,-180,-90,180')
-# get more data from datasets here: https://www.ncei.noaa.gov/access/search/dataset-search?observationTypes=Land%20Surface
