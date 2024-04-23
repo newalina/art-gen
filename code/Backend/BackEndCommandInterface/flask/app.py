@@ -1,70 +1,89 @@
-
+##########################################################################
+#
+# File: app.py
+# 
+# Purpose of File: The purpose of this file is run the server, handle api 
+#                   requests to our generation endpoint
+#
+# Creation Date: March 20th, 2024
+#
+# Author: David Doan, Alec Pratt, Malique Bodie
+#       
+##########################################################################
 # File imports
-import base64
-import json
-import sys
-
 import numpy as np
 import requests
-import websockets
 from flask_cors import CORS
 from flask_socketio import SocketIO
 from google.cloud import storage
-from opencv import cv2
+import cv2
 from pymongo import MongoClient
 
 from flask import Flask, jsonify, request
 
-# ********************************************************* INIT SERVER **************************************************
+# move to a common file eventually
+import sys
+import os
+
+##########################################################################
+# Function:     findTopLevelDirectory
+# Purpose:      Find the top level directory of the project
+# Requirements: N/A
+# Inputs:       startPath - the path to start the search from       
+# Outputs:      currentPath - the path to the top level directory
+##########################################################################
+def findTopLevelDirectory(startPath):
+    currentPath = startPath
+    while currentPath != os.path.dirname(currentPath):
+        if os.path.basename(currentPath) == 'art-gen':
+            return currentPath 
+    
+        currentPath = os.path.dirname(currentPath) 
+    return currentPath
+
+currentFilePath = os.path.abspath(__file__)
+artGenPath = findTopLevelDirectory(currentFilePath)
+sys.path.insert(0, artGenPath)
+
+from projectCode.Backend.ArtGenerationDriver.src import AGD_Subsystem
+from projectCode.Backend.Common.src.CMN_ErrorLogging import CMN_LoggingLevels as CMN_LL
+from projectCode.Backend.Common.src.CMN_ErrorLogging import log
+
+# Open the log file
+log.openFile()
+
+# ########################### INIT SERVER ################################
+log.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the Subsystem")
+artSubSystem = AGD_Subsystem()
+log.log(CMN_LL.ERR_LEVEL_DEBUG, "Subsystem started")
+
+# Initialize the Flask app
+log.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the Flask Server")
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret key'
+app.config['SECRET_KEY'] = 'artgen-secret-key-csci2340'
 socketio = SocketIO(app, logger=True)
-socketio.run(app, host='wss://websocket-csci2340-78f5f096308b.herokuapp.com', port=443)
+socketio.run(app, 
+             host='wss://websocket-csci2340-78f5f096308b.herokuapp.com', 
+             port=443)
+
+# Enable CORS to allow requests from the frontend
 CORS(app)
+log.log(CMN_LL.ERR_LEVEL_DEBUG, "Server started")
 
-# ********************************************************* DATABASE (INC) **************************************************
-
-# database with whoever does that
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
-# db = SQLAlchemy(app)
-
-# class User(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     username = db.Column(db.String(80), unique=True, nullable=False)
-#     password = db.Column(db.String(80), nullable=False)
-
-### User NoSQL representation ###
-# User:
-# {
-#     "username": "string",
-#     "media": ["string"]
-# }
-
-CORS(app)
-
-API_KEY = '3x1ffNiowcASHEnfhbH7KkcylZTkRfQfytyyL4JE'
-
+# ############################ DATABASE INIT #############################
 # Initialize Google Cloud Storage client
+log.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the Google Cloud Storage Client")
 storage_client = storage.Client.from_service_account_json('gcp-key.json')
+
 # MongoDB connection 
+log.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the MongoDB Client")
 MONGO_URI = 'mongodb+srv://malique-bodie:86zb67pNK3U3BgEt@art-gen.bxqjsqp.mongodb.net/?retryWrites=true&w=majority'
 db = MongoClient(MONGO_URI).test # Using test DB 
 collection = db["product"]
 
+log.log(CMN_LL.ERR_LEVEL_DEBUG, "Database initialized")
 
-
-# makes it so that the url is http://127.0.0.1:5000/api/????
-@app.route('/api/apod', methods=['GET', 'POST'])
-def api():
-    if request.method == 'GET':
-        request_data = requests.get('https://api.nasa.gov/planetary/apod?api_key=' + API_KEY)
-        requests.post('http://localhost:3000', data=request_data.json()['url'])
-        return request_data.json()['url']
-    else:
-        request_data = requests.get('https://api.nasa.gov/planetary/apod?api_key=' + API_KEY)
-        return request_data.json()['url']
-    
-
+# ###############################  GCP ###################################
 # Route to connect to Google Cloud API
 @app.route('/api/google-cloud', methods=['GET', 'POST'])
 def google_cloud_api():
@@ -144,94 +163,51 @@ def extract_first_frame(mp4_stream):
     return jpeg_bytes
 
 
+# ######################## ART GENERATION ENDPOINT #######################
 
-# requested parameters
-# get more data from datasets here: https://www.ncei.noaa.gov/access/search/dataset-search?observationTypes=Land%20Surface
-# @app.route('/api/particle_cloud/forest', methods=['GET'])
-@app.route('/api/particle_cloud/ocean', methods=['GET'])
-def ocean():
-    request_data = requests.get('https://www.ncei.noaa.gov/access/services/data/v1?dataset=global-marine&amp;dataTypes=WIND_DIR,WIND_SPEED&amp;stations=AUCE&amp;startDate=2016-01-01&amp;endDate=2016-01-02&amp;boundingBox=90,-180,-90,180')
-    # STATION	DATE	LATITUDE	LONGITUDE	WIND_DIR	WIND_SPEED
-    tosend = request_data.json().split('\n')
+##########################################################################
+# Function:     artGeneration
+# Purpose:      Generate art based on user input, starts an art generation
+#               object and waits for the art to be generated
+# Requirements: N/A
+# Inputs:       modelSelection - the model to be used for generation
+#               slider1Value - the value of the first slider
+#               slider2Value - the value of the second slider
+#               slider3Value - the value of the third slider
+#
+# Outputs:      None, sends the generated art to the frontend
+##########################################################################
+
+@app.route('/api/artGeneration', methods=['GET'])
+def artGeneration():
+    log.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation Endpoint requested")
     try:
-        websocket = websockets.connect("ws://127.0.0.1:5000")
-        for line in tosend:
-            websocket.send(line.split(',')[4:])
-    except Exception as e:
-        return f"An error occurred: {e}"
+        log.log(CMN_LL.ERR_LEVEL_DEBUG, "Getting user data from request")        
+        userData = request.json
+        modelSelection = userData['modelSelection']
+        slider1Value = userData['slider1']
+        slider2Value = userData['slider2']
+        slider3Value = userData['slider3']
+        
+        log.log(CMN_LL.ERR_LEVEL_DEBUG, "Appending generation request to queue")
+        curLen = len(artSubSystem.generatedOutput)
+        artSubSystem.appendGenerationRequest([modelSelection, slider1Value, slider2Value, slider3Value])
 
-MAP_KEY = 'e8aa84fba48bdd97c918f27b26ad74c6'
-@app.route('/api/particle_cloud/fire', methods=['GET'])
-def fire():
-    # format /api/area/csv/[MAP_KEY]/[SOURCE]/[AREA_COORDINATES]/[DAY_RANGE]
-    # area coordinates expect [-90...90]
-    # ex: https://firms.modaps.eosdis.nasa.gov/api/area/csv/e8aa84fba48bdd97c918f27b26ad74c6/VIIRS_SNPP_NRT/world/1
-    request_data = requests.get('https://firms.modaps.eosdis.nasa.gov/api/area/csv/' + MAP_KEY + '/VIIRS_SNPP_NRT/world/1')
-    # gives latitude,longitude,bright_ti4,scan,track,acq_date,acq_time,satellite,instrument,confidence,version,bright_ti5,frp,daynight
+        # wait for the art to be generated
+        while len(artSubSystem.generatedOutput) == curLen:
+            pass
+        
+        generatedArtPath = artSubSystem.popleft().pathToOutputData
+        log.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation completed")
 
-    # send latitude, longitude, and brightness to touchdesigner the first three values in each line
-    tosend = request_data.json().split('\n')
-    # for line in tosend:
-    #     requests.post('http://localhost:3000', data=line.split(',')[0:3])
-    try:
-        websocket = websockets.connect("ws://127.0.0.1:5000")
-        for line in tosend:
-            websocket.send(line.split(',')[0:3])
-    except Exception as e:
-        return f"An error occurred: {e}"
-    # return request_data.json()['latitude']
+        requests.post('http://localhost:3000', data=generatedArtPath)
 
+        log.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation sent to frontend")
+        # upload the generated art to GCS (add caching elements in the future?)
+        # gcs_upload_media(generated_art.pathToOutputData, 'video/mp4')
+        # gcs_upload_thumbnail(generated_art.pathToOutputData, 'image/jpeg')
+        return 'artGenerated'
     
-
-
-# ************************************************** SOCKET FUNCTION **************************************************
-
-# http://127.0.0.1:5000/socket/initMessage
-@app.route('/socket/initMessage', methods=['GET'])
-def init_message():
-
-    # socketio.emit('initMessage', jsonToSend)
-    # socketio.send(jsonToSend, json=True)
-    return 'Message sent'
-
-@socketio.on('data')
-def handle_data(data):
-    # decode the data base64
-
-    # send the data to the front end
-    requests.post('http://localhost:3000', data=data)
-
-# more api endpoints per request
-
-
- 
-# ws://127.0.0.1:5001/socket.io/?EIO=4&transport=websocket
-
-@socketio.on('TD event')  # Listening for the event named "my event"
-def handle_my_custom_event(binaryData):  # The function that will run when the event is received
-    print('received binary data:')
-    # decode the data base64
-    decoded_data = base64.b64decode(binaryData)
-    # send the data to the front end
-    requests.post('http://localhost:3000', data=decoded_data)
-
-async def websocket_test():
-    uri = "wss://websocket-csci2340-78f5f096308b.herokuapp.com:443"
-    try:
-        async with websockets.connect(uri) as websocket:
-            toSend = {"Slider1" : 0.56, "Slider2" : 0.72}
-            jsonToSend = json.dumps(toSend)
-            await websocket.send(jsonToSend)
-            response = None;
-            #while response != 'ping':
-            response = await websocket.recv()
-            response = json.loads(response)
-            print(response, file=sys.stdout)
-            return "Received: " + str(response)
-            return response
     except Exception as e:
-        return f"An error occurred: {e}"
-
-@app.route('/api/test_websocket', methods=['GET'])
-def test_websocket_route():
-    return asyncio.run(websocket_test());
+        log.log(CMN_LL.ERR_LEVEL_ERROR, f"An error occurred {e}")
+        return f'An error occurred {e}', 500
