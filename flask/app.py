@@ -1,17 +1,12 @@
-
 # File imports
 import base64
 import json
-
-import numpy as np
 import requests
 import websockets
 from flask_cors import CORS
 from flask_socketio import SocketIO
 from google.cloud import storage
-from opencv import cv2
 from pymongo import MongoClient
-
 from flask import Flask, jsonify, request
 
 # ********************************************************* INIT SERVER **************************************************
@@ -21,27 +16,57 @@ socketio = SocketIO(app, logger=True)
 socketio.run(app, host='127.0.0.1', port=5001)
 CORS(app)
 
-# ********************************************************* DATABASE (INC) **************************************************
 
-# database with whoever does that
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
-# db = SQLAlchemy(app)
+# ********************************************************* API DATA INIT **************************************************
+environmental_apis = {
+    'Carbon Dioxide' : 'https://global-warming.org/api/co2-api',
+    'Methane' : 'https://global-warming.org/api/methane-api',
+    'Nitrous Oxide' : 'https://global-warming.org/api/nitrous-oxide-api',
+    'Ocean Temperature' : 'https://global-warming.org/api/ocean-warming-api'
+}
 
-# class User(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     username = db.Column(db.String(80), unique=True, nullable=False)
-#     password = db.Column(db.String(80), nullable=False)
+def format_data(data_name, data):
+        out = []
+        if data_name == 'Ocean Temperature':
+            result = data['result']
+            for key, value in result.items():
+                out.append(float(value))
+        else:
+            if data_name == 'Carbon Dioxide':
+                key = 'co2'
+            elif data_name == 'Methane':
+                key = 'methane'
+            elif data_name == 'Nitrous Oxide':
+                key = 'nitrous'
+            result = data[key]
+            for dict in result:
+                out.append(float(dict['trend']))
+        return out  
 
-### User NoSQL representation ###
-# User:
-# {
-#     "username": "string",
-#     "media": ["string"]
-# }
+# load environmental data
+def load_api_data(apis, output_file):
+    # Dictionary to store data from each API
+    api_data = {}
 
-CORS(app)
+    # Loop through each API URL
+    for api_name, api_url in apis.items():
+        try:
+            # Make GET request to API
+            response = requests.get(api_url)
+            data = response.json()  # Extract JSON data from response
+            data = format_data(api_name, data)
+            # Store data in dictionary with URL as key
+            api_data[api_name] = data
+        except Exception as e:
+            print(f"Failed to fetch data from {api_url}: {e}")
 
-API_KEY = '3x1ffNiowcASHEnfhbH7KkcylZTkRfQfytyyL4JE'
+    # Write API data to JSON file
+    with open(output_file, 'w') as f:
+        json.dump(api_data, f, indent=4)
+
+load_api_data(environmental_apis,'daily_data.json')  
+
+# ********************************************************* DATABASE ROUTER **************************************************
 
 # Initialize Google Cloud Storage client
 storage_client = storage.Client.from_service_account_json('gcp-key.json')
@@ -49,20 +74,7 @@ storage_client = storage.Client.from_service_account_json('gcp-key.json')
 MONGO_URI = 'mongodb+srv://malique-bodie:86zb67pNK3U3BgEt@art-gen.bxqjsqp.mongodb.net/?retryWrites=true&w=majority'
 db = MongoClient(MONGO_URI).test # Using test DB 
 collection = db["product"]
-
-
-
-# makes it so that the url is http://127.0.0.1:5000/api/????
-@app.route('/api/apod', methods=['GET', 'POST'])
-def api():
-    if request.method == 'GET':
-        request_data = requests.get('https://api.nasa.gov/planetary/apod?api_key=' + API_KEY)
-        requests.post('http://localhost:3000', data=request_data.json()['url'])
-        return request_data.json()['url']
-    else:
-        request_data = requests.get('https://api.nasa.gov/planetary/apod?api_key=' + API_KEY)
-        return request_data.json()['url']
-    
+      
 
 # Route to connect to Google Cloud API
 @app.route('/api/google-cloud', methods=['GET', 'POST'])
@@ -73,17 +85,10 @@ def google_cloud_api():
         return list(results['media'])
 
     else:
-        username, file, filetype = request.args.get('username'), request.files.get('media'), request.args.get('filetype')
+        username, file, filetype = request.args.get('username'), request.files.get('media'), request.args.get('filetype') # edit request to include thumbnail and video
         # Upload the file to Google Cloud Storage
         pub_url = gcs_upload_media(file, filetype)
-        if filetype == 'video/mp4':
-            # calculate thumbnail
-            thumbnail = extract_first_frame(file.stream)
-            # upload to gcp
-            thumbnail_url = gcs_upload_thumbnail(thumbnail, file.filename.split("/")[-1].split('.')[0]+'-thumbnail.jpeg')
-            new_media = (thumbnail_url,pub_url)
-        else: 
-            new_media = (pub_url,pub_url)
+        new_media = (pub_url,pub_url)
 
         # check if user exists in db
         user = collection.find_one({'username': username})
@@ -96,7 +101,7 @@ def google_cloud_api():
             user = {'username': username, 'media': [new_media]}
             collection.insert_one(user)
             
-        return jsonify({'message': 'Image uploaded successfully', 'username': username, 'filename': file.filename.split("/")[-1].split('.')[0]+'-thumbnail.jpeg'}), 200
+        return jsonify({'message': 'Media uploaded successfully', 'username': username}), 200
     
 # function to upload file to GCS
 def gcs_upload_media(file : str, type):
@@ -106,41 +111,6 @@ def gcs_upload_media(file : str, type):
     blob.upload_from_file(file.stream)
     public_url: str = blob.public_url
     return public_url
-
-# function to upload file to GCS
-def gcs_upload_thumbnail(file_stream,filename):
-    bucket = storage_client.bucket('artgen-storage')
-    blob: storage.Blob = bucket.blob(filename)
-    blob.content_type = "image/jpeg"
-    blob.upload_from_file(file_stream)
-    public_url: str = blob.public_url
-    return public_url
-
-def extract_first_frame(mp4_stream):
-    # Convert mp4 stream to bytes-like object
-    mp4_bytes = mp4_stream.read()
-    # Convert bytes-like object to numpy array
-    np_array = np.frombuffer(mp4_bytes, np.uint8)
-    # Decode video using OpenCV
-    video_capture = cv2.VideoCapture()
-    video_capture.open(np_array)
-    # Check if video capture is successful
-    if not video_capture.isOpened():
-        raise ValueError("Error: Unable to open video stream.")
-    # Read the first frame from the video
-    success, frame = video_capture.read()
-    # Check if frame is successfully read
-    if not success:
-        raise ValueError("Error: Unable to read first frame from video.")
-    # Release the video capture object
-    video_capture.release()
-    success, encoded_image = cv2.imencode('.jpg', frame)
-    if not success:
-        raise ValueError("Error: Unable to encode frame to JPEG format.")
-    # Convert encoded image to bytes
-    jpeg_bytes = encoded_image.tobytes()
-
-    return jpeg_bytes
 
 
 
