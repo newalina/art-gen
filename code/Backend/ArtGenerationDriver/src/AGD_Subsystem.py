@@ -11,24 +11,25 @@
 # Creation Date: April 14th, 2024
 #
 # Author: David Doan, Alec Pratt
+#
+# Copyright: GPL-3.0-or-later © Copyleft 2024 Alexander Pratt, Alina Kim, David Doan, Erik Wang, Gus LeTourneau, Malique Bodie, Yingjia Liu, Morgann Thain, momothain
 #       
 ##########################################################################
 
 # Public Modules
+import logging
+import os
 import sys
 import threading
 from collections import deque
-import logging
-import os
 
 # TODO: Remove this and generalize path loading
 sys.path.insert(0, 'c:/Users/pratt/Documents/Academics/Brown University/Courses/SP2024/CSCI2340/FinalProject/art-gen/code/Backend/Common/src/')
 
 # Project Modules
 from AGD_ArtGeneratorUnit import AGD_ArtGeneratorUnit
-from AGD_Definitions import AGD_Definitions as AGD_DEF;
-from CMN_ErrorLogging import CMN_LoggingLevels as CMN_LL
-from CMN_ErrorLogging import log
+from AGD_Definitions import AGD_Definitions as AGD_DEF
+
 
 # Class Definitions
 class AGD_Subsystem:
@@ -42,11 +43,11 @@ class AGD_Subsystem:
     #####################################################################
     def __init__(self):
         # expects a list of [modelSelection, param1, param2, param3]
-        self.generationQueue = deque();
-        self.generatedOutput = deque();
+        self.generationQueue = deque()
+        self.generatedOutput = deque()
 
         # init a thread to handle the generation queue
-        self.generationThread = threading.Thread(target=self.processGenerationQueue);
+        self.generationThread = threading.Thread(target=self.processGenerationQueue)
 
     #####################################################################
     # Function:     appendGenerationRequest
@@ -61,12 +62,12 @@ class AGD_Subsystem:
     def appendGenerationRequest(self, object) -> int:
 
         if( len(self.generationQueue) >= AGD_DEF.MAX_QUEUE_SIZE.value ):
-            print("ERROR: Unable to append to queue");
-            return -1;
+            print("ERROR: Unable to append to queue")
+            return -1
         else:
-            self.generationQueue.append(object);
+            self.generationQueue.append(object)
         
-        return 0;
+        return 0
 
     #####################################################################
     # Function:     popGenerationRequest
@@ -77,8 +78,8 @@ class AGD_Subsystem:
     # Outputs:      
     #####################################################################
     def popGenerationRequest(self):
-        logging.debug("Popping Generation Request");
-        return self.generationQueue.popleft();
+        logging.debug("Popping Generation Request")
+        return self.generationQueue.popleft()
 
     #####################################################################
     # Function:     checkIfFileExists
@@ -90,7 +91,7 @@ class AGD_Subsystem:
     # Outputs:      boolean - True if file is found, false if not found  
     #####################################################################
     def checkIfFileExists(self, path):
-        return os.path.isfile(path);
+        return os.path.isfile(path)
 
     #####################################################################
     # Function:     processGenerationQueue
@@ -104,16 +105,16 @@ class AGD_Subsystem:
         while(True):
             if( len(self.generationQueue) > 0 ):
 
-                a, param1, param2, param3 = self.popGenerationRequest();
-                artGenerator = AGD_ArtGeneratorUnit(a, param1, param2, param3);
-                artGenerator.writeToJSON();
-                artGenerator.startTouchDesigner();
+                a, param1, param2, param3 = self.popGenerationRequest()
+                artGenerator = AGD_ArtGeneratorUnit(a, param1, param2, param3)
+                artGenerator.writeToJSON()
+                artGenerator.startTouchDesigner()
 
                 # check if the file exists
                 while( not self.checkIfFileExists(artGenerator.pathToOutputData) ):
-                    pass;
+                    pass
 
-                self.generatedOutput.append(artGenerator);                
+                self.generatedOutput.append(artGenerator)                
 
     
 
