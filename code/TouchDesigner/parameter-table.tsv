@@ -1,0 +1,11 @@
+name,index,path,parameter,enable
+scalex,0,geo1,sx,1
+scaley,1,geo1,sy,1
+
+
+
+To export "DAT by Name", specify the name 
+of the channels in the DAT table and set
+the export method under the common tab to
+"DAT Table by Name". Then toggle the 
+CHOP's Export Flag on.
