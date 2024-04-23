@@ -14,6 +14,22 @@ function startRecording(stream) {
     };
 }
 
+function saveRecording() {
+    const blob = new Blob(recordedChunks, {
+        type: 'video/webm',
+    });
+
+    const formData = new FormData();
+    formData.append('video', blob);
+
+    // replace with url for save-image from backend
+    fetch('REPLACE WITH URL', {
+        method: 'POST',
+        
+    })
+
+}
+
 navigator.mediaDevices.getDisplayMedia({ video: true })
   .then(stream => startRecording(stream))
   .catch(console.error);
