@@ -5,5 +5,4 @@ List to Do (In Order of Importance):
 * Implement robust error logging in both Python and TD
 * Connect all patches to AGD
 * Create Garbage Collection Scheme
-* Create Requirements.txt install
 * Create guide to installing and running the backend
