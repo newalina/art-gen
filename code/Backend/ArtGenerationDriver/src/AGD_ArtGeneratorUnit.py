@@ -41,7 +41,7 @@ class AGD_ArtGeneratorUnit:
     #####################################################################
     def __init__(self, *args):
 
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.__init__: In")
+        log.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_ArtGeneratorUnit.__init__: In")
 
         if(len(args) == 4):
 
@@ -73,7 +73,7 @@ class AGD_ArtGeneratorUnit:
         else:
             log.log(CMN_LL.ERR_LEVEL_ERROR, "AGD_ArtGeneratorUnit.__init__: Invalid Attempt to Initialize Art Generator Object");
 
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit: Out")
+        log.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_ArtGeneratorUnit: Out")
 
 
     #####################################################################
@@ -85,7 +85,7 @@ class AGD_ArtGeneratorUnit:
     # Outputs:      None  
     #####################################################################
     def startTouchDesigner(self):
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.startTouchDesigner() in")
+        log.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_ArtGeneratorUnit.startTouchDesigner() in")
 
         executeString = CMN_DIR.TD_EXEC + " " + self.pathToPatch_;
         
@@ -97,7 +97,7 @@ class AGD_ArtGeneratorUnit:
         if(errCode.returncode != 0):
             print("ERROR: Unable to run Touch Designer with exit code: " + str(errCode.returncode));
         
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.startTouchDesigner() out")
+        log.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_ArtGeneratorUnit.startTouchDesigner() out")
     
     #####################################################################
     # Method:       updateArtGenerationData
@@ -107,8 +107,8 @@ class AGD_ArtGeneratorUnit:
     # Outputs:      None  
     #####################################################################
     def updateArtGenerationData(self):
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.updateArtGenerationData() in")
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.updateArtGenerationData() out")
+        log.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_ArtGeneratorUnit.updateArtGenerationData() in")
+        log.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_ArtGeneratorUnit.updateArtGenerationData() out")
         return None;
 
     #####################################################################
@@ -122,7 +122,7 @@ class AGD_ArtGeneratorUnit:
     #                data for Touch Designer processing.   
     #####################################################################
     def packageJSONData(self):
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.packagaeJSONData() in")
+        log.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_ArtGeneratorUnit.packagaeJSONData() in")
         jsonData = {};
 
         # Add Shared Data
@@ -165,7 +165,7 @@ class AGD_ArtGeneratorUnit:
             log.log(CMN_LL.ERR_LEVEL_ERROR, "AGD_ArtGeneratorUnit.packagaeJSONData() Unsupported Data to Package")
             return -1;
 
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.packagaeJSONData() out")
+        log.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_ArtGeneratorUnit.packagaeJSONData() out")
         return jsonData;
 
     #####################################################################
@@ -176,11 +176,11 @@ class AGD_ArtGeneratorUnit:
     # Outputs:      None
     #####################################################################
     def writeToJSON(self):
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.writeToJSON() in")
+        log.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_ArtGeneratorUnit.writeToJSON() in")
         jsonData = self.packageJSONData();
 
         with open(str(AGD_DIR.AGD_INPUT_JSON) , "w") as jsonFile:
             json.dump(jsonData, jsonFile);
 
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.writeToJSON() out")
+        log.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_ArtGeneratorUnit.writeToJSON() out")
         return 0;

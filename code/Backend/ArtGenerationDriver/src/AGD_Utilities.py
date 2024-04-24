@@ -17,7 +17,7 @@ import td;
 import sys;
 
 # Project Modules
-import TouchDesigner.Patches.TD_InitializePatch as TD_IP
+
 
 #####################################################################
 # Function:     onDone
@@ -32,7 +32,7 @@ import TouchDesigner.Patches.TD_InitializePatch as TD_IP
 # Outputs:      None  
 #####################################################################
 def onDone(timerOp, segment, interrupt):
-	sys.stdout.write("In Utilities with: " + str(TD_IP.TDLog.path_) + "\n");
+	sys.stdout.write("Exiting Program...\n");
 	quit();
 	return
 
