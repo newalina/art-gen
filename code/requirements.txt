@@ -1,1 +1,0 @@
-# Use this for Python Requirements including setuptools, td, readline( find right version), gitpython
