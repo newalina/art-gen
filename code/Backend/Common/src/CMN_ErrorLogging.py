@@ -15,9 +15,29 @@
 # Public Modules
 from enum import IntEnum
 import sys
+import os
 from datetime import datetime
 
 #from AGD_Definitions import AGD_Directories as AGD_DIR
+##########################################################################
+# Function:     findTopLevelDirectory
+# Purpose:      Find the top level directory of the project
+# Requirements: N/A
+# Inputs:       startPath - the path to start the search from       
+# Outputs:      currentPath - the path to the top level directory
+##########################################################################
+def findTopLevelDirectory(startPath):
+    currentPath = startPath
+    while currentPath != os.path.dirname(currentPath):
+        if os.path.basename(currentPath) == 'code':
+            return currentPath 
+    
+        currentPath = os.path.dirname(currentPath) 
+    return currentPath
+
+currentFilePath = os.path.abspath(__file__)
+artGenPath = findTopLevelDirectory(currentFilePath)
+sys.path.insert(0, artGenPath)
 
 # CLass Definitions
 class CMN_Logging:
@@ -31,7 +51,11 @@ class CMN_Logging:
     #####################################################################
     def __init__(self, threshold):
         # Need to generalize this path to be system independent. 
-        self.path = "c:\\Users\\pratt\\Documents\\Academics\\Brown University\\Courses\\SP2024\\CSCI2340\\FinalProject\\art-gen\\code\\Backend\\Common\\logs\\" + self.createTime(self.getTime()) + "_runLog.log";
+        # self.path = "c:\\Users\\pratt\\Documents\\Academics\\Brown University\\Courses\\SP2024\\CSCI2340\\FinalProject\\art-gen\\code\\Backend\\Common\\logs\\" + self.createTime(self.getTime()) + "_runLog.log";
+        # self.path = artGenPath + "\\Common\\" + self.createTime(self.getTime()) + "_runLog.log";
+        # print(artGenPath);
+        # self.path = f'{artGenPath}\Backend\Common\debugLog\{self.createTime(self.getTime())}_runLog.log';
+        self.path = os.path.join(artGenPath, "Backend", "Common", "debugLog", f'{self.createTime(self.getTime())}_runLog.log');
         self.threshold = threshold;
         self.file = None;
 
@@ -121,4 +145,4 @@ class CMN_LoggingLevels(IntEnum):
 
 
 # Instance of CMN_Logging Class to be used. 
-log = CMN_Logging(CMN_LoggingLevels.ERR_LEVEL_ALL);
+# log = CMN_Logging(CMN_LoggingLevels.ERR_LEVEL_ALL);

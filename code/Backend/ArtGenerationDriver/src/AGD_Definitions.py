@@ -93,7 +93,7 @@ class AGD_Definitions(Enum):
 #   AGD_LOGGING_PATH_BASE - Provides a path to to the error logs
 #    directory
 #####################################################################
-class AGD_Directories(StrEnum):
+class AGD_Directories(Enum):
     ROOT_DIR = getProjectRoot(os.getcwd());
     TD_DIR = '\\code\\TouchDesigner';
     TD_EXEC = getTouchDesignerExecutable();
@@ -134,7 +134,7 @@ class AGD_RecordingParameters(IntEnum):
 #   AGD_TD_PATCH_CONTROL - Node that controls the entire patch
 #   AGD_TD_PATCH_CONTROL_EXEC - Node that executes the control patch                   
 #####################################################################
-class AGD_TouchDesignerNodes(StrEnum):
+class AGD_TouchDesignerNodes(Enum):
     AGD_TD_RECORD_NODE = 'AGD_RecordOutput';
     AGD_TD_TIMER_NODE  = 'AGD_Timer';
     AGD_TD_TIMER_CALLBACK_NODE = 'AGD_TimerCallbacks'
@@ -157,3 +157,57 @@ class AGD_LengthUnits(IntEnum):
     LENGTH_UNIT_FRAMES  = 1
     LENGTH_UNIT_SECONDS = 2
 
+#####################################################################
+# Enum:         AGD_TouchDesignerPatch
+# Enum Type:    Enum
+# Description:  This enum contains the different patches that can
+#                be run in Touch Designer.  
+# Values:
+#   TD_PATCH_NONE - No Patch
+#   TD_PATCH_RESERVED_1 - Reserved Patch 1
+#   TD_PATCH_RESERVED_2 - Reserved Patch 2
+#   TD_PATCH_RESERVED_3 - Reserved Patch 3
+#   TD_PATCH_RESERVED_4 - Reserved Patch 4
+#   TD_PATCH_RESERVED_5 - Reserved Patch 5
+#   TD_PATCH_RESERVED_6 - Reserved Patch 6
+#   TD_PATCH_RESERVED_7 - Reserved Patch 7
+#   TD_PATCH_RESERVED_8 - Reserved Patch 8
+#   TD_PATCH_MAX_PATCH - Maximum Patch Number
+#   TD_PATCH_FILES - List of paths to the patches
+#####################################################################
+class AGD_TouchDesignerPatch(Enum):
+
+    #def __init__(Enum):
+    TD_PATCH_NONE       = 0;
+    TD_PATCH_RESERVED_1 = 1;
+    TD_PATCH_RESERVED_2 = 2;
+    TD_PATCH_RESERVED_3 = 3;
+    TD_PATCH_RESERVED_4 = 4;
+    TD_PATCH_RESERVED_5 = 5;
+    TD_PATCH_RESERVED_6 = 6;
+    TD_PATCH_RESERVED_7 = 7;
+    TD_PATCH_RESERVED_8 = 8;
+    TD_PATCH_MAX_PATCH  = 9;
+
+    TD_PATCH_FILES      = ['"' + AGD_Directories.ROOT_DIR.value + AGD_Directories.TD_DIR.value + '\\Patches\\none.toe"',
+                           '"' + AGD_Directories.ROOT_DIR.value + AGD_Directories.TD_DIR.value + '\\Patches\\hex-quakes.toe"',
+                           '"' + AGD_Directories.ROOT_DIR.value + AGD_Directories.TD_DIR.value + '\\Patches\\reserved-2.toe"',
+                           '"' + AGD_Directories.ROOT_DIR.value + AGD_Directories.TD_DIR.value + '\\Patches\\reserved-3.toe"',
+                           '"' + AGD_Directories.ROOT_DIR.value + AGD_Directories.TD_DIR.value + '\\Patches\\reserved-4.toe"',
+                           '"' + AGD_Directories.ROOT_DIR.value + AGD_Directories.TD_DIR.value + '\\Patches\\reserved-5.toe"',
+                           '"' + AGD_Directories.ROOT_DIR.value + AGD_Directories.TD_DIR.value + '\\Patches\\reserved-6.toe"',
+                           '"' + AGD_Directories.ROOT_DIR.value + AGD_Directories.TD_DIR.value + '\\Patches\\reserved-7.toe"',
+                           '"' + AGD_Directories.ROOT_DIR.value + AGD_Directories.TD_DIR.value + '\\Patches\\reserved-8.toe"']
+
+    @classmethod
+    def getPathToPatch(self, patchNumber):
+        # if(patchNumber < AGD_TouchDesignerPatch.TD_PATCH_MAX_PATCH.value):
+        #     return list(AGD_TouchDesignerPatch.TD_PATCH_FILES.value)[patchNumber];
+        # else:
+        #     print("ERROR: Cannot print");
+        #     return -1;
+        try:
+            return list(AGD_TouchDesignerPatch.TD_PATCH_FILES.value)[patchNumber];
+        except:
+            log.log(CMN_LL.ERR_LEVEL_ERROR, "AGD_TouchDesignerPatch.getPathToPatch() Unsupported Patch Number")
+            return -1;

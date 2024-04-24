@@ -22,15 +22,35 @@ import logging
 import os
 
 # TODO: Remove this and generalize path loading
-sys.path.insert(0, 'c:/Users/pratt/Documents/Academics/Brown University/Courses/SP2024/CSCI2340/FinalProject/art-gen/code/Backend/Common/src/')
+# sys.path.insert(0, 'c:/Users/pratt/Documents/Academics/Brown University/Courses/SP2024/CSCI2340/FinalProject/art-gen/code/Backend/Common/src/')
+def findTopLevelDirectory(startPath):
+    currentPath = startPath
+    while currentPath != os.path.dirname(currentPath):
+        if os.path.basename(currentPath) == 'code':
+            return currentPath 
+    
+        currentPath = os.path.dirname(currentPath) 
+    return currentPath
+
+currentFilePath = os.path.abspath(__file__)
+artGenPath = findTopLevelDirectory(currentFilePath)
+sys.path.insert(0, artGenPath)
 
 # Project Modules
-from AGD_ArtGeneratorUnit import AGD_ArtGeneratorUnit
-from AGD_Definitions import AGD_Definitions as AGD_DEF;
-from CMN_ErrorLogging import CMN_LoggingLevels as CMN_LL
-from CMN_ErrorLogging import log
+# from Backend.ArtGenerationDriver.src.AGD_ArtGeneratorUnit import AGD_ArtGeneratorUnit
+# from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_Definitions as AGD_DEF
+from Backend.Common.src.CMN_ErrorLogging import CMN_LoggingLevels as CMN_LL
 
-# Class Definitions
+##########################################################################
+#
+# Class: AGD_Subsystem
+#
+# Purpose: The purpose of this class is to contain the Art Generation
+#           Driver Subsystem class. This class is responsible for
+#           controlling the entirety of the Touch Designer interface,
+#           generating art, and returning art to the user.
+#
+##########################################################################
 class AGD_Subsystem:
 
     #####################################################################
@@ -40,12 +60,14 @@ class AGD_Subsystem:
     # Inputs:       self - current class member        
     # Outputs:      None  
     #####################################################################
-    def __init__(self):
+    def __init__(self, logger):
         # expects a list of [modelSelection, param1, param2, param3]
         self.generationQueue = deque();
         self.generatedOutput = deque();
+        self.logger = logger;
 
         # init a thread to handle the generation queue
+        self.logger.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.__init__: Starting Generation Thread");
         self.generationThread = threading.Thread(target=self.processGenerationQueue);
 
     #####################################################################
@@ -61,9 +83,10 @@ class AGD_Subsystem:
     def appendGenerationRequest(self, object) -> int:
 
         if( len(self.generationQueue) >= AGD_DEF.MAX_QUEUE_SIZE.value ):
-            print("ERROR: Unable to append to queue");
+            self.logger.log(CMN_LL.ERR_LEVEL_ERROR, "AGD_Subsystem.appendGenerationRequest: Queue is Full");
             return -1;
         else:
+            self.logger.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.appendGenerationRequest: Appending Generation Request");
             self.generationQueue.append(object);
         
         return 0;
@@ -77,7 +100,7 @@ class AGD_Subsystem:
     # Outputs:      
     #####################################################################
     def popGenerationRequest(self):
-        logging.debug("Popping Generation Request");
+        self.logger.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.popGenerationRequest: Popping Generation Request");
         return self.generationQueue.popleft();
 
     #####################################################################
@@ -90,6 +113,7 @@ class AGD_Subsystem:
     # Outputs:      boolean - True if file is found, false if not found  
     #####################################################################
     def checkIfFileExists(self, path):
+        self.logger.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.checkIfFileExists: Checking if File Exists");
         return os.path.isfile(path);
 
     #####################################################################
@@ -103,7 +127,7 @@ class AGD_Subsystem:
     def processGenerationQueue(self):
         while(True):
             if( len(self.generationQueue) > 0 ):
-
+                self.logger.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.processGenerationQueue: Processing Generation Queue");
                 a, param1, param2, param3 = self.popGenerationRequest();
                 artGenerator = AGD_ArtGeneratorUnit(a, param1, param2, param3);
                 artGenerator.writeToJSON();
@@ -113,10 +137,8 @@ class AGD_Subsystem:
                 while( not self.checkIfFileExists(artGenerator.pathToOutputData) ):
                     pass;
 
-                self.generatedOutput.append(artGenerator);                
-
-    
-
+                self.generatedOutput.append(artGenerator);
+                self.logger.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.processGenerationQueue: File Found and Added to Output Queue");
 
 # Need to determine if current exit strategy is OK, or if we want a more SW heavy approach using personally declared files.
 #   This does not need to be OOP. Could use helper functions to determine if too much data in folder, program is stopped recording,

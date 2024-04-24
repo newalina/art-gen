@@ -19,7 +19,7 @@ from google.cloud import storage
 import cv2
 from pymongo import MongoClient
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file, send_from_directory, url_for
 
 # move to a common file eventually
 import sys
@@ -35,7 +35,7 @@ import os
 def findTopLevelDirectory(startPath):
     currentPath = startPath
     while currentPath != os.path.dirname(currentPath):
-        if os.path.basename(currentPath) == 'art-gen':
+        if os.path.basename(currentPath) == 'code':
             return currentPath 
     
         currentPath = os.path.dirname(currentPath) 
@@ -45,20 +45,26 @@ currentFilePath = os.path.abspath(__file__)
 artGenPath = findTopLevelDirectory(currentFilePath)
 sys.path.insert(0, artGenPath)
 
-from projectCode.Backend.ArtGenerationDriver.src import AGD_Subsystem
-from projectCode.Backend.Common.src.CMN_ErrorLogging import CMN_LoggingLevels as CMN_LL
-from projectCode.Backend.Common.src.CMN_ErrorLogging import log
+from Backend.ArtGenerationDriver.src.AGD_Subsystem import AGD_Subsystem
+from Backend.Common.src.CMN_ErrorLogging import CMN_LoggingLevels as CMN_LL, CMN_Logging
+from Backend.Common.src.CMN_StorageMonitor import CMN_StorageMonitor
 
 # Open the log file
-log.openFile()
+logging = CMN_Logging(CMN_LL.ERR_LEVEL_DEBUG)
+logging.openFile()
+
+# Storage Monitor initialization
+storageMonitor = CMN_StorageMonitor(artGenPath + '/projectCode/Backend/Common/debugLogs', artGenPath + '/projectCode/Backend/ArtGenerationDriver/data')
 
 # ########################### INIT SERVER ################################
-log.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the Subsystem")
-artSubSystem = AGD_Subsystem()
-log.log(CMN_LL.ERR_LEVEL_DEBUG, "Subsystem started")
+logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the Subsystem")
+artSubSystem = AGD_Subsystem(logging)
+logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Subsystem started")
+
+ART_GENERATION_ID = 0
 
 # Initialize the Flask app
-log.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the Flask Server")
+logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the Flask Server")
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'artgen-secret-key-csci2340'
 socketio = SocketIO(app, logger=True)
@@ -68,20 +74,20 @@ socketio.run(app,
 
 # Enable CORS to allow requests from the frontend
 CORS(app)
-log.log(CMN_LL.ERR_LEVEL_DEBUG, "Server started")
+logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Server started")
 
 # ############################ DATABASE INIT #############################
 # Initialize Google Cloud Storage client
-log.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the Google Cloud Storage Client")
+logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the Google Cloud Storage Client")
 storage_client = storage.Client.from_service_account_json('gcp-key.json')
 
 # MongoDB connection 
-log.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the MongoDB Client")
+logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the MongoDB Client")
 MONGO_URI = 'mongodb+srv://malique-bodie:86zb67pNK3U3BgEt@art-gen.bxqjsqp.mongodb.net/?retryWrites=true&w=majority'
 db = MongoClient(MONGO_URI).test # Using test DB 
 collection = db["product"]
 
-log.log(CMN_LL.ERR_LEVEL_DEBUG, "Database initialized")
+logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Database initialized")
 
 # ###############################  GCP ###################################
 # Route to connect to Google Cloud API
@@ -178,36 +184,73 @@ def extract_first_frame(mp4_stream):
 # Outputs:      None, sends the generated art to the frontend
 ##########################################################################
 
-@app.route('/api/artGeneration', methods=['GET'])
+# Helper function to increment and get the current ART_GENERATION_ID
+def get_next_art_generation_id():
+    global ART_GENERATION_ID
+    ART_GENERATION_ID += 1
+    return ART_GENERATION_ID
+
+@app.route('/api/artGeneration', methods=['GET', 'POST'])
 def artGeneration():
-    log.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation Endpoint requested")
+    logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation Endpoint requested")
+    artGenerationId = get_next_art_generation_id()
+    
     try:
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "Getting user data from request")        
-        userData = request.json
-        modelSelection = userData['modelSelection']
-        slider1Value = userData['slider1']
-        slider2Value = userData['slider2']
-        slider3Value = userData['slider3']
+        logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Getting user data from request")  
+        modelSelection = slider1Value = slider2Value = slider3Value = 0
+        if request.method == 'GET':
+            logging.log(CMN_LL.ERR_LEVEL_DEBUG, "GET request")
+            modelSelection = request.args.get('modelSelection')
+            slider1Value = request.args.get('slider1Value')
+            slider2Value = request.args.get('slider2Value')
+            slider3Value = request.args.get('slider3Value')
+            logging.log(CMN_LL.ERR_LEVEL_DEBUG, f"Model Selection: {modelSelection}, Slider 1: {slider1Value}, Slider 2: {slider2Value}, Slider 3: {slider3Value}")
         
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "Appending generation request to queue")
+        logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Appending generation request to queue")
         curLen = len(artSubSystem.generatedOutput)
-        artSubSystem.appendGenerationRequest([modelSelection, slider1Value, slider2Value, slider3Value])
+
+        # to work with TouchDesigner Potentially, @Alec
+        # artSubSystem.appendGenerationRequest([modelSelection, slider1Value, slider2Value, slider3Value])
 
         # wait for the art to be generated
-        while len(artSubSystem.generatedOutput) == curLen:
-            pass
+        # while len(artSubSystem.generatedOutput) == curLen:
+        #     pass
         
-        generatedArtPath = artSubSystem.popleft().pathToOutputData
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation completed")
+        # generatedArtPath = artSubSystem.generatedOutput.popleft().pathToOutputData
+        logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation completed")
 
-        requests.post('http://localhost:3000', data=generatedArtPath)
+        videoUrl = url_for('get_video', filename=f'artGenerationOutput_{artGenerationId}.mov', _external=True)
 
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation sent to frontend")
-        # upload the generated art to GCS (add caching elements in the future?)
-        # gcs_upload_media(generated_art.pathToOutputData, 'video/mp4')
-        # gcs_upload_thumbnail(generated_art.pathToOutputData, 'image/jpeg')
-        return 'artGenerated'
-    
+        # old method of sending data directly to frontend
+        # filePath = f'{artGenPath}/Backend/ArtGenerationDriver/data/artGenerationOutput_{artGenerationId}.mov'
+
+        # with open(filePath, 'rb') as f:
+        #     # file = {'file': (filePath, f, 'video/mp4')}
+        #     # requests.post('http://localhost:3000', files=file)
+        
+        requests.post('http://localhost:3000', data=videoUrl)
+
+        logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation sent to frontend")
+
+        # return send_file(artGenPath + f'/Backend/ArtGenerationDriver/data/artGenerationOutput_{artGenerationId}.mov', mimetype='video/mp4')
+        return jsonify({'message': 'Art generated successfully', 'videoUrl': videoUrl}), 200
     except Exception as e:
-        log.log(CMN_LL.ERR_LEVEL_ERROR, f"An error occurred {e}")
+        logging.log(CMN_LL.ERR_LEVEL_ERROR, f"An error occurred {e}")
         return f'An error occurred {e}', 500
+
+# host the videos as urls
+@app.route('/videos/<filename>')
+def get_video(filename):
+    # return send_file(f'{artGenPath}/Backend/ArtGenerationDriver/data/{filename}', mimetype='video/mp4')
+    response = send_from_directory(f'{artGenPath}/Backend/ArtGenerationDriver/data', filename)
+    response.headers['Content-Type'] = 'video/mp4'
+    response.headers['Accept-Ranges'] = 'bytes' 
+    response.headers['Content-Disposition'] = 'inline; filename="{}"'.format(filename)
+    return response
+    
+if __name__ == '__main__':
+    app.run(debug=True)
+    logging.closeFile()
+    storageMonitor.stop()
+    logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Server closed")
+    sys.exit(0)
