@@ -13,13 +13,13 @@
 ##########################################################################
 
 # Public Modules
-from enum import IntEnum, StrEnum
+from enum import IntEnum
 import sys
 import os
 from datetime import datetime
 
 from Backend.Common.src.CMN_Definitions import CMN_Directories as CMN_DIR
-from Backend.Common.src.CMN_Definitions import CMN_LoggingLevels as CMN_LL
+# from Backend.Common.src.CMN_Definitions import CMN_LoggingLevels as CMN_LL
 from Backend.Common.src.CMN_Definitions import CMN_LoggingDomain as CMN_LD
 # CLass Definitions
 class CMN_Logging:
@@ -35,10 +35,10 @@ class CMN_Logging:
 
         if(domain == CMN_LD.CMN_LOG_DOMAIN_BE):
             # Global Logging for Backend / AGD
-            self.path_ = CMN_DIR.LOGGING_PATH_BASE + "backend_runLog_" + self.createTime(self.getTime()) + ".log";
+            self.path_ = str(CMN_DIR.LOGGING_PATH_BASE) + "backend_runLog_" + self.createTime(self.getTime()) + ".log";
         else:
             # Logging for Touch Designer
-            self.path_ = CMN_DIR.LOGGING_PATH_BASE + "touch_designer_runLog_" + self.createTime(self.getTime()) + ".log";
+            self.path_ = str(CMN_DIR.LOGGING_PATH_BASE) + "touch_designer_runLog_" + self.createTime(self.getTime()) + ".log";
 
         self.threshold_ = threshold;
         self.file_ = None;

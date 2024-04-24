@@ -24,7 +24,7 @@ from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_TouchDesignerNod
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_Directories as AGD_DIR
 
 from Backend.BackEndCommandInterface.flask.app import logging as log
-from Backend.Common.src.CMN_ErrorLogging import CMN_LoggingLevels as CMN_LL
+from Backend.Common.src.CMN_Definitions import CMN_LoggingLevels as CMN_LL
 
 
 ##########################################################################

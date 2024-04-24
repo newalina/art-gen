@@ -46,11 +46,12 @@ artGenPath = findTopLevelDirectory(currentFilePath)
 sys.path.insert(0, artGenPath)
 
 from Backend.ArtGenerationDriver.src.AGD_Subsystem import AGD_Subsystem
-from Backend.Common.src.CMN_ErrorLogging import CMN_LoggingLevels as CMN_LL, CMN_Logging
+from Backend.Common.src.CMN_Definitions import CMN_LoggingLevels as CMN_LL
+from Backend.Common.src.CMN_ErrorLogging import CMN_Logging
 from Backend.Common.src.CMN_StorageMonitor import CMN_StorageMonitor
 
 # Open the log file
-logging = CMN_Logging(CMN_LL.ERR_LEVEL_DEBUG)
+logging = CMN_Logging(CMN_LL.ERR_LEVEL_DEBUG, 'BE')
 logging.openFile()
 
 # Storage Monitor initialization
@@ -207,7 +208,7 @@ def artGeneration():
             logging.log(CMN_LL.ERR_LEVEL_DEBUG, f"Model Selection: {modelSelection}, Slider 1: {slider1Value}, Slider 2: {slider2Value}, Slider 3: {slider3Value}")
         
         logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Appending generation request to queue")
-        curLen = len(artSubSystem.generatedOutput)
+        curLen = len(artSubSystem.generatedOutput_)
 
         # to work with TouchDesigner Potentially, @Alec
         # artSubSystem.appendGenerationRequest([modelSelection, slider1Value, slider2Value, slider3Value])
@@ -216,7 +217,7 @@ def artGeneration():
         # while len(artSubSystem.generatedOutput) == curLen:
         #     pass
         
-        # generatedArtPath = artSubSystem.generatedOutput.popleft().pathToOutputData
+        # generatedArtPath = artSubSystem.generatedOutput_.popleft().pathToOutputData
         logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation completed")
 
         videoUrl = url_for('get_video', filename=f'artGenerationOutput_{artGenerationId}.mov', _external=True)

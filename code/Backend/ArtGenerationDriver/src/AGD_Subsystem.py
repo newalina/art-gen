@@ -25,7 +25,7 @@ import os
 from Backend.ArtGenerationDriver.src.AGD_ArtGeneratorUnit import AGD_ArtGeneratorUnit
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_Definitions as AGD_DEF;
 from Backend.Common.src.CMN_Definitions import CMN_LoggingLevels as CMN_LL
-from Backend.Common.src.CMN_ErrorLogging import log
+# from Backend.Common.src.CMN_ErrorLogging import log
 
 ##########################################################################
 #
@@ -115,7 +115,7 @@ class AGD_Subsystem:
             if( len(self.generationQueue_) > 0 ):
                 self.logger.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.processGenerationQueue: Processing Generation Queue");
                 a, param1, param2, param3 = self.popGenerationRequest();
-                artGenerator = AGD_ArtGeneratorUnit(a, param1, param2, param3);
+                artGenerator = AGD_ArtGeneratorUnit(a, param1, param2, param3, self.logger);
                 artGenerator.writeToJSON();
                 artGenerator.startTouchDesigner();
 

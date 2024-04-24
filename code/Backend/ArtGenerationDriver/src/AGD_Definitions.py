@@ -14,7 +14,7 @@
 # Public Modules
 import git
 import os
-from enum import Enum, IntEnum, StrEnum
+from enum import Enum, IntEnum
 from shutil import which
 
 # Project Modules
@@ -48,8 +48,8 @@ class AGD_Definitions(Enum):
 #   AGD_OUTPUT_FILE_BASE - Provides a string that is the base of any
 #    art generation output file
 #####################################################################
-class AGD_Directories(StrEnum):
-    AGD_DATA_DIR = CMN_DIR.ROOT_DIR + '\\code\\Backend\\ArtGenerationDriver\\data';
+class AGD_Directories(Enum):
+    AGD_DATA_DIR = str(CMN_DIR.ROOT_DIR) + '\\code\\Backend\\ArtGenerationDriver\\data';
     AGD_INPUT_JSON = AGD_DATA_DIR + '\\artGenerationDataInput.json';
     AGD_OUTPUT_JSON = AGD_DATA_DIR + '\\artGenerationDataOutput.json';
     AGD_OUTPUT_FILE_BASE = '\\artGenerationOutput_';
@@ -141,15 +141,15 @@ class AGD_TouchDesignerPatch(Enum):
     TD_PATCH_RESERVED_8 = 8;
     TD_PATCH_MAX_PATCH  = 9;
 
-    TD_PATCH_FILES      = ['"' + AGD_Directories.ROOT_DIR.value + AGD_Directories.TD_DIR.value + '\\Patches\\none.toe"',
-                           '"' + AGD_Directories.ROOT_DIR.value + AGD_Directories.TD_DIR.value + '\\Patches\\hex-quakes.toe"',
-                           '"' + AGD_Directories.ROOT_DIR.value + AGD_Directories.TD_DIR.value + '\\Patches\\reserved-2.toe"',
-                           '"' + AGD_Directories.ROOT_DIR.value + AGD_Directories.TD_DIR.value + '\\Patches\\reserved-3.toe"',
-                           '"' + AGD_Directories.ROOT_DIR.value + AGD_Directories.TD_DIR.value + '\\Patches\\reserved-4.toe"',
-                           '"' + AGD_Directories.ROOT_DIR.value + AGD_Directories.TD_DIR.value + '\\Patches\\reserved-5.toe"',
-                           '"' + AGD_Directories.ROOT_DIR.value + AGD_Directories.TD_DIR.value + '\\Patches\\reserved-6.toe"',
-                           '"' + AGD_Directories.ROOT_DIR.value + AGD_Directories.TD_DIR.value + '\\Patches\\reserved-7.toe"',
-                           '"' + AGD_Directories.ROOT_DIR.value + AGD_Directories.TD_DIR.value + '\\Patches\\reserved-8.toe"']
+    TD_PATCH_FILES      = ['"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\none.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\hex-quakes.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\reserved-2.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\reserved-3.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\reserved-4.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\reserved-5.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\reserved-6.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\reserved-7.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\reserved-8.toe"']
 
     @classmethod
     def getPathToPatch(self, patchNumber):
