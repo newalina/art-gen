@@ -14,7 +14,7 @@
 # Public Modules
 import git
 import os
-from enum import Enum, IntEnum
+from enum import StrEnum, IntEnum, Enum
 from shutil import which
 
 # Project Modules
@@ -48,7 +48,7 @@ class AGD_Definitions(Enum):
 #   AGD_OUTPUT_FILE_BASE - Provides a string that is the base of any
 #    art generation output file
 #####################################################################
-class AGD_Directories(Enum):
+class AGD_Directories(StrEnum):
     AGD_DATA_DIR = str(CMN_DIR.ROOT_DIR) + '\\code\\Backend\\ArtGenerationDriver\\data';
     AGD_INPUT_JSON = AGD_DATA_DIR + '\\artGenerationDataInput.json';
     AGD_OUTPUT_JSON = AGD_DATA_DIR + '\\artGenerationDataOutput.json';
@@ -86,7 +86,7 @@ class AGD_RecordingParameters(IntEnum):
 #   AGD_TD_PATCH_CONTROL - Node that controls the entire patch
 #   AGD_TD_PATCH_CONTROL_EXEC - Node that executes the control patch                   
 #####################################################################
-class AGD_TouchDesignerNodes(Enum):
+class AGD_TouchDesignerNodes(StrEnum):
     AGD_TD_RECORD_NODE = 'AGD_RecordOutput';
     AGD_TD_TIMER_NODE  = 'AGD_Timer';
     AGD_TD_TIMER_CALLBACK_NODE = 'AGD_TimerCallbacks'
@@ -161,5 +161,11 @@ class AGD_TouchDesignerPatch(Enum):
         try:
             return list(AGD_TouchDesignerPatch.TD_PATCH_FILES.value)[patchNumber];
         except:
-            log.log(CMN_LL.ERR_LEVEL_ERROR, "AGD_TouchDesignerPatch.getPathToPatch() Unsupported Patch Number")
+            #log.log(CMN_LL.ERR_LEVEL_ERROR, "AGD_TouchDesignerPatch.getPathToPatch() Unsupported Patch Number")
             return -1;
+
+
+# Count of # of args needed for each init type
+class AGD_UnitInitializationTypes(IntEnum):
+    AGD_UIT_DATA = 5
+    AGD_UIT_JSON = 1

@@ -1,5 +1,5 @@
 import git
-from enum import IntEnum, Enum
+from enum import IntEnum, StrEnum
 from shutil import which
 import os
 
@@ -18,7 +18,7 @@ import os
 #   LOGGING_PATH_BASE - Contains the directory where common logs are
 #    to be written.
 #####################################################################
-class CMN_Directories(Enum):
+class CMN_Directories(StrEnum):
 
     #####################################################################
     # Method:       get_project_root
@@ -86,3 +86,4 @@ class CMN_LoggingLevels(IntEnum):
 class CMN_LoggingDomain(IntEnum):
     CMN_LOG_DOMAIN_BE   = 0
     CMN_LOG_DOMAIN_TD   = 1
+    CMN_LOG_DOMAIN_UT   = 2

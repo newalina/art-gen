@@ -36,10 +36,15 @@ class CMN_Logging:
         if(domain == CMN_LD.CMN_LOG_DOMAIN_BE):
             # Global Logging for Backend / AGD
             self.path_ = str(CMN_DIR.LOGGING_PATH_BASE) + "backend_runLog_" + self.createTime(self.getTime()) + ".log";
-        else:
+        elif(domain == CMN_LD.CMN_LOG_DOMAIN_TD):
             # Logging for Touch Designer
             self.path_ = str(CMN_DIR.LOGGING_PATH_BASE) + "touch_designer_runLog_" + self.createTime(self.getTime()) + ".log";
-
+        elif(domain == CMN_LD.CMN_LOG_DOMAIN_UT):
+            # Logging for Unit Tests
+            self.path_ = str(CMN_DIR.LOGGING_PATH_BASE) + "unit_test_runLog_" + self.createTime(self.getTime()) + ".log";
+        else:
+            print("ERROR");
+        
         self.threshold_ = threshold;
         self.file_ = None;
                

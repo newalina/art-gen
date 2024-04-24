@@ -50,10 +50,10 @@ class AGD_Subsystem:
         # expects a list of [modelSelection, param1, param2, param3]
         self.generationQueue_ = deque();
         self.generatedOutput_ = deque();
-        self.logger = logger;
+        self.logger_ = logger;
 
         # init a thread to handle the generation queue
-        self.logger.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.__init__: Starting Generation Thread");
+        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.__init__: Starting Generation Thread");
         self.generationThread_ = threading.Thread(target=self.processGenerationQueue);
 
     #####################################################################
@@ -69,10 +69,10 @@ class AGD_Subsystem:
     def appendGenerationRequest(self, object) -> int:
 
         if( len(self.generationQueue) >= AGD_DEF.MAX_QUEUE_SIZE.value ):
-            self.logger.log(CMN_LL.ERR_LEVEL_ERROR, "AGD_Subsystem.appendGenerationRequest: Queue is Full");
+            self.logger_.log(CMN_LL.ERR_LEVEL_ERROR, "AGD_Subsystem.appendGenerationRequest: Queue is Full");
             return -1;
         else:
-            self.logger.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.appendGenerationRequest: Appending Generation Request");
+            self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.appendGenerationRequest: Appending Generation Request");
             self.generationQueue_.append(object);
         
         return 0;
@@ -86,7 +86,7 @@ class AGD_Subsystem:
     # Outputs:      
     #####################################################################
     def popGenerationRequest(self):
-        self.logger.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.popGenerationRequest: Popping Generation Request");
+        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.popGenerationRequest: Popping Generation Request");
         return self.generationQueue_.popleft();
 
     #####################################################################
@@ -99,7 +99,7 @@ class AGD_Subsystem:
     # Outputs:      boolean - True if file is found, false if not found  
     #####################################################################
     def checkIfFileExists(self, path):
-        self.logger.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.checkIfFileExists: Checking if File Exists");
+        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.checkIfFileExists: Checking if File Exists");
         return os.path.isfile(path);
 
     #####################################################################
@@ -113,7 +113,7 @@ class AGD_Subsystem:
     def processGenerationQueue(self):
         while(True):
             if( len(self.generationQueue_) > 0 ):
-                self.logger.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.processGenerationQueue: Processing Generation Queue");
+                self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.processGenerationQueue: Processing Generation Queue");
                 a, param1, param2, param3 = self.popGenerationRequest();
                 artGenerator = AGD_ArtGeneratorUnit(a, param1, param2, param3, self.logger);
                 artGenerator.writeToJSON();
@@ -124,7 +124,7 @@ class AGD_Subsystem:
                     pass;
 
                 self.generationQueue_.append(artGenerator);
-                self.logger.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.processGenerationQueue: File Found and Added to Output Queue");
+                self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.processGenerationQueue: File Found and Added to Output Queue");
 
 # Need to determine if current exit strategy is OK, or if we want a more SW heavy approach using personally declared files.
 #   This does not need to be OOP. Could use helper functions to determine if too much data in folder, program is stopped recording,

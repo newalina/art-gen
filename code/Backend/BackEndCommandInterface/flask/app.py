@@ -47,11 +47,12 @@ sys.path.insert(0, artGenPath)
 
 from Backend.ArtGenerationDriver.src.AGD_Subsystem import AGD_Subsystem
 from Backend.Common.src.CMN_Definitions import CMN_LoggingLevels as CMN_LL
+from Backend.Common.src.CMN_Definitions import CMN_LoggingDomain as CMN_LD
 from Backend.Common.src.CMN_ErrorLogging import CMN_Logging
 from Backend.Common.src.CMN_StorageMonitor import CMN_StorageMonitor
 
 # Open the log file
-logging = CMN_Logging(CMN_LL.ERR_LEVEL_DEBUG, 'BE')
+logging = CMN_Logging(CMN_LL.ERR_LEVEL_DEBUG, CMN_LD.CMN_LOG_DOMAIN_BE)
 logging.openFile()
 
 # Storage Monitor initialization

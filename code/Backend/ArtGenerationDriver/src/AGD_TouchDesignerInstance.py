@@ -23,7 +23,7 @@ from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_RecordingParamet
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_TouchDesignerNodes as AGD_TDN
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_Directories as AGD_DIR
 
-from Backend.BackEndCommandInterface.flask.app import logging as log
+#from Backend.BackEndCommandInterface.flask.app import logging as log
 from Backend.Common.src.CMN_Definitions import CMN_LoggingLevels as CMN_LL
 
 
@@ -56,7 +56,7 @@ class AGD_TouchDesignerInstance:
     
         self.readFromJSON();
     
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.__init__: Init complete")
+        #log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.__init__: Init complete")
 
     #####################################################################
     # Method:       run
@@ -67,7 +67,7 @@ class AGD_TouchDesignerInstance:
     # Outputs:      None  
     #####################################################################
     def run(self):
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.run: beginning run")
+        #log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.run: beginning run")
         self.initializeTouchDesigner();
 
         self.startArtGeneration();
@@ -76,7 +76,7 @@ class AGD_TouchDesignerInstance:
         #  Ideally it would be nice to use a class method to handle the stopping of recording cleanly, and then exiting.
         #  THe current implementation works for now.
         self.startGenerationDelay();
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.run: run complete")
+        #log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.run: run complete")
 
     #####################################################################
     # Method:       initializeTouchDesigner
@@ -87,7 +87,7 @@ class AGD_TouchDesignerInstance:
     # Outputs:      None  
     #####################################################################
     def initializeTouchDesigner(self):
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.initializeTouchDesigner: initializing Touch Designer")
+        #log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.initializeTouchDesigner: initializing Touch Designer")
         # Initialize Recording Node
 
         td.op(AGD_TDN.AGD_TD_RECORD_NODE).par.record = AGD_RP.AGD_RECORDING_OFF.value;
@@ -103,7 +103,7 @@ class AGD_TouchDesignerInstance:
         # Initialize Timer Trigger
         td.op(AGD_TDN.AGD_TD_TIMER_TRIGGER).par.const0value = 0;
 
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.initializeTouchDesigner: Touch Designer initialized")
+        #log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.initializeTouchDesigner: Touch Designer initialized")
         return 0;
 
     #####################################################################
@@ -115,7 +115,7 @@ class AGD_TouchDesignerInstance:
     #####################################################################
     def startArtGeneration(self):
         # Enable output recording
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.startArtGeneration: starting art generation")
+        #log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.startArtGeneration: starting art generation")
         td.op(AGD_TDN.AGD_TD_RECORD_NODE).par.record = AGD_RP.AGD_RECORDING_ON.value;
         return 0;
 
@@ -130,7 +130,7 @@ class AGD_TouchDesignerInstance:
     def startGenerationDelay(self):
         # Start the timer
         td.op(AGD_TDN.AGD_TD_TIMER_TRIGGER).par.const0value = 1;
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.startGenerationDelay: starting generation after delay")
+        #log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.startGenerationDelay: starting generation after delay")
     
     #####################################################################
     # Method:       stopArtGeneration
@@ -142,7 +142,7 @@ class AGD_TouchDesignerInstance:
     def stopArtGeneration(self):
         # Disable output recording
         td.op(AGD_TDN.AGD_TD_RECORD_NODE).par.record = AGD_RP.AGD_RECORDING_OFF.value;
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.stopArtGeneration: stopping art generation")
+        #log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.stopArtGeneration: stopping art generation")
         return 0;
 
     #####################################################################
@@ -153,7 +153,7 @@ class AGD_TouchDesignerInstance:
     # Outputs:      None  
     #####################################################################
     def readFromJSON(self):
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.readFromJSON: reading in data from JSON")
+        #log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.readFromJSON: reading in data from JSON")
         with open(str(AGD_DIR.AGD_INPUT_JSON), "r") as jsonFile:
             jsonData = json.load(jsonFile);
 
@@ -173,5 +173,5 @@ class AGD_TouchDesignerInstance:
             else:
                 print("WARNING: " + str(key) + " is not supported");
         
-        log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.readFromJSON: read in data from JSON")
+        #log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.readFromJSON: read in data from JSON")
         return 0;
