@@ -62,7 +62,7 @@ logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the Subsystem")
 artSubSystem = AGD_Subsystem(logging)
 logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Subsystem started")
 
-ART_GENERATION_ID = 0
+ART_GENERATION_ID = -1
 
 # Initialize the Flask app
 logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the Flask Server")
