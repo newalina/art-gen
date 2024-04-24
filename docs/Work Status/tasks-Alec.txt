@@ -1,1 +1,8 @@
 // Status of work for Alec
+
+List to Do (In Order of Importance):
+* Integrate Backend into AGD + TD
+* Implement robust error logging in both Python and TD
+* Connect all patches to AGD
+* Create Garbage Collection Scheme
+* Create guide to installing and running the backend

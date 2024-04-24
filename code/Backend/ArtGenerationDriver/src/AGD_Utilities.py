@@ -16,6 +16,9 @@
 import td;
 import sys;
 
+# Project Modules
+
+
 #####################################################################
 # Function:     onDone
 # Purpose:      A function used by the timer tracking generation
@@ -29,7 +32,7 @@ import sys;
 # Outputs:      None  
 #####################################################################
 def onDone(timerOp, segment, interrupt):
-	sys.stdout.write("TRACE: TouchDesigner Closing...\n");
+	sys.stdout.write("Exiting Program...\n");
 	quit();
 	return
 
