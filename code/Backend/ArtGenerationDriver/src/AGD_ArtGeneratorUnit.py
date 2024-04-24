@@ -15,16 +15,14 @@
 
 # Public Modules
 from subprocess import run
-import sys;
 import json
-# TODO: Remove this and generalize path loading
-sys.path.insert(0, 'c:/Users/pratt/Documents/Academics/Brown University/Courses/SP2024/CSCI2340/FinalProject/art-gen/code/Backend/Common/src/')
 
 # Project Modules
-from AGD_TouchDesignerPatch import AGD_TouchDesignerPatch as AGD_TDP
-from AGD_Definitions import AGD_Directories as AGD_DIR
-from CMN_ErrorLogging import CMN_LoggingLevels as CMN_LL
-from CMN_ErrorLogging import log
+from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_Directories as AGD_DIR
+from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_TouchDesignerPatch as AGD_TDP
+from Backend.Common.src.CMN_Definitions import CMN_Directories as CMN_DIR
+from Backend.Common.src.CMN_Definitions import CMN_LoggingLevels as CMN_LL
+from Backend.Common.src.CMN_ErrorLogging import log
 
 # Class Definitions
 class AGD_ArtGeneratorUnit:
@@ -32,7 +30,7 @@ class AGD_ArtGeneratorUnit:
     instance_id_ = 0;
 
     #####################################################################
-    # Function:     __init__
+    # Method:       __init__
     # Purpose:      Initialize a new instance of the AGD_ArtGeneratorUnit
     #                class. 
     # Requirements: N/A
@@ -47,24 +45,24 @@ class AGD_ArtGeneratorUnit:
 
         if(len(args) == 4):
 
-            self.artDriverID = args[0];
-            self.paramX = args[1];
-            self.paramY = args[2];
-            self.paramZ = args[3];
+            self.instance_id_ = AGD_ArtGeneratorUnit.instance_id_;
+            AGD_ArtGeneratorUnit.instance_id_ = AGD_ArtGeneratorUnit.instance_id_ + 1;
 
-            self.pathToPatch = AGD_TDP.getPathToPatch(self.artDriverID);
-            self.pathToOutputData = AGD_DIR.AGD_DATA_DIR + AGD_DIR.AGD_OUTPUT_FILE_BASE + str(self.instance_id_) + '.mov'; # Can make more robust file extensions.
+            self.artDriverID_ = args[0];
+            self.paramX_ = args[1];
+            self.paramY_ = args[2];
+            self.paramZ_ = args[3];
+
+            self.pathToPatch_ = AGD_TDP.getPathToPatch(self.artDriverID_);
+            self.pathToOutputData_ = AGD_DIR.AGD_DATA_DIR + AGD_DIR.AGD_OUTPUT_FILE_BASE + str(self.instance_id_) + '.mov'; # Can make more robust file extensions.
             # Store required parameters for generation here?
 
 
             # Store Art Generation Output Here?
-            self.generatedOutput = 0;
+            self.generatedOutput_ = 0;
 
-            if(self.pathToPatch == -1):
+            if(self.pathToPatch_ == -1):
                 log.log(CMN_LL.ERR_LEVEL_ERROR, "AGD_ArtGeneratorUnit.__init__: Unable to properly initialize object " + str(self.instance_id_));
-
-            self.instance_id_ = AGD_ArtGeneratorUnit.instance_id_;
-            AGD_ArtGeneratorUnit.instance_id_ = AGD_ArtGeneratorUnit.instance_id_ + 1;
 
             log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.__init__: Created object " + str(self.instance_id_));
 
@@ -79,7 +77,7 @@ class AGD_ArtGeneratorUnit:
 
 
     #####################################################################
-    # Function:     startTouchDesigner
+    # Method:       startTouchDesigner
     # Purpose:      Start a Touch Designer instance using the data of this
     #                class. 
     # Requirements: N/A
@@ -89,7 +87,7 @@ class AGD_ArtGeneratorUnit:
     def startTouchDesigner(self):
         log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.startTouchDesigner() in")
 
-        executeString = AGD_DIR.TD_EXEC + " " + self.pathToPatch;
+        executeString = CMN_DIR.TD_EXEC + " " + self.pathToPatch_;
         
         # Before Running, we need to pull in all data here that will be used to manipulate
         self.updateArtGenerationData();
@@ -102,7 +100,7 @@ class AGD_ArtGeneratorUnit:
         log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.startTouchDesigner() out")
     
     #####################################################################
-    # Function:     updateArtGenerationData
+    # Method:       updateArtGenerationData
     # Purpose:      Update class member data from external API JSON Files
     # Requirements: N/A
     # Inputs:       self - current class member       
@@ -114,7 +112,7 @@ class AGD_ArtGeneratorUnit:
         return None;
 
     #####################################################################
-    # Function:     packageJSONData
+    # Method:       packageJSONData
     # Purpose:      Create a JSON object that is used to store the 
     #                parameters of this class. This is the data that is
     #                accessed in Touch Designer. 
@@ -129,38 +127,38 @@ class AGD_ArtGeneratorUnit:
 
         # Add Shared Data
         jsonData["eventID"] = self.instance_id_;
-        jsonData["moduleID"] = self.artDriverID;
-        jsonData["ParamX"] = self.paramX;
-        jsonData["ParamY"] = self.paramY;
-        jsonData["ParamZ"] = self.paramZ;
-        jsonData["OutputPath"] = self.pathToOutputData;
+        jsonData["moduleID"] = self.artDriverID_;
+        jsonData["ParamX"] = self.paramX_;
+        jsonData["ParamY"] = self.paramY_;
+        jsonData["ParamZ"] = self.paramZ_;
+        jsonData["OutputPath"] = self.pathToOutputData_;
 
         # Add Driver Specific Data
-        if(self.artDriverID == AGD_TDP.TD_PATCH_RESERVED_1.value):
+        if(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_1.value):
             jsonData["SEA"] = "SAW";
 
-        elif(self.artDriverID == AGD_TDP.TD_PATCH_RESERVED_2.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_2.value):
             jsonData["WOODS"] = "BURN";
 
-        elif(self.artDriverID == AGD_TDP.TD_PATCH_RESERVED_3.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_3.value):
             jsonData["ICE"] = "T";
 
-        elif(self.artDriverID == AGD_TDP.TD_PATCH_RESERVED_4.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_4.value):
             jsonData["TRASH"] = "CAN";
 
-        elif(self.artDriverID == AGD_TDP.TD_PATCH_RESERVED_5.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_5.value):
             jsonData["RES"] = "5";
 
-        elif(self.artDriverID == AGD_TDP.TD_PATCH_RESERVED_6.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_6.value):
             jsonData["RES"] = "6";
 
-        elif(self.artDriverID == AGD_TDP.TD_PATCH_RESERVED_7.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_7.value):
             jsonData["RES"] = "7";
 
-        elif(self.artDriverID == AGD_TDP.TD_PATCH_RESERVED_8.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_8.value):
             jsonData["RES"] = "8";
 
-        elif(self.artDriverID == AGD_TDP.TD_PATCH_NONE.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_NONE.value):
             log.log(CMN_LL.ERR_LEVEL_WARNING, "AGD_ArtGeneratorUnit.packagaeJSONData() NONE Mode is for debug and development purposes")
             jsonData["NONE"] = "True";
         else:
@@ -171,7 +169,7 @@ class AGD_ArtGeneratorUnit:
         return jsonData;
 
     #####################################################################
-    # Function:     writeToJSON
+    # Method:       writeToJSON
     # Purpose:      Write a JSON object to file
     # Requirements: N/A
     # Inputs:       self - current class member       
@@ -186,8 +184,3 @@ class AGD_ArtGeneratorUnit:
 
         log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.writeToJSON() out")
         return 0;
-    
-
-
-
-

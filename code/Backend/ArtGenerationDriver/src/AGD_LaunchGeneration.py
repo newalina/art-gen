@@ -20,16 +20,19 @@
 import sys
 import td
 # TODO: Remove the need for adding sys path
-sys.path.insert(0, 'c:/Users/pratt/Documents/Academics/Brown University/Courses/SP2024/CSCI2340/FinalProject/art-gen/code/Backend/ArtGenerationDriver/src/')
-# THIS SHOULD PROBABLY BE CALLED PATCH CONTROl    
-
+#sys.path.insert(0, 'c:/Users/pratt/Documents/Academics/Brown University/Courses/SP2024/CSCI2340/FinalProject/art-gen/code/Backend/ArtGenerationDriver/src/')
+ 
+# THIS SHOULD PROBABLY BE CALLED PATCH CONTROl   
 # Project Modules
-from AGD_TouchDesignerInstance import AGD_TouchDesignerInstance;
+from Backend.ArtGenerationDriver.src.AGD_TouchDesignerInstance import AGD_TouchDesignerInstance;
 
+# Confirm this works in touch designer
 artGenInstance = AGD_TouchDesignerInstance();
-    
+
 sys.stdout.write("\n\n***Starting New Instance***\n");
 
-sys.stdout.write("Launch Gen for: " + str(artGenInstance.artDriverID) + "\n")
+sys.stdout.write("Launch Gen for: " + str(artGenInstance.artDriverID_) + "\n")
 
 artGenInstance.run();
+
+sys.stdout.write("In Launch Generation\n");
