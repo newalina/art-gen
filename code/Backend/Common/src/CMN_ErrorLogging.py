@@ -13,56 +13,41 @@
 ##########################################################################
 
 # Public Modules
-from enum import IntEnum
+from enum import IntEnum, StrEnum
 import sys
 import os
 from datetime import datetime
 
-#from AGD_Definitions import AGD_Directories as AGD_DIR
-##########################################################################
-# Function:     findTopLevelDirectory
-# Purpose:      Find the top level directory of the project
-# Requirements: N/A
-# Inputs:       startPath - the path to start the search from       
-# Outputs:      currentPath - the path to the top level directory
-##########################################################################
-def findTopLevelDirectory(startPath):
-    currentPath = startPath
-    while currentPath != os.path.dirname(currentPath):
-        if os.path.basename(currentPath) == 'code':
-            return currentPath 
-    
-        currentPath = os.path.dirname(currentPath) 
-    return currentPath
-
-currentFilePath = os.path.abspath(__file__)
-artGenPath = findTopLevelDirectory(currentFilePath)
-sys.path.insert(0, artGenPath)
-
+from Backend.Common.src.CMN_Definitions import CMN_Directories as CMN_DIR
+from Backend.Common.src.CMN_Definitions import CMN_LoggingLevels as CMN_LL
+from Backend.Common.src.CMN_Definitions import CMN_LoggingDomain as CMN_LD
 # CLass Definitions
 class CMN_Logging:
 
     #####################################################################
-    # Function:     __init__
+    # Method:     __init__
     # Purpose:      Initialize a new instance of the CMN_Logging class
     # Requirements: N/A
     # Inputs:       self - current class member        
     # Outputs:      None  
     #####################################################################
-    def __init__(self, threshold):
-        # Need to generalize this path to be system independent. 
-        # self.path = "c:\\Users\\pratt\\Documents\\Academics\\Brown University\\Courses\\SP2024\\CSCI2340\\FinalProject\\art-gen\\code\\Backend\\Common\\logs\\" + self.createTime(self.getTime()) + "_runLog.log";
-        # self.path = artGenPath + "\\Common\\" + self.createTime(self.getTime()) + "_runLog.log";
-        # print(artGenPath);
-        # self.path = f'{artGenPath}\Backend\Common\debugLog\{self.createTime(self.getTime())}_runLog.log';
-        self.path = os.path.join(artGenPath, "Backend", "Common", "debugLog", f'{self.createTime(self.getTime())}_runLog.log');
-        self.threshold = threshold;
-        self.file = None;
+    def __init__(self, threshold, domain):
 
+        if(domain == CMN_LD.CMN_LOG_DOMAIN_BE):
+            # Global Logging for Backend / AGD
+            self.path_ = CMN_DIR.LOGGING_PATH_BASE + "backend_runLog_" + self.createTime(self.getTime()) + ".log";
+        else:
+            # Logging for Touch Designer
+            self.path_ = CMN_DIR.LOGGING_PATH_BASE + "touch_designer_runLog_" + self.createTime(self.getTime()) + ".log";
+
+        self.threshold_ = threshold;
+        self.file_ = None;
+               
+        # This could be moved 
         self.prepend = [", ERROR: ", ", WARNING: ", ", DEBUG: "," TRACE:" ]; 
 
     #####################################################################
-    # Function:     getTime
+    # Method:     getTime
     # Purpose:      Get the current time
     # Requirements: N/A
     # Inputs:       self - current class member        
@@ -72,7 +57,7 @@ class CMN_Logging:
         return datetime.now();
 
     #####################################################################
-    # Function:     createTime
+    # Method:     createTime
     # Purpose:      Format the time to be used for a filename
     # Requirements: N/A
     # Inputs:       self - current class member    
@@ -84,7 +69,7 @@ class CMN_Logging:
             + f"{time.hour:02}" + '.' + f"{time.minute:02}" + '.' + f"{time.second:02}" + '.' + str(time.microsecond);
 
     #####################################################################
-    # Function:     log
+    # Method:     log
     # Purpose:      Log a message to file
     # Requirements: N/A
     # Inputs:       self - current class member    
@@ -93,56 +78,35 @@ class CMN_Logging:
     # Outputs:      None  
     #####################################################################
     def log(self, level, message):
-        if(level <= self.threshold):
+        if(level <= self.threshold_):
             # Create string to write to file
             # Want the date, error level, message
             logString = str(self.getTime()) + self.prepend[level] + message + "\n";
 
-            self.file.write(logString);
+            self.file_.write(logString);
         return
 
     #####################################################################
-    # Function:     openFile
+    # Method:     openFile
     # Purpose:      Open file to write to
     # Requirements: N/A
     # Inputs:       self - current class member    
     # Outputs:      None  
     #####################################################################
     def openFile(self):
-        self.file = open(self.path, "w");
+        self.file_ = open(self.path_, "w");
 
     #####################################################################
-    # Function:     closeFile
+    # Method:     closeFile
     # Purpose:      Close file that is being written to
     # Requirements: N/A
     # Inputs:       self - current class member    
     # Outputs:      None  
     #####################################################################
     def closeFile(self):
-        self.file.close();
+        self.file_.close();
 
-
-#####################################################################
-# Enum:         CMN_LoggingLevels
-# Enum Type:    IntEnum
-# Description:  This enum contains the logging levels that can be 
-#                used in the Art Generator Project. Review the 
-#                guide to learn about how to use these logging 
-#                levels. 
-# Values:
-#   ERR_LEVEL_ERROR - Error Logging Level
-#   ERR_LEVEL_WARNING - Warning Logging Level
-#   ERR_LEVEL_DEBUG - Debug Logging Level
-#   ERR_LEVEL_TRACE - Trace Logging Level
-#   ERR_LEVEL_ALL - Logging level enabling all logging.              
-#####################################################################
-class CMN_LoggingLevels(IntEnum):
-    ERR_LEVEL_ERROR     = 0
-    ERR_LEVEL_WARNING   = 1
-    ERR_LEVEL_DEBUG     = 2
-    ERR_LEVEL_TRACE     = 3
-    ERR_LEVEL_ALL       = 4 
 
 
 # Instance of CMN_Logging Class to be used. 
-# log = CMN_Logging(CMN_LoggingLevels.ERR_LEVEL_ALL);
+# log = CMN_Logging(CMN_LL.ERR_LEVEL_ALL, CMN_LD.CMN_LOG_DOMAIN_BE);

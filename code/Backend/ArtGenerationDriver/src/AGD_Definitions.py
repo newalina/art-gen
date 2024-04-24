@@ -17,46 +17,8 @@ import os
 from enum import Enum, IntEnum, StrEnum
 from shutil import which
 
-
 # Project Modules
-
-
-#####################################################################
-# Function:     getProjectRoot
-# Purpose:      Find the root of the github repo that this project
-#                is being run in. 
-# Requirements: N/A
-# Inputs:       path - The path to the current working directory.        
-# Outputs:      Path to root of GitHub Repository  
-#####################################################################
-def getProjectRoot(path):
-    git_repo = git.Repo(path, search_parent_directories=True)
-    git_root = str(git_repo.git.rev_parse("--show-toplevel"))
-
-    # Do some manipulation of string to make it windows compatible
-    return git_root.replace('/', '\\');
-
-
-
-#####################################################################
-# Function:     getTouchDesignerExecutable
-# Purpose:      Find the path to the Touch Designer executable on 
-#                the current machine. 
-# Requirements: N/A
-# Inputs:       None      
-# Outputs:      Path to the Touch Designer executable
-#####################################################################
-def getTouchDesignerExecutable():
-    # Only works if TD is on the PATH of machine executing this command. Hopefully there is a better
-    #  way to do this
-    try:
-        # Do some manipulation of string to cover any potential issues of
-        #  spaces in path.
-        return '"' + str(which("TouchDesigner")) + '"';
-    except:
-        print("ERROR: Failed to Find Touch Designer Executable. Is it on your PATH?");
-        return None;
-
+from Backend.Common.src.CMN_Definitions import CMN_Directories as CMN_DIR
 
 #####################################################################
 # Enum:         AGD_Definitions
@@ -77,11 +39,6 @@ class AGD_Definitions(Enum):
 #                that are used in different capacities in the Art
 #                Generation Driver. 
 # Values:
-#   ROOT_DIR - Contains the root directory of the GitHub Repository
-#   TD_DIR - Contains the directory of the Touch Designer relative
-#    to ROOT_DIR.
-#   TD_EXEC - Contains the directory to the installed Touch Desginer
-#    Executable.
 #   AGD_DATA_DIR - Contains the path to the Art Generation Driver 
 #    data directory
 #   AGD_INPUT_JSON - Contains the path to the Art Generation Driver
@@ -90,18 +47,13 @@ class AGD_Definitions(Enum):
 #    output JSON file
 #   AGD_OUTPUT_FILE_BASE - Provides a string that is the base of any
 #    art generation output file
-#   AGD_LOGGING_PATH_BASE - Provides a path to to the error logs
-#    directory
 #####################################################################
-class AGD_Directories(Enum):
-    ROOT_DIR = getProjectRoot(os.getcwd());
-    TD_DIR = '\\code\\TouchDesigner';
-    TD_EXEC = getTouchDesignerExecutable();
-    AGD_DATA_DIR = ROOT_DIR + '\\code\\Backend\\ArtGenerationDriver\\data';
+class AGD_Directories(StrEnum):
+    AGD_DATA_DIR = CMN_DIR.ROOT_DIR + '\\code\\Backend\\ArtGenerationDriver\\data';
     AGD_INPUT_JSON = AGD_DATA_DIR + '\\artGenerationDataInput.json';
     AGD_OUTPUT_JSON = AGD_DATA_DIR + '\\artGenerationDataOutput.json';
     AGD_OUTPUT_FILE_BASE = '\\artGenerationOutput_';
-    AGD_LOGGING_PATH_BASE = ROOT_DIR + '\\code\\Backend\\Common\\logs'
+
 
 #####################################################################
 # Enum:         AGD_RecordingParameters
