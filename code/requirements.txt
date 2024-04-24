@@ -1,1 +1,5 @@
-# Use this for Python Requirements including setuptools, td, readline( find right version), gitpython
+# Requirements needed for Backend Code
+setuptools>=69.1.0
+GitPython>=3.1.43
+pyreadline3>=3.4.1
+td>=0.4
