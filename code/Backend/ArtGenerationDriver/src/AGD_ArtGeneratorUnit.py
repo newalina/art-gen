@@ -90,8 +90,7 @@ class AGD_ArtGeneratorUnit:
         self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.startTouchDesigner() in")
 
         executeString = str(CMN_DIR.TD_EXEC) + " " + self.pathToPatch_;
-        print(executeString)
-
+        
         # Before Running, we need to pull in all data here that will be used to manipulate
         self.updateArtGenerationData();
 
