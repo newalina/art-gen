@@ -8,6 +8,7 @@ import ImageUpload from './generator/components/ImageUpload';
 import Home from './home-page/pages/Home'
 import ControlPanel from './control-panel/pages/control-panel';
 import UserProfile from './user-profile/pages/UserProfile'
+import Generator from './generator/pages/Generator'
 
 const App = () => {
 
@@ -29,6 +30,10 @@ const App = () => {
 
       <Route path="/user" exact>
         <UserProfile />
+      </Route>
+
+      <Route path="/generator" exact>
+        <Generator />
       </Route>
 
       <Redirect to="/home" />
