@@ -1,0 +1,162 @@
+.button-link {
+    text-decoration: none; /* Removes underline from the link */
+    color: inherit; /* The color will be inherited from the parent element */
+}
+
+.container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center; /* Centers children horizontally */
+    height:100%;
+    margin: 0px;
+    padding: 20px;
+    background-color: #181818;
+}
+
+.text {
+    font-family: Inter;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 48.41px;
+    text-align: center;
+    margin-bottom: 50px;
+    color: #FFFFFF;
+}
+
+.button {
+    background-color: #3E3E3E;
+    width: 126px;
+    height: 46px;
+    border-radius: 999px;
+    opacity: 1px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s, transform 0.2s; /* transition for the click effect */
+
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 19.36px;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.button:active {
+    background-color: #2D2D2D;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2); /* pressed effect */
+    transform: translateY(2px);
+}
+
+.media-popup-g {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.media-popup-content-g {
+    position: relative;
+    background: transparent;
+    width: 100%;
+    height: 100%;
+}
+
+.close-btn-g {
+    position: absolute;
+    top: 26%;
+    right: 25%;
+    z-index: 101;
+}
+
+.video-js-g {
+    width: 100%;
+    height: auto;
+    transform: translate(0%, 0%);
+    z-index: 100;
+}
+
+.video-js-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: auto;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+}
+
+.media-controls-g {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    top: 85%;
+    right: 50%;
+    transform: translate(50%);
+    z-index: 101;
+    width: 120px;
+    height: 60px;
+    gap: 10px;
+    padding: 0px 0px 0px 0px;
+    border-radius: 90px;
+    background-color: #99999995;
+    opacity: .7;
+    transition: opacity .3s linear;
+}
+
+.media-controls-g:hover{
+    opacity: 1
+}
+
+.camera-icon {
+    cursor: pointer
+}
+
+.record-icon {
+    cursor: pointer;
+}
+
+.record-icon-path {
+    fill: white;
+}
+
+.recording {
+    transition: fill .3s linear;
+    fill: red;
+}
+
+@keyframes flash {
+    0% {
+        opacity: 0;
+    }
+
+    20% {
+        opacity: .6;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+.flash-overlay {
+    position:fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 101;
+    opacity: 0;
+    background-color: white ;
+    pointer-events: none;
+}
+
+.screenshotting {
+    animation: flash .7s ease-in-out;
+}
+
+video::-webkit-media-controls-panel {
+    background-image: linear-gradient(transparent, transparent) !important;
+}

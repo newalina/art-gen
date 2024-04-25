@@ -11,16 +11,16 @@
 #       
 ##########################################################################
 # File imports
-import numpy as np
 import requests
 from flask_cors import CORS
 from flask_socketio import SocketIO
 from google.cloud import storage
-import cv2
 from pymongo import MongoClient
-from time import sleep
-
+from moviepy.editor import VideoFileClip
+from PIL import Image
+import json
 from flask import Flask, jsonify, request, send_file, send_from_directory, url_for
+
 
 # move to a common file eventually
 import sys
@@ -92,6 +92,53 @@ collection = db["product"]
 
 logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Database initialized")
 
+# ********************************************************* API DATA INIT **************************************************
+environmental_apis = {
+    'Carbon Dioxide' : 'https://global-warming.org/api/co2-api',
+    'Methane' : 'https://global-warming.org/api/methane-api',
+    'Nitrous Oxide' : 'https://global-warming.org/api/nitrous-oxide-api',
+    'Ocean Temperature' : 'https://global-warming.org/api/ocean-warming-api'
+}
+
+def format_data(data_name, data):
+        out = []
+        if data_name == 'Ocean Temperature':
+            result = data['result']
+            for key, value in result.items():
+                out.append(float(value))
+        else:
+            if data_name == 'Carbon Dioxide':
+                key = 'co2'
+            elif data_name == 'Methane':
+                key = 'methane'
+            elif data_name == 'Nitrous Oxide':
+                key = 'nitrous'
+            result = data[key]
+            for dict in result:
+                out.append(float(dict['trend']))
+        return out  
+
+# load environmental data
+def load_api_data(apis, output_file):
+    # Dictionary to store data from each API
+    api_data = {}
+
+    # Loop through each API URL
+    for api_name, api_url in apis.items():
+        try:
+            # Make GET request to API
+            response = requests.get(api_url)
+            data = response.json()  # Extract JSON data from response
+            data = format_data(api_name, data)
+            # Store data in dictionary with URL as key
+            api_data[api_name] = data
+        except Exception as e:
+            print(f"Failed to fetch data from {api_url}: {e}")
+
+    # Write API data to JSON file
+    with open(output_file, 'w') as f:
+        json.dump(api_data, f, indent=4)
+
 # ###############################  GCP ###################################
 # Route to connect to Google Cloud API
 @app.route('/api/google-cloud', methods=['GET', 'POST'])
@@ -102,17 +149,25 @@ def google_cloud_api():
         return list(results['media'])
 
     else:
-        username, file, filetype = request.args.get('username'), request.files.get('media'), requests.args.get('filetype')
-        # Upload the file to Google Cloud Storage
-        pub_url = gcs_upload_media(file, filetype)
-        if filetype == 'video/mp4':
-            # calculate thumbnail
-            thumbnail = extract_first_frame(file.stream)
-            # upload to gcp
-            thumbnail_url = gcs_upload_thumbnail(thumbnail, file) # how to convert from jpg to file
-            new_media = (thumbnail_url,pub_url)
-        else: 
-            new_media = (pub_url,pub_url)
+        username, source, isVideo, timestamp = request.args.get('username'), request.args.get('source'), bool(request.args.get('isVideo')), int(request.args.get('timestamp')) # isVideo: Bool, username: Str, source: Str, timeStamp: int
+        
+        # define video and thumbnail files
+        video_output_filename, thumbnail_output_filename  = "trimmed_video.mp4","thumbnail.jpg"        
+        
+        # trim video
+        trim_video(source,timestamp,10,video_output_filename)
+        
+        # Upload the trimmed video file to Google Cloud Storage
+        video_url = gcs_upload_media(video_output_filename, 'video/mp4')
+
+        # generate thumbnail
+        generate_thumbnail(source,thumbnail_output_filename,timestamp)
+
+        # Upload the trimmed video file to Google Cloud Storage
+        thumbnail_url = gcs_upload_media(thumbnail_output_filename, 'image/jpg')
+
+        # Format MongoDB output
+        new_media = (thumbnail_url,video_url,isVideo) # (thumbnail, video, is_video)
 
         # check if user exists in db
         user = collection.find_one({'username': username})
@@ -125,51 +180,75 @@ def google_cloud_api():
             user = {'username': username, 'media': [new_media]}
             collection.insert_one(user)
             
-        return jsonify({'message': 'Image uploaded successfully', 'username': username}), 200
+        return jsonify({'message': 'Media uploaded successfully', 'username': username}), 200
+   
     
-# function to upload file to GCS
-def gcs_upload_media(file : str, type):
+"""
+Uploads a media file to Google Cloud Storage and returns its public URL.
+
+Parameters:
+    file (str): The path to the file to be uploaded.
+    type (str): The content type of the file (e.g., 'image/jpeg').
+
+Returns:
+    str: The public URL of the uploaded file.
+"""
+def gcs_upload_media(file, type):
     bucket = storage_client.bucket('artgen-storage')
-    blob: storage.Blob = bucket.blob(file.filename.split("/")[-1])
-    blob.content_type = type # example: 'image/jpeg'
-    blob.upload_from_file(file.stream)
+    blob: storage.Blob = bucket.blob(file.split("/")[-1])
+    blob.content_type = type 
+    blob.upload_from_filename(file)
     public_url: str = blob.public_url
     return public_url
 
-# function to upload file to GCS
-def gcs_upload_thumbnail(file_stream,file):
-    bucket = storage_client.bucket('artgen-storage')
-    blob: storage.Blob = bucket.blob(file.filename.split("/")[-1]+'-thumbnail')
-    blob.content_type = type # example: 'image/jpeg'
-    blob.upload_from_file(file_stream)
-    public_url: str = blob.public_url
-    return public_url
+"""
+Trim a video from the specified start time to the end time and save it to the output path.
 
-def extract_first_frame(mp4_stream):
-    # Convert mp4 stream to bytes-like object
-    mp4_bytes = mp4_stream.read()
-    # Convert bytes-like object to numpy array
-    np_array = np.frombuffer(mp4_bytes, np.uint8)
-    # Decode video using OpenCV
-    video_capture = cv2.VideoCapture()
-    video_capture.open(np_array)
-    # Check if video capture is successful
-    if not video_capture.isOpened():
-        raise ValueError("Error: Unable to open video stream.")
-    # Read the first frame from the video
-    success, frame = video_capture.read()
-    # Check if frame is successfully read
-    if not success:
-        raise ValueError("Error: Unable to read first frame from video.")
-    # Release the video capture object
-    video_capture.release()
-    success, encoded_image = cv2.imencode('.jpg', frame)
-    if not success:
-        raise ValueError("Error: Unable to encode frame to JPEG format.")
-    # Convert encoded image to bytes
-    jpeg_bytes = encoded_image.tobytes()
+Parameters:
+    input_file (str): The path to the input video file.
+    start_time (float): The start time in seconds for trimming the video.
+    duration (float): The duration in seconds for trimming the video.
+    output_file (str): The path to save the trimmed video.
 
-    return jpeg_bytes
+    Returns:
+        None
+"""
+def trim_video(input_file, start_time, duration, output_file):
+    # Load the video clip
+    video_clip = VideoFileClip(input_file)
+
+    # Trim the video to the specified duration
+    trimmed_clip = video_clip.subclip(start_time, start_time + duration)
+
+    # Save the trimmed video
+    trimmed_clip.write_videofile(output_file)
+
+"""
+Generate a thumbnail image for a video at the specified time.
+
+Parameters:
+    video_path (str): The path to the input video file.
+    output_path (str): The path to save the generated thumbnail image.
+    time (float): The time in seconds at which to capture the thumbnail.
+
+Returns:
+    None
+"""
+def generate_thumbnail(video_path, output_path, time):
+    # Load the video clip
+    video_clip = VideoFileClip(video_path)
+
+    # Capture a frame at the specified time
+    thumbnail = video_clip.get_frame(time)
+
+    # Convert frame (numpy array) to image
+    thumbnail = Image.fromarray(thumbnail)
+
+    # Save the thumbnail image
+    thumbnail.save(output_path)
+
+    # Close the video clip
+    video_clip.close()
 
 
 # ######################## ART GENERATION ENDPOINT #######################
