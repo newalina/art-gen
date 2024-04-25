@@ -55,7 +55,7 @@ class AGD_Subsystem:
         # init a thread to handle the generation queue
         self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.__init__: Starting Generation Thread");
         self.generationThread_ = threading.Thread(target=self.processGenerationQueue);
-
+        self.generationThread_.start();
     #####################################################################
     # Method:       appendGenerationRequest
     # Purpose:      Add an AGD_ArtGeneratorUnit object to the queue for
@@ -68,7 +68,7 @@ class AGD_Subsystem:
     #####################################################################
     def appendGenerationRequest(self, object) -> int:
 
-        if( len(self.generationQueue) >= AGD_DEF.MAX_QUEUE_SIZE.value ):
+        if( len(self.generationQueue_) >= AGD_DEF.MAX_QUEUE_SIZE.value ):
             self.logger_.log(CMN_LL.ERR_LEVEL_ERROR, "AGD_Subsystem.appendGenerationRequest: Queue is Full");
             return -1;
         else:
@@ -111,19 +111,20 @@ class AGD_Subsystem:
     # Outputs:      None
     #####################################################################
     def processGenerationQueue(self):
+        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.processGenerationQueue: in");        
         while(True):
             if( len(self.generationQueue_) > 0 ):
-                self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.processGenerationQueue: Processing Generation Queue");
+                self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.processGenerationQueue: processing new unit"); 
                 a, param1, param2, param3 = self.popGenerationRequest();
-                artGenerator = AGD_ArtGeneratorUnit(a, param1, param2, param3, self.logger);
+                artGenerator = AGD_ArtGeneratorUnit(a, param1, param2, param3, self.logger_);
                 artGenerator.writeToJSON();
                 artGenerator.startTouchDesigner();
 
                 # check if the file exists
-                while( not self.checkIfFileExists(artGenerator.pathToOutputData) ):
+                while( not self.checkIfFileExists(artGenerator.pathToOutputData_) ):
                     pass;
 
-                self.generationQueue_.append(artGenerator);
+                self.generatedOutput_.append(artGenerator);
                 self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.processGenerationQueue: File Found and Added to Output Queue");
 
 # Need to determine if current exit strategy is OK, or if we want a more SW heavy approach using personally declared files.

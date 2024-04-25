@@ -19,7 +19,8 @@ from pymongo import MongoClient
 from moviepy.editor import VideoFileClip
 from PIL import Image
 import json
-from flask import Flask, jsonify, request, send_from_directory, url_for
+from flask import Flask, jsonify, request, send_file, send_from_directory, url_for
+
 
 # move to a common file eventually
 import sys
@@ -279,7 +280,7 @@ def artGeneration():
     try:
         logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Getting user data from request")  
         modelSelection = slider1Value = slider2Value = slider3Value = 0
-        if request.method == 'GET':
+        if request.method == 'POST':
             logging.log(CMN_LL.ERR_LEVEL_DEBUG, "GET request")
             modelSelection = request.args.get('modelSelection')
             slider1Value = request.args.get('slider1Value')
@@ -291,16 +292,16 @@ def artGeneration():
         curLen = len(artSubSystem.generatedOutput_)
 
         # to work with TouchDesigner Potentially, @Alec
-        # artSubSystem.appendGenerationRequest([modelSelection, slider1Value, slider2Value, slider3Value])
+        artSubSystem.appendGenerationRequest([modelSelection, slider1Value, slider2Value, slider3Value])
 
         # wait for the art to be generated
-        # while len(artSubSystem.generatedOutput) == curLen:
-        #     pass
-        
+        while len(artSubSystem.generatedOutput_) == curLen:
+            pass
+
         # generatedArtPath = artSubSystem.generatedOutput_.popleft().pathToOutputData
         logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation completed")
 
-        videoUrl = url_for('get_video', filename=f'artGenerationOutput_{artGenerationId}.mov', _external=True)
+        videoUrl = url_for('get_video', filename=f'artGenerationOutput_{artGenerationId}.mov',  _external=True)
 
         # old method of sending data directly to frontend
         # filePath = f'{artGenPath}/Backend/ArtGenerationDriver/data/artGenerationOutput_{artGenerationId}.mov'
@@ -309,7 +310,7 @@ def artGeneration():
         #     # file = {'file': (filePath, f, 'video/mp4')}
         #     # requests.post('http://localhost:3000', files=file)
         
-        requests.post('http://localhost:3000', data=videoUrl)
+        # requests.post('http://localhost:3000', data=videoUrl)
 
         logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation sent to frontend")
 
@@ -322,7 +323,7 @@ def artGeneration():
 # host the videos as urls
 @app.route('/videos/<filename>')
 def get_video(filename):
-    # return send_file(f'{artGenPath}/Backend/ArtGenerationDriver/data/{filename}', mimetype='video/mp4')
+    #return send_file(f'{artGenPath}/Backend/ArtGenerationDriver/data/{filename}', mimetype='video/mp4')
     response = send_from_directory(f'{artGenPath}/Backend/ArtGenerationDriver/data', filename)
     response.headers['Content-Type'] = 'video/mp4'
     response.headers['Accept-Ranges'] = 'bytes' 
