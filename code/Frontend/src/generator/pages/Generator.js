@@ -47,7 +47,7 @@ const Generator = () => {
                     </div>
                     <div className={'video-js-container'}>
                         <div className={'flash-overlay ' + (isScreenshotting ? 'screenshotting' : '')}></div>
-                    <video id="media-player-g" className="video-js vjs-default-skin" controls autoPlay muted>
+                    <video id="media-player-g" className="video-js video-js-g vjs-default-skin" controls autoPlay muted>
                         <source className={'source'} src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'} type="video/mp4" />
                         Your browser does not support the video tag.
                     </video>
