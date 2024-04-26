@@ -1,62 +1,65 @@
 /* User icon and popup styles */
 .user-icon-container {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 10px;
-    z-index: 100; /* Ensure it's above other elements */
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 10px;
+  z-index: 100; /* Ensure it's above other elements */
 }
-  
+
 .user-icon {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .user-popup {
-    position: fixed;
-    top: 0; 
-    right: 0;    
-    background-color: white; 
-    border-left: 1px solid #ccc; 
-    box-shadow: -5px 0 5px rgba(0, 0, 0, 0.2); 
-    z-index: 100;    
+  position: fixed;
+  padding: 5px;
+  margin-right: 10px;
+  top: 55px; 
+  right: 0;    
+  border-radius: 18px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-left: 1px solid #ccc; 
+  box-shadow: -5px 0 5px rgba(0, 0, 0, 0.2); 
+  z-index: 100;    
 }
 
 /* Styling for the popup when the user is not signed in */
-.user-popup.small {
-    width: 350px;
-    height: 100px;
-    padding: 15px;
-  }
-  
-  /* Styling for the popup when the user is signed in */
-  .user-popup.large {
-    width: 350px; 
-    height: 400px;
-    padding: 20px;
-  }
+.user-popup.smallVersion {
+  width: 200px;
+  height: 100px;
+  padding: 20px;
+}
+
+/* Styling for the popup when the user is signed in */
+.user-popup.largeVersion {
+  width: 300px; 
+  height: 200px;
+  padding: 20px;
+}
 
 /* .user-popup h2 {
-    margin-top: 0;
+  margin-top: 0;
 } */
-  
+
 /* Style the paragraphs for user info */
 .user-popup p {
-    font-size: 18px; /* Adjust font size as needed */
-    margin: 10px 0; /* Spacing between paragraphs */
+  font-size: 18px; /* Adjust font size as needed */
+  margin: 10px 0; /* Spacing between paragraphs */
 }
 
 .user-popup button {
-    display: block;
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    background-color: #a7c6e7;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .user-popup button:hover {
-    background-color: #a7c6e7;
-  }
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  background-color: #3E3E3E;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.user-popup button:hover {
+  background-color: #3E3E3E;
+}
