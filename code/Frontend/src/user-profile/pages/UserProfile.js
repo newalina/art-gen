@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
-import { Link } from 'react-router-dom';
 import './UserProfile.css';
+import { useUser } from '../../context/UserContext';
 
 const UserProfile = () => {
+    const { userInfo } = useUser();
     const [isGrid, setIsGrid] = useState(true);
     const [mediaPopupOpen, setMediaPopupOpen] = useState(false);
     const [selectedMedia, setSelectedMedia] = useState(null);
@@ -72,7 +73,7 @@ const UserProfile = () => {
     return (
         <div className={'container'}>
             <div className={'username-container'}>
-                User Name
+                Hi, {userInfo.name}
             </div>
             <div className={'view-toggle'} onClick={toggleView}>
                 {isGrid ?

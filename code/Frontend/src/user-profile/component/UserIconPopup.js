@@ -5,12 +5,14 @@ import { jwtDecode } from "jwt-decode";
 import './UserIconPopup.css';
 import SignupIcon from './SignupIcon'
 import UserIcon from './userIcon';
+import { useUser } from '../../context/UserContext';
 
 function UserIconPopup() {
+  const { userInfo, login, logout } = useUser();
   const history = useHistory();
   const [showPopup, setShowPopup] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [userInfo, setUserInfo] = useState({});
+  // const [userInfo, setUserInfo] = useState({});
   const popupRef = useRef();
 
   useEffect(() => {
@@ -27,7 +29,7 @@ function UserIconPopup() {
     const decodedCredential = jwtDecode(credentialResponse.credential);
     // console.log(decodedCredential);    
     setIsSignedIn(true);
-    setUserInfo({
+    login({
       name: decodedCredential.name,
       email: decodedCredential.email,
     });
@@ -41,11 +43,11 @@ function UserIconPopup() {
   const handleSignOut = () => {
     // Here you would also ideally clear the authentication session
     setIsSignedIn(false);
-    setUserInfo({});
+    logout();
   };
 
   const handleGoHome = () => {
-    history.push('/user');
+    history.push('/user', {userInfo: userInfo});
   }
 
   return (
