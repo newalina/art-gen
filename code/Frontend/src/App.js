@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -7,6 +7,8 @@ import Home from './home-page/pages/Home'
 import ControlPanel from './control-panel/pages/control-panel';
 import UserProfile from './user-profile/pages/UserProfile'
 import NavBar from './navigation-bar/components/NavBar'
+import Generator from './generator/pages/Generator'
+
 
 const App = () => {
 
@@ -30,6 +32,10 @@ const App = () => {
 
           <Route path="/user" exact>
             <UserProfile />
+          </Route>
+
+          <Route path="/generator" exact>
+            <Generator />
           </Route>
 
           <Redirect to="/home" />

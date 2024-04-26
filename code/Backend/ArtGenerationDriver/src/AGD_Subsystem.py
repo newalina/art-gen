@@ -21,35 +21,43 @@ from collections import deque
 import logging
 import os
 
-# TODO: Remove this and generalize path loading
-sys.path.insert(0, 'c:/Users/pratt/Documents/Academics/Brown University/Courses/SP2024/CSCI2340/FinalProject/art-gen/code/Backend/Common/src/')
-
 # Project Modules
-from AGD_ArtGeneratorUnit import AGD_ArtGeneratorUnit
-from AGD_Definitions import AGD_Definitions as AGD_DEF;
-from CMN_ErrorLogging import CMN_LoggingLevels as CMN_LL
-from CMN_ErrorLogging import log
+from Backend.ArtGenerationDriver.src.AGD_ArtGeneratorUnit import AGD_ArtGeneratorUnit
+from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_Definitions as AGD_DEF;
+from Backend.Common.src.CMN_Definitions import CMN_LoggingLevels as CMN_LL
+# from Backend.Common.src.CMN_ErrorLogging import log
 
-# Class Definitions
+##########################################################################
+#
+# Class: AGD_Subsystem
+#
+# Purpose: The purpose of this class is to contain the Art Generation
+#           Driver Subsystem class. This class is responsible for
+#           controlling the entirety of the Touch Designer interface,
+#           generating art, and returning art to the user.
+#
+##########################################################################
 class AGD_Subsystem:
 
     #####################################################################
-    # Function:     __init__
+    # Method:       __init__
     # Purpose:      Initialize a new instance of the AGD_Subsystem class
     # Requirements: N/A
     # Inputs:       self - current class member        
     # Outputs:      None  
     #####################################################################
-    def __init__(self):
+    def __init__(self, logger):
         # expects a list of [modelSelection, param1, param2, param3]
-        self.generationQueue = deque();
-        self.generatedOutput = deque();
+        self.generationQueue_ = deque();
+        self.generatedOutput_ = deque();
+        self.logger_ = logger;
 
         # init a thread to handle the generation queue
-        self.generationThread = threading.Thread(target=self.processGenerationQueue);
-
+        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.__init__: Starting Generation Thread");
+        self.generationThread_ = threading.Thread(target=self.processGenerationQueue);
+        self.generationThread_.start();
     #####################################################################
-    # Function:     appendGenerationRequest
+    # Method:       appendGenerationRequest
     # Purpose:      Add an AGD_ArtGeneratorUnit object to the queue for
     #                processing in Touch Designer
     # Requirements: N/A
@@ -60,16 +68,17 @@ class AGD_Subsystem:
     #####################################################################
     def appendGenerationRequest(self, object) -> int:
 
-        if( len(self.generationQueue) >= AGD_DEF.MAX_QUEUE_SIZE.value ):
-            print("ERROR: Unable to append to queue");
+        if( len(self.generationQueue_) >= AGD_DEF.MAX_QUEUE_SIZE.value ):
+            self.logger_.log(CMN_LL.ERR_LEVEL_ERROR, "AGD_Subsystem.appendGenerationRequest: Queue is Full");
             return -1;
         else:
-            self.generationQueue.append(object);
+            self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.appendGenerationRequest: Appending Generation Request");
+            self.generationQueue_.append(object);
         
         return 0;
 
     #####################################################################
-    # Function:     popGenerationRequest
+    # Method:       popGenerationRequest
     # Purpose:      Remove an AGD_ArtGeneratorUnit object from the queue 
     #                after it has completed processing
     # Requirements: N/A
@@ -77,11 +86,11 @@ class AGD_Subsystem:
     # Outputs:      
     #####################################################################
     def popGenerationRequest(self):
-        logging.debug("Popping Generation Request");
-        return self.generationQueue.popleft();
+        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.popGenerationRequest: Popping Generation Request");
+        return self.generationQueue_.popleft();
 
     #####################################################################
-    # Function:     checkIfFileExists
+    # Method:       checkIfFileExists
     # Purpose:      Determine if art generation output file has been
     #                written.
     # Requirements: N/A
@@ -90,10 +99,11 @@ class AGD_Subsystem:
     # Outputs:      boolean - True if file is found, false if not found  
     #####################################################################
     def checkIfFileExists(self, path):
+        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.checkIfFileExists: Checking if File Exists");
         return os.path.isfile(path);
 
     #####################################################################
-    # Function:     processGenerationQueue
+    # Method:       processGenerationQueue
     # Purpose:      Driving function for the Art Generator Driver that
     #                handles the processing of the request queue. 
     # Requirements: N/A
@@ -101,22 +111,21 @@ class AGD_Subsystem:
     # Outputs:      None
     #####################################################################
     def processGenerationQueue(self):
+        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.processGenerationQueue: in");        
         while(True):
-            if( len(self.generationQueue) > 0 ):
-
+            if( len(self.generationQueue_) > 0 ):
+                self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.processGenerationQueue: processing new unit"); 
                 a, param1, param2, param3 = self.popGenerationRequest();
-                artGenerator = AGD_ArtGeneratorUnit(a, param1, param2, param3);
+                artGenerator = AGD_ArtGeneratorUnit(a, param1, param2, param3, self.logger_);
                 artGenerator.writeToJSON();
                 artGenerator.startTouchDesigner();
 
                 # check if the file exists
-                while( not self.checkIfFileExists(artGenerator.pathToOutputData) ):
+                while( not self.checkIfFileExists(artGenerator.pathToOutputData_) ):
                     pass;
 
-                self.generatedOutput.append(artGenerator);                
-
-    
-
+                self.generatedOutput_.append(artGenerator);
+                self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.processGenerationQueue: File Found and Added to Output Queue");
 
 # Need to determine if current exit strategy is OK, or if we want a more SW heavy approach using personally declared files.
 #   This does not need to be OOP. Could use helper functions to determine if too much data in folder, program is stopped recording,

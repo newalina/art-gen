@@ -4,8 +4,8 @@
 code/TouchDesigner/Patches/Backup
 code/Backend/ArtGenerationDriver/data/artGenerationDataInput.json
 code/Backend/ArtGenerationDriver/data/artGenerationOutput*mov
-
-
+code/Backend/Common/logs/*runLog.log
+code/Backend/BackEndCommandInterface/flask/gcp-key.json
 
 
 ### Generic Excludes ? ###
@@ -274,3 +274,4 @@ status/gcp-key.json
 code/Backend/BackEndCommandInterface/flask/.DS_Store
 code/TouchDesigner/Patches/Export_examples.1.toe
 code/TouchDesigner/Patches/hex_quake.3.toe
+/td

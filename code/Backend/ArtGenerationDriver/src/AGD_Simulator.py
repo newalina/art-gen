@@ -16,13 +16,11 @@
 # Public Modules
 import sys
 
-# TODO: Remove this and generalize path loading
-sys.path.insert(0, 'c:/Users/pratt/Documents/Academics/Brown University/Courses/SP2024/CSCI2340/FinalProject/art-gen/code/Backend/Common/src/')
-
 # Private Modules
-from AGD_ArtGeneratorUnit import AGD_ArtGeneratorUnit
-from CMN_ErrorLogging import CMN_LoggingLevels as CMN_LL
-from CMN_ErrorLogging import log
+from Backend.ArtGenerationDriver.src.AGD_ArtGeneratorUnit import AGD_ArtGeneratorUnit
+from Backend.Common.src.CMN_Definitions import CMN_LoggingLevels as CMN_LL
+from Backend.Common.src.CMN_Definitions import CMN_LoggingDomain as CMN_LD
+from Backend.Common.src.CMN_ErrorLogging import CMN_Logging
 
 #####################################################################
 # Function:     runBaselineTest
@@ -37,28 +35,29 @@ from CMN_ErrorLogging import log
 #####################################################################
 def runBaselineTest():
 
+    log = CMN_Logging(CMN_LL.ERR_LEVEL_ALL, CMN_LD.CMN_LOG_DOMAIN_UT);
     log.openFile();
-    log.log(2, "AGD_Simulator.runBaselineTest() Starting runBaselineTest testcase");
+    log.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.runBaselineTest() Starting runBaselineTest testcase");
 
     # Object 0
-    testArtGenerator = AGD_ArtGeneratorUnit(0, 125, 32, 51);
+    testGeneration1 = AGD_ArtGeneratorUnit(0, 125, 32, 51, log);
     # Do some API stuff here
-    testArtGenerator.updateArtGenerationData();
-    testArtGenerator.writeToJSON();
-    #testArtGenerator.startTouchDesigner();
+    testGeneration1.updateArtGenerationData();
+    testGeneration1.writeToJSON();
+    testGeneration1.startTouchDesigner();
     # Here do something with the data...
-    log.log(2, "AGD_Simulator.runBaselineTest() Succesfully Quit Instance 1");
+    log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runBaselineTest() Succesfully Quit Instance " + str(testGeneration1.instance_id_));
 
     # Object 1
-    test2 = AGD_ArtGeneratorUnit(0, 1, 24, 61);
+    testGeneration2 = AGD_ArtGeneratorUnit(0, 1, 24, 61, log);
     # Do some API stuff here
-    test2.updateArtGenerationData();
-    test2.writeToJSON();
-    #test2.startTouchDesigner();
+    testGeneration2.updateArtGenerationData();
+    testGeneration2.writeToJSON();
+    testGeneration2.startTouchDesigner();
     # Here do something with the data...
-    log.log(2, "AGD_Simulator.runBaselineTest() Succesfully Quit Instance 2");
+    log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runBaselineTest() Succesfully Quit Instance " + str(testGeneration2.instance_id_));
 
-    log.log(2, "AGD_Simulator.runBaselineTest() Finishing runBaselineTest testcase");
+    log.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.runBaselineTest() Finishing runBaselineTest testcase");
     log.closeFile();
 
 
