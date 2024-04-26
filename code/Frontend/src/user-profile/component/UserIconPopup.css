@@ -13,25 +13,28 @@
 
 .user-popup {
     position: fixed;
-    top: 0; 
+    padding: 5px;
+    margin-right: 10px;
+    top: 55px; 
     right: 0;    
-    background-color: white; 
+    border-radius: 18px;
+    background-color: rgba(255, 255, 255, 0.8);
     border-left: 1px solid #ccc; 
     box-shadow: -5px 0 5px rgba(0, 0, 0, 0.2); 
     z-index: 100;    
 }
 
 /* Styling for the popup when the user is not signed in */
-.user-popup.small {
-    width: 350px;
+.user-popup.smallVersion {
+    width: 200px;
     height: 100px;
-    padding: 15px;
+    padding: 20px;
   }
   
   /* Styling for the popup when the user is signed in */
-  .user-popup.large {
-    width: 350px; 
-    height: 400px;
+  .user-popup.largeVersion {
+    width: 300px; 
+    height: 200px;
     padding: 20px;
   }
 
@@ -50,7 +53,7 @@
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;
-    background-color: #a7c6e7;
+    background-color: #3E3E3E;
     color: white;
     border: none;
     border-radius: 4px;
@@ -58,5 +61,5 @@
   }
   
   .user-popup button:hover {
-    background-color: #a7c6e7;
+    background-color: #3E3E3E;
   }
