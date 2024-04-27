@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import './UserProfile.css';
 import { useUser } from '../../context/UserContext';
 
 const UserProfile = () => {
-    const { userInfo } = useUser();
+    const { userInfo, logout } = useUser();
+    const history = useHistory();
     const [isGrid, setIsGrid] = useState(true);
     const [mediaPopupOpen, setMediaPopupOpen] = useState(false);
     const [selectedMedia, setSelectedMedia] = useState(null);
@@ -46,6 +48,11 @@ const UserProfile = () => {
         setMediaPopupOpen(false);
         setSelectedMedia(null);
     };
+
+    const handleSignout = () => {
+        logout();
+        history.push('/home');
+    }
 
     const responseFromApi = [
         ['https://randompicturegenerator.com/img/national-park-generator/g622bccfa3263195caf998e13ba1c1d43831b73fa15797fda0f7f3f325d267d6146ba55f8b845305057d3cb7594b74fb8_640.jpg'],
@@ -110,7 +117,7 @@ const UserProfile = () => {
                 </div>}
 
             <div className="ok">
-                <button className={'sign-out-button'} onClick={toggleView}>Sign Out</button>
+                <button className={'sign-out-button'} onClick={handleSignout}>Sign Out</button>
             </div>
 
             {/* Media Player Popup */}
