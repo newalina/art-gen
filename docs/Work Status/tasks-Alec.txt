@@ -1,8 +1,10 @@
 // Status of work for Alec
 
 List to Do (In Order of Importance):
-* Integrate Backend into AGD + TD
-* Implement robust error logging in both Python and TD
 * Connect all patches to AGD
+  - Part of this is making file loading in TD path relative, not absolute. 
+* Implement robust error logging in both Python and TD
+  - Look into why logging is inconsistent when running with app.py.
+    o Is something overwriting the file when passed to a new object?
 * Create Garbage Collection Scheme
 * Create guide to installing and running the backend
