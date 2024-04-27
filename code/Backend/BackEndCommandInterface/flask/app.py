@@ -20,7 +20,7 @@ from moviepy.editor import VideoFileClip
 from PIL import Image
 import json
 from flask import Flask, jsonify, request, send_file, send_from_directory, url_for
-
+import ffmpeg
 
 # move to a common file eventually
 import sys
@@ -272,6 +272,9 @@ def get_next_art_generation_id():
     ART_GENERATION_ID += 1
     return ART_GENERATION_ID
 
+def convert_mov_to_mp4(input_path, output_path):
+    ffmpeg.input(input_path).output(output_path).run()
+
 @app.route('/api/artGeneration', methods=['GET', 'POST'])
 def artGeneration():
     logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation Endpoint requested")
@@ -301,7 +304,8 @@ def artGeneration():
         # generatedArtPath = artSubSystem.generatedOutput_.popleft().pathToOutputData
         logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation completed")
 
-        videoUrl = url_for('get_video', filename=f'artGenerationOutput_{artGenerationId}.mov',  _external=True)
+        convert_mov_to_mp4(f'{artGenPath}/Backend/ArtGenerationDriver/data/artGenerationOutput_{artGenerationId}.mov', f'{artGenPath}/Backend/BackEndCommandInterface/data/artGenerationOutput_{artGenerationId}.mp4')
+        videoUrl = url_for('get_video', filename=f'artGenerationOutput_{artGenerationId}.mp4',  _external=True)
 
         # old method of sending data directly to frontend
         # filePath = f'{artGenPath}/Backend/ArtGenerationDriver/data/artGenerationOutput_{artGenerationId}.mov'
@@ -323,8 +327,8 @@ def artGeneration():
 # host the videos as urls
 @app.route('/videos/<filename>')
 def get_video(filename):
-    #return send_file(f'{artGenPath}/Backend/ArtGenerationDriver/data/{filename}', mimetype='video/mp4')
-    response = send_from_directory(f'{artGenPath}/Backend/ArtGenerationDriver/data', filename)
+    return send_file("C:\\Users\\pratt\\Documents\\Academics\\Brown University\\Courses\\SP2024\\CSCI2340\\FinalProject\\art-gen\\code\\Backend\\BackEndCommandInterface\\data\\artGenerationOutput_0.mp4", mimetype='video/mp4')
+    response = send_from_directory(f'{artGenPath}/Backend/BackEndCommandInterface/data', filename, mimetype='video/mp4', as_attachment=True)
     response.headers['Content-Type'] = 'video/mp4'
     response.headers['Accept-Ranges'] = 'bytes' 
     response.headers['Content-Disposition'] = 'inline; filename="{}"'.format(filename)
@@ -332,7 +336,7 @@ def get_video(filename):
     
 if __name__ == '__main__':
     app.run(debug=True)
-    logging.closeFile()
     storageMonitor.stop()
     logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Server closed")
+    logging.closeFile()
     sys.exit(0)
