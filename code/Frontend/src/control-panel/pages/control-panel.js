@@ -7,14 +7,18 @@ import Axios from "axios";
 
 const ControlPanel = () => {
   // potential candidate databases:
-  const databaseList = ["Database A", "Database B", "Database C", "Database D"];
-  const [selectedDatabase, setSelectedDatabase] = useState("None");
+  const databaseList = [0, 1, 2, 3, 4];
+  const [selectedDatabase, setSelectedDatabase] = useState(0);
   const [mediaPopupOpen, setMediaPopupOpen] = useState(false);
   const [vidURL, setVidURL] = useState("");
-  // potential user input params:
+    // potential user input params:
   const [parameter1, setParameter1] = useState(20);
   const [parameter2, setParameter2] = useState(40);
   const [parameter3, setParameter3] = useState(80);
+
+  const closeMediaPopup = () => {
+      setMediaPopupOpen(false);
+  };
 
   const handleGenerateArt = async () => {
     Axios.get("http://127.0.0.1:5000/api/artGeneration", {
@@ -74,7 +78,10 @@ const ControlPanel = () => {
                 />
               </svg>
 
-              <svg
+                <svg onClick={closeMediaPopup} width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 5L19 19M5 19L19 5" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+
+
+                <svg
                 width="36"
                 height="36"
                 viewBox="0 0 36 36"
@@ -93,7 +100,7 @@ const ControlPanel = () => {
               controls
               autoPlay
             >
-              <source className={"source"} src={vidURL} type="video/mp4" />
+              <source className={"source"} src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>

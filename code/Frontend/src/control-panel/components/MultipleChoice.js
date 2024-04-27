@@ -3,28 +3,23 @@ import './MultipleChoice.css';
 
 function MultipleChoice({ value, onValueChange, optionList }) {
 
-    const hanldeOptionChange = (e) => {
-        onValueChange(e.target.value);
+    const handleOptionChange = (newValue) => {
+        onValueChange(newValue);
     };
 
-    return(
+    return (
         <div className="multiple-choice-container">
-
-            <div className='choice'>Selected Database: {value}</div>
-            <form>
+            <div className='choice'></div>
+            <div className="circle-options">
                 {optionList.map((option, index) => (
-                    <label key={index} className="option-container">
-                        <input
-                            type="radio"
-                            name="multipleChoice"
-                            value={option}
-                            checked={value === option}
-                            onChange={hanldeOptionChange}                         
-                        />
-                        {option}
-                    </label>
+                    <div
+                        key={index}
+                        className={`circle ${value === index ? 'selected' : ''}`}
+                        style={{ backgroundColor: option }}
+                        onClick={() => handleOptionChange(index)}
+                    />
                 ))}
-            </form>
+            </div>
         </div>
     );
 }
