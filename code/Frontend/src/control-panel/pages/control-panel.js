@@ -100,7 +100,7 @@ const ControlPanel = () => {
               controls
               autoPlay
             >
-              <source className={"source"} src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'} type="video/mp4" />
+              <source className={"source"} src={vidURL} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>
