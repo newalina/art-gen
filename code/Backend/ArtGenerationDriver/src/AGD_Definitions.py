@@ -49,10 +49,11 @@ class AGD_Definitions(Enum):
 #    art generation output file
 #####################################################################
 class AGD_Directories(StrEnum):
-    AGD_DATA_DIR = str(CMN_DIR.ROOT_DIR) + '\\code\\Backend\\ArtGenerationDriver\\data';
-    AGD_INPUT_JSON = AGD_DATA_DIR + '\\artGenerationDataInput.json';
-    AGD_OUTPUT_JSON = AGD_DATA_DIR + '\\artGenerationDataOutput.json';
-    AGD_OUTPUT_FILE_BASE = '\\artGenerationOutput_';
+    AGD_SRC_DIR = CMN_DIR.ROOT_DIR + '/code/Backend/ArtGenerationDriver/src'
+    AGD_DATA_DIR = CMN_DIR.ROOT_DIR + '/code/Backend/ArtGenerationDriver/data';
+    AGD_INPUT_JSON = AGD_DATA_DIR + '/artGenerationDataInput.json';
+    AGD_OUTPUT_JSON = AGD_DATA_DIR + '/artGenerationDataOutput.json';
+    AGD_OUTPUT_FILE_BASE = AGD_DATA_DIR + '/artGenerationOutput_';
 
 
 #####################################################################
@@ -64,11 +65,14 @@ class AGD_Directories(StrEnum):
 #   AGD_RECORDING_OFF - Disables recording in Touch Designer
 #   AGD_RECORDING_ON - Enables recording in Touch Designer
 #   AGD_RECORDING_DURATION - Duration of Touch Designer output (s)
+#   AGD_RECORDING_DELAY - Duration of a delay introduced to prevent
+#    any corruption of recording video files. 
 #####################################################################
 class AGD_RecordingParameters(IntEnum):
     AGD_RECORDING_OFF = 0;
     AGD_RECORDING_ON = 1;
     AGD_RECORDING_DURATION = 5;
+    AGD_RECORDING_DELAY = 1;
 
 #####################################################################
 # Enum:         AGD_TouchDesignerNodes
@@ -131,25 +135,25 @@ class AGD_TouchDesignerPatch(Enum):
 
     #def __init__(Enum):
     TD_PATCH_NONE       = 0;
-    TD_PATCH_RESERVED_1 = 1;
-    TD_PATCH_RESERVED_2 = 2;
-    TD_PATCH_RESERVED_3 = 3;
-    TD_PATCH_RESERVED_4 = 4;
-    TD_PATCH_RESERVED_5 = 5;
+    TD_PATCH_LOOP       = 1;
+    TD_PATCH_SHORE      = 2;
+    TD_PATCH_INSTANCE   = 3;
+    TD_PATCH_PARTICLE   = 4;
+    TD_PATCH_WATERCOLOR = 5;
     TD_PATCH_RESERVED_6 = 6;
     TD_PATCH_RESERVED_7 = 7;
     TD_PATCH_RESERVED_8 = 8;
     TD_PATCH_MAX_PATCH  = 9;
 
-    TD_PATCH_FILES      = ['"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\none.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\hex-quakes.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\reserved-2.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\reserved-3.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\reserved-4.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\reserved-5.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\reserved-6.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\reserved-7.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\reserved-8.toe"']
+    TD_PATCH_FILES      = ['"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/none.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/loop.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/shore.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/instance.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/particle.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/watercolour.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/reserved-6.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/reserved-7.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/reserved-8.toe"']
 
     @classmethod
     def getPathToPatch(self, patchNumber):
@@ -169,3 +173,19 @@ class AGD_TouchDesignerPatch(Enum):
 class AGD_UnitInitializationTypes(IntEnum):
     AGD_UIT_DATA = 5
     AGD_UIT_JSON = 1
+
+
+
+class AGD_VideoCodecTypes(IntEnum):
+    AGD_CODEC_ANIMATION = 0
+    AGD_CODEC_PHOTO_MOTION_JPEG = 1
+    AGD_CODEC_MPEG4_PART2 = 2
+    AGD_CODEC_H264 = 3
+    AGD_CODEC_GOPRO = 4
+    AGD_CODEC_HAP = 5
+    AGD_CODEC_H265 = 6
+    AGD_CODEC_GIF = 7
+    AGD_CODEC_NOTCHLC = 8
+    AGD_CODEC_VP8 = 9
+    AGD_CODEC_VP9 = 10
+    AGD_CODEC_APPLE_PRORES = 11

@@ -56,7 +56,7 @@ class AGD_ArtGeneratorUnit:
             self.logger_ = args[4];
 
             self.pathToPatch_ = AGD_TDP.getPathToPatch(self.artDriverID_);
-            self.pathToOutputData_ = str(AGD_DIR.AGD_DATA_DIR) + str(AGD_DIR.AGD_OUTPUT_FILE_BASE) + str(self.instance_id_) + '.mov'; # Can make more robust file extensions.
+            self.pathToOutputData_ = AGD_DIR.AGD_OUTPUT_FILE_BASE + str(self.instance_id_) + '.mov'; # Can make more robust file extensions.
             # Store required parameters for generation here?
 
 
@@ -136,19 +136,19 @@ class AGD_ArtGeneratorUnit:
         jsonData["OutputPath"] = self.pathToOutputData_;
 
         # Add Driver Specific Data
-        if(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_1.value):
+        if(self.artDriverID_ == AGD_TDP.TD_PATCH_LOOP.value):
             jsonData["SEA"] = "SAW";
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_2.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_SHORE.value):
             jsonData["WOODS"] = "BURN";
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_3.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_INSTANCE.value):
             jsonData["ICE"] = "T";
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_4.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_PARTICLE.value):
             jsonData["TRASH"] = "CAN";
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_5.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_WATERCOLOR.value):
             jsonData["RES"] = "5";
 
         elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_6.value):
