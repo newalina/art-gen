@@ -19,9 +19,7 @@
 # Public Modules
 import sys
 import td
-# TODO: Remove the need for adding sys path
-#sys.path.insert(0, 'c:/Users/pratt/Documents/Academics/Brown University/Courses/SP2024/CSCI2340/FinalProject/art-gen/code/Backend/ArtGenerationDriver/src/')
- 
+
 # THIS SHOULD PROBABLY BE CALLED PATCH CONTROl   
 # Project Modules
 from Backend.ArtGenerationDriver.src.AGD_TouchDesignerInstance import AGD_TouchDesignerInstance;

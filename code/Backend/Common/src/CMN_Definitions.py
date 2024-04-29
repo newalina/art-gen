@@ -4,7 +4,7 @@ from shutil import which
 import os
 
 #####################################################################
-# Enum:         AGD_Directories
+# Enum:         CMN_Directories
 # Enum Type:    StrEnum
 # Description:  This enum contains strings of directory locations
 #                that are used in different capacities in the Art
@@ -33,7 +33,7 @@ class CMN_Directories(StrEnum):
         git_root = str(git_repo.git.rev_parse("--show-toplevel"))
 
         # Do some manipulation of string to make it windows compatible
-        return git_root.replace('/', '\\');
+        return git_root.replace('/', '/');
 
     #####################################################################
     # Method:       get_touch_designer_executable
@@ -55,9 +55,9 @@ class CMN_Directories(StrEnum):
             return None;
 
     ROOT_DIR = get_project_root(os.getcwd());
-    TD_DIR = '\\code\\TouchDesigner';
+    TD_DIR = '/code/TouchDesigner';
     TD_EXEC = get_touch_designer_executable();
-    LOGGING_PATH_BASE = ROOT_DIR + '\\code\\Backend\\Common\\logs\\'
+    LOGGING_PATH_BASE = ROOT_DIR + '/code/Backend/Common/logs/'
 
 
 #####################################################################

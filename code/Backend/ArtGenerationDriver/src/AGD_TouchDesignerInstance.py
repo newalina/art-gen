@@ -22,8 +22,7 @@ from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_LengthUnits as A
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_RecordingParameters as AGD_RP
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_TouchDesignerNodes as AGD_TDN
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_Directories as AGD_DIR
-
-#from Backend.BackEndCommandInterface.flask.app import logging as log
+from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_VideoCodecTypes as AGD_VCT
 from Backend.Common.src.CMN_Definitions import CMN_LoggingLevels as CMN_LL
 
 
@@ -91,17 +90,20 @@ class AGD_TouchDesignerInstance:
         # Initialize Recording Node
 
         td.op(AGD_TDN.AGD_TD_RECORD_NODE).par.record = AGD_RP.AGD_RECORDING_OFF.value;
+        td.op(AGD_TDN.AGD_TD_RECORD_NODE).par.videocodec = AGD_VCT.AGD_CODEC_PHOTO_MOTION_JPEG;
         td.op(AGD_TDN.AGD_TD_RECORD_NODE).par.file = self.pathToOutputData_;
         td.op(AGD_TDN.AGD_TD_RECORD_NODE).par.limitlength = 1; # Create def for this
         td.op(AGD_TDN.AGD_TD_RECORD_NODE).par.length = AGD_RP.AGD_RECORDING_DURATION;
         td.op(AGD_TDN.AGD_TD_RECORD_NODE).par.lengthunit = AGD_LU.LENGTH_UNIT_SECONDS;
 
         # Initialize Timer Node
-        td.op(AGD_TDN.AGD_TD_TIMER_NODE).par.length = AGD_RP.AGD_RECORDING_DURATION;
+        td.op(AGD_TDN.AGD_TD_TIMER_NODE).par.length = AGD_RP.AGD_RECORDING_DURATION + AGD_RP.AGD_RECORDING_DELAY;
         td.op(AGD_TDN.AGD_TD_TIMER_NODE).par.lengthunits = AGD_LU.LENGTH_UNIT_SECONDS;
         
         # Initialize Timer Trigger
         td.op(AGD_TDN.AGD_TD_TIMER_TRIGGER).par.const0value = 0;
+
+        # Initialize Specific Patch
 
         #log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.initializeTouchDesigner: Touch Designer initialized")
         return 0;

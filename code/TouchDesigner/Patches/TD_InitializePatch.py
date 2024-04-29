@@ -21,10 +21,8 @@ import td
 import sys
 from pathlib import Path
 
-# TODO: Find a better way to do this
-#sys.path.insert(0, 'c:/Users/pratt/Documents/Academics/Brown University/Courses/SP2024/CSCI2340/FinalProject/art-gen/code/Backend/ArtGenerationDriver/src/')
-
 # Private Modules
+from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_Directories as AGD_DIR
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_TouchDesignerNodes as AGD_TDN
 from Backend.Common.src.CMN_ErrorLogging import CMN_Logging
 from Backend.Common.src.CMN_Definitions import CMN_LoggingLevels as CMN_LL
@@ -48,15 +46,16 @@ def onOffToOn(channel, sampleIndex, val, prev):
     sys.stdout.write("Init: " + TDLog.path_ + "\n");
 
     sys.stdout.write("Initialize New Patch\n");
-    # Load in Patch Control File 
-    td.op(AGD_TDN.AGD_TD_PATCH_CONTROL).par.file = 'C:\\Users\\pratt\\Documents\\Academics\\Brown University\\Courses\\SP2024\\CSCI2340\\FinalProject\\art-gen\\code\\Backend\\ArtGenerationDriver\\src\\AGD_LaunchGeneration.py';
-    td.op("AGD_LaunchGeneration_exec").par.file = 'C:\\Users\\pratt\\Documents\\Academics\\Brown University\\Courses\\SP2024\\CSCI2340\\FinalProject\\art-gen\\code\\Backend\\ArtGenerationDriver\\src\\AGD_Utilities.py';
-    td.op("AGD_TimerCallbacks").par.file = 'C:\\Users\\pratt\\Documents\\Academics\\Brown University\\Courses\\SP2024\\CSCI2340\\FinalProject\\art-gen\\code\\Backend\\ArtGenerationDriver\\src\\AGD_Utilities.py';
 
-    td.op(AGD_TDN.AGD_TD_PATCH_CONTROL).par.loadonstartpulse.pulse()
-    td.op("AGD_LaunchGeneration_exec").par.loadonstartpulse.pulse()
-    td.op("AGD_TimerCallbacks").par.loadonstartpulse.pulse()
+    # Load in Patch Control File 
+    td.op(AGD_TDN.AGD_TD_PATCH_CONTROL).par.file = AGD_DIR.AGD_SRC_DIR + '/AGD_LaunchGeneration.py';
+    td.op(AGD_TDN.AGD_TD_PATCH_CONTROL_EXEC).par.file = AGD_DIR.AGD_SRC_DIR + '/AGD_Utilities.py';
+    td.op(AGD_TDN.AGD_TD_TIMER_CALLBACK_NODE).par.file = AGD_DIR.AGD_SRC_DIR + '/AGD_Utilities.py';
+
+    td.op(AGD_TDN.AGD_TD_PATCH_CONTROL).par.loadonstartpulse.pulse();
+    td.op(AGD_TDN.AGD_TD_PATCH_CONTROL_EXEC).par.loadonstartpulse.pulse();
+    td.op(AGD_TDN.AGD_TD_TIMER_CALLBACK_NODE).par.loadonstartpulse.pulse();
 
     # Start Execution
-    td.op(AGD_TDN.AGD_TD_PATCH_CONTROL_EXEC).par.startpulse.pulse()
-    return
+    td.op(AGD_TDN.AGD_TD_PATCH_CONTROL_EXEC).par.startpulse.pulse();
+    return;
