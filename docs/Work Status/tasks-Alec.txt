@@ -2,8 +2,7 @@
 
 List to Do (In Order of Importance):
 * Connect all patches to AGD
-  - Implement parameter control
-  - Implement file loading on initialize for particle, watercolor, and instance
+  - Implement file loading on initialize for quake, watercolor, and instance
 * Implement robust error logging in both Python and TD
   - Look into why logging is inconsistent when running with app.py.
     o Is something overwriting the file when passed to a new object?
