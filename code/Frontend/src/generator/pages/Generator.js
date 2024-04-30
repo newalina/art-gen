@@ -7,6 +7,8 @@ const Generator = () => {
     const [isRecording, setIsRecording] = useState(false)
     const [isScreenshotting, setIsScreenshotting] = useState(false)
 
+    var baseURL = 'http://127.0.0.1:5000/api/google-cloud'
+
     const cameraButtonHandler = () => {
         let currentTime = document.getElementById('media-player-g').currentTime
         console.log(currentTime)
@@ -27,6 +29,36 @@ const Generator = () => {
         else {
             setIsRecording(false)
         }
+
+        const url = 'http://127.0.0.1:5000/api/google-cloud';
+        const params = {
+            username: 'mbodie',
+            source: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+            IsVideo: 1,
+            timestamp: 25
+        };
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(params)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Handle the response data
+                console.log(data);
+            })
+            .catch(error => {
+                // Handle errors
+                console.error('There was a problem with the fetch operation:', error);
+            });
     }
 
 
