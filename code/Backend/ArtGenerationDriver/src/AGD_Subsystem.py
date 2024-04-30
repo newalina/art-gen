@@ -115,8 +115,8 @@ class AGD_Subsystem:
         while(True):
             if( len(self.generationQueue_) > 0 ):
                 self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Subsystem.processGenerationQueue: processing new unit"); 
-                a, param1, param2, param3 = self.popGenerationRequest();
-                artGenerator = AGD_ArtGeneratorUnit(a, param1, param2, param3, self.logger_);
+                a, param1, param2, param3, param4, param5, param6 = self.popGenerationRequest();
+                artGenerator = AGD_ArtGeneratorUnit(a, param1, param2, param3, param4, param5, param6, self.logger_);
                 artGenerator.writeToJSON();
                 artGenerator.startTouchDesigner();
 

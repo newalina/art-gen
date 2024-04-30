@@ -6,6 +6,7 @@ code/Backend/ArtGenerationDriver/data/artGenerationDataInput.json
 code/Backend/ArtGenerationDriver/data/artGenerationOutput*mov
 code/Backend/Common/logs/*runLog.log
 code/Backend/BackEndCommandInterface/src/gcp-key.json
+code/Backend/BackEndCommandInterface/data/artGenerationOutput_*.mp4
 
 
 ### Generic Excludes ? ###

@@ -49,9 +49,12 @@ class AGD_TouchDesignerInstance:
         # Give garabge data
         self.instance_id_ = -1;
         self.artDriverID_ = -1;
-        self.paramX_ = -1;
-        self.paramY_ = -1;
-        self.paramZ_ = -1;
+        self.paramA_ = -1;
+        self.paramB_ = -1;
+        self.paramC_ = -1;
+        self.paramD_ = -1;
+        self.paramE_ = -1;
+        self.paramF_ = -1;
         self.pathToOutputData_ = -1;
     
         self.readFromJSON();
@@ -119,38 +122,38 @@ class AGD_TouchDesignerInstance:
         if(self.artDriverID_ == AGD_TDP.TD_PATCH_NONE):
             return
         elif(self.artDriverID_ == AGD_TDP.TD_PATCH_LOOP):
-            td.op("grid1").par.sizex = 6;
-            td.op("grid1").par.sizey = 10;
-            td.op("math3").par.gain = 0.1;
-            # Add updates for Feedback >> level 1 >> Gamma1
+            td.op("grid1").par.sizex = self.paramA_;
+            td.op("grid1").par.sizey = self.paramB_;
+            td.op("math3").par.gain = self.paramC_;
+            td.op("feedback/level1").par.gamma1 = self.paramD_;
 
             # Add color control
 
         elif(self.artDriverID_ == AGD_TDP.TD_PATCH_SHORE):
-            td.op("noise1").par.amp = 4;
-            td.op("noise1").par.harmon = 1.4;
-            td.op("cam1").par.tz = 14;
+            td.op("noise1").par.amp = self.paramA_;
+            td.op("noise1").par.harmon = self.paramB_;
+            td.op("cam1").par.tz = self.paramC_;
 
         elif(self.artDriverID_ == AGD_TDP.TD_PATCH_INSTANCE):
-            td.op("noise1").par.rate = 6;
-            td.op("noise1").par.amp = 5;
-            td.op("noise1").par.period = 0.9;
+            td.op("noise1").par.rate = self.paramA_;
+            td.op("noise1").par.amp = self.paramB_;
+            td.op("noise1").par.period = self.paramC_;
             td.op("noise1").par.periodunit = AGD_LU.LENGTH_UNIT_SECONDS;
             
             # Add Video Source control here
 
         elif(self.artDriverID_ == AGD_TDP.TD_PATCH_HEX_QUAKE):
-            td.op("noise4").par.amp = 2;
-            td.op("noise4").par.period = 6;
-            td.op("noise4").par.gain = 0.6;
+            td.op("noise4").par.amp = self.paramA_;
+            td.op("noise4").par.period = self.paramB_;
+            td.op("noise4").par.gain = self.paramC_;
 
             # Add color control
 
         elif(self.artDriverID_ == AGD_TDP.TD_PATCH_WATERCOLOR):
-            td.op("displace1").par.displaceweightx = 0.0001;
-            td.op("displace1").par.displaceweighty = 0.001;
-            td.op("displace1").par.uvweight = 0.999;
-            td.op("emboss1").par.strength = 42;
+            td.op("displace1").par.displaceweightx = self.paramA_;
+            td.op("displace1").par.displaceweighty = self.paramB_;
+            td.op("displace1").par.uvweight = self.paramC_;
+            td.op("emboss1").par.strength = self.paramD_;
 
             # Add Image control from nasa
 
@@ -220,11 +223,17 @@ class AGD_TouchDesignerInstance:
                 self.instance_id_ = jsonData[key];
             elif(key == "moduleID"):
                 self.artDriverID_ = jsonData[key];
-            elif(key == "ParamX"):
+            elif(key == "ParamA"):
                 self.paramX_ = jsonData[key];
-            elif(key == "ParamY"):
+            elif(key == "ParamB"):
                 self.paramY_ = jsonData[key];
-            elif(key == "ParamZ"):
+            elif(key == "ParamC"):
+                self.paramZ_ = jsonData[key];
+            elif(key == "ParamD"):
+                self.paramX_ = jsonData[key];
+            elif(key == "ParamE"):
+                self.paramY_ = jsonData[key];
+            elif(key == "ParamF"):
                 self.paramZ_ = jsonData[key];
             elif(key == "OutputPath"):
                 self.pathToOutputData_ = jsonData[key];
