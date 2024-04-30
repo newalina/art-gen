@@ -2,17 +2,28 @@
 .multiple-choice-container {
     display: flex;
     flex-direction: column;
-    align-items: start;
+    align-items: center;    
     padding: 10px;
-    border-radius: 5px;
-    max-width: 400px;
+    border-radius: 5px;    
     margin-bottom: 5px;
     background-color: white;
+    min-width: 1000px;
 }
 
 .circle-options {
     display: flex;
-    justify-content: center;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 10px;
+    min-width: 900px;
+}
+
+.circle-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    margin-right: 30;
 }
 
 .circle {
@@ -20,10 +31,16 @@
     height: 50px;
     border-radius: 50%;
     margin: 0 10px;
-    cursor: pointer;
-    background-color: red;
+    cursor: pointer;    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease, border-color 0.3s ease;
+    border: 2px solid transparent;
 }
 
-.selected {
-    border: 2px solid black;
+.circle-container.selected .circle { /* Change selector to target circle inside the selected container */
+    border: 3px solid black; /* Apply border to the circle */
+    background-color: #00000050; /* Darken the background color slightly on selection */
+    transform: scale(1.1); /* Optionally scale the circle to emphasize selection */
 }

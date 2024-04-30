@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styles from "./control-panel.module.css";
 import SliderWithInput from "../components/SliderWithInput";
@@ -7,14 +7,51 @@ import Axios from "axios";
 
 const ControlPanel = () => {
   // potential candidate databases:
-  const databaseList = [0, 1, 2, 3, 4];
-  const [selectedDatabase, setSelectedDatabase] = useState(0);
+  const databaseList = ["Melting Sea Ice", "Social Displacement", "Gas Levels", "Rising Temperatures", "Ocean Temperatures"];
+  const sliderConfigurations = {
+    "Melting Sea Ice": [
+      { name: "Horizontal Spread", min: 0.0001, max: 0.001, defaultValue: 0.0001 },
+      { name: "Vertical Spread", min: 0.0001, max: 0.001, defaultValue: 0.0001 },
+      { name: "Entropy", min: 0.999, max: 1, defaultValue: 0.999 },
+      { name: "Texture", min: 0, max: 100, defaultValue: 0 }
+    ],
+    "Social Displacement": [
+      { name: "Speed", min: 1, max: 8, defaultValue: 1 },
+      { name: "Distance", min: 1, max: 5, defaultValue: 1 },
+      { name: "Generation", min: 0.1, max: 1, defaultValue: 0.1 }
+    ],
+    "Gas Levels": [
+      { name: "Density", min: 6, max: 10, defaultValue: 6 },
+      { name: "Speed", min: 0.1, max: 0.5, defaultValue: 0.1 },
+      { name: "Color inversion", min: 1, max: 2, defaultValue: 1 }      
+    ],
+    "Rising Temperatures": [
+      { name: "Height", min: 1, max: 3, defaultValue: 1 },
+      { name: "Smoothness", min: 0.1, max: 10, defaultValue: 0.1 },
+      { name: "Entropy", min: 0.1, max: 0.7, defaultValue: 0.1 }
+    ],
+    "Ocean Temperatures": [
+      { name: "Size", min: 1, max: 5, defaultValue: 1 },
+      { name: "Entropy", min: 0.1, max: 3, defaultValue: 0.1 },
+      { name: "Distance", min: 0, max: 100, defaultValue: 0 }
+    ]
+  };
+  const [selectedDatabase, setSelectedDatabase] = useState("Melting Sea Ice");
   const [mediaPopupOpen, setMediaPopupOpen] = useState(false);
   const [vidURL, setVidURL] = useState("");
     // potential user input params:
-  const [parameter1, setParameter1] = useState(20);
-  const [parameter2, setParameter2] = useState(40);
-  const [parameter3, setParameter3] = useState(80);
+  const [parameter1, setParameter1] = useState();
+  const [parameter2, setParameter2] = useState();
+  const [parameter3, setParameter3] = useState();
+  const [parameter4, setParameter4] = useState();
+
+  useEffect(() => {
+    const sliders = sliderConfigurations[selectedDatabase]
+    if (sliders[0]) setParameter1(sliders[0].defaultValue);
+    if (sliders[1]) setParameter2(sliders[1].defaultValue);
+    if (sliders[2]) setParameter3(sliders[2].defaultValue);
+    if (sliders[3]) setParameter4(sliders[3].defaultValue);
+  }, [selectedDatabase]);
 
   const closeMediaPopup = () => {
       setMediaPopupOpen(false);
@@ -40,8 +77,8 @@ const ControlPanel = () => {
       <h3>
         Current Database selection: {selectedDatabase}
         <br />
-        Current Parameter selection: Param1: {parameter1}, Param2: {parameter2},
-        Param3: {parameter3}
+        just for debug: Current Parameter selection: Param1: {parameter1}, Param2: {parameter2},
+        Param3: {parameter3}, Param4: {parameter4}
       </h3>
 
       <MultipleChoice
@@ -49,9 +86,18 @@ const ControlPanel = () => {
         onValueChange={setSelectedDatabase}
         optionList={databaseList}
       />
-      <SliderWithInput value={parameter1} onValueChange={setParameter1} />
-      <SliderWithInput value={parameter2} onValueChange={setParameter2} />
-      <SliderWithInput value={parameter3} onValueChange={setParameter3} />
+      
+      {sliderConfigurations[selectedDatabase]?.map((sliderInfo, index) => (
+        <SliderWithInput
+          key={index}
+          name={sliderInfo.name}
+          value={index === 0 ? parameter1 : index === 1 ? parameter2 : index === 2 ? parameter3 : parameter4}
+          min={sliderInfo.min}
+          max={sliderInfo.max}
+          onValueChange={index === 0 ? setParameter1 : index === 1 ? setParameter2 : index === 2 ? setParameter3 : setParameter4}
+        />
+      ))}
+
 
       <button className={styles.generateButton} onClick={handleGenerateArt}>
         generate
