@@ -21,6 +21,7 @@ import json
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_Directories as AGD_DIR
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_UnitInitializationTypes as AGD_UIT
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_TouchDesignerPatch as AGD_TDP
+from Backend.ArtGenerationDriver.src.AGD_Definitions import TD_PATCH_FILES
 from Backend.Common.src.CMN_Definitions import CMN_Directories as CMN_DIR
 from Backend.Common.src.CMN_Definitions import CMN_LoggingLevels as CMN_LL
 
@@ -54,7 +55,7 @@ class AGD_ArtGeneratorUnit:
             self.paramZ_ = args[3];
             self.logger_ = args[4];
 
-            self.pathToPatch_ = AGD_TDP.getPathToPatch(self.artDriverID_);
+            self.pathToPatch_ = TD_PATCH_FILES[self.artDriverID_];
             self.pathToOutputData_ = AGD_DIR.AGD_OUTPUT_FILE_BASE + str(self.instance_id_) + '.mov'; # Can make more robust file extensions.
             # Store required parameters for generation here?
 
@@ -135,31 +136,31 @@ class AGD_ArtGeneratorUnit:
         jsonData["OutputPath"] = self.pathToOutputData_;
 
         # Add Driver Specific Data
-        if(self.artDriverID_ == AGD_TDP.TD_PATCH_LOOP.value):
+        if(self.artDriverID_ == AGD_TDP.TD_PATCH_LOOP):
             jsonData["SEA"] = "SAW";
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_SHORE.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_SHORE):
             jsonData["WOODS"] = "BURN";
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_INSTANCE.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_INSTANCE):
             jsonData["ICE"] = "T";
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_HEX_QUAKE.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_HEX_QUAKE):
             jsonData["TRASH"] = "CAN";
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_WATERCOLOR.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_WATERCOLOR):
             jsonData["RES"] = "5";
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_6.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_6):
             jsonData["RES"] = "6";
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_7.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_7):
             jsonData["RES"] = "7";
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_8.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_8):
             jsonData["RES"] = "8";
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_NONE.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_NONE):
             self.logger_.log(CMN_LL.ERR_LEVEL_WARNING, "AGD_ArtGeneratorUnit.packagaeJSONData() NONE Mode is for debug and development purposes")
             jsonData["NONE"] = "True";
         else:

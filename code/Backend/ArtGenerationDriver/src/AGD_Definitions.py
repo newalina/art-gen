@@ -117,7 +117,7 @@ class AGD_LengthUnits(IntEnum):
 
 #####################################################################
 # Enum:         AGD_TouchDesignerPatch
-# Enum Type:    Enum
+# Enum Type:    IntEnum
 # Description:  This enum contains the different patches that can
 #                be run in Touch Designer.  
 # Values:
@@ -131,9 +131,8 @@ class AGD_LengthUnits(IntEnum):
 #   TD_PATCH_RESERVED_7 - Reserved Patch 7
 #   TD_PATCH_RESERVED_8 - Reserved Patch 8
 #   TD_PATCH_MAX_PATCH - Maximum Patch Number
-#   TD_PATCH_FILES - List of paths to the patches
 #####################################################################
-class AGD_TouchDesignerPatch(Enum):
+class AGD_TouchDesignerPatch(IntEnum):
 
     #def __init__(Enum):
     TD_PATCH_NONE       = 0;
@@ -146,30 +145,6 @@ class AGD_TouchDesignerPatch(Enum):
     TD_PATCH_RESERVED_7 = 7;
     TD_PATCH_RESERVED_8 = 8;
     TD_PATCH_MAX_PATCH  = 9;
-
-    TD_PATCH_FILES      = ['"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/patches/none.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/patches/loop.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/patches/shore.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/patches/instance.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/patches/hex_quake.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/patches/watercolour.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/patches/reserved-6.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/patches/reserved-7.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/patches/reserved-8.toe"']
-
-    @classmethod
-    def getPathToPatch(self, patchNumber):
-        # if(patchNumber < AGD_TouchDesignerPatch.TD_PATCH_MAX_PATCH.value):
-        #     return list(AGD_TouchDesignerPatch.TD_PATCH_FILES.value)[patchNumber];
-        # else:
-        #     print("ERROR: Cannot print");
-        #     return -1;
-        try:
-            return list(AGD_TouchDesignerPatch.TD_PATCH_FILES.value)[patchNumber];
-        except:
-            #log.log(CMN_LL.ERR_LEVEL_ERROR, "AGD_TouchDesignerPatch.getPathToPatch() Unsupported Patch Number")
-            return -1;
-
 
 # Count of # of args needed for each init type
 class AGD_UnitInitializationTypes(IntEnum):
@@ -192,8 +167,6 @@ class AGD_VideoCodecTypes(IntEnum):
     AGD_CODEC_VP9 = 10
     AGD_CODEC_APPLE_PRORES = 11
 
-
-
 class AGD_Testcases(IntEnum):
     AGD_TC_BASELINE      = 0
     AGD_TC_LOOP          = 1
@@ -204,5 +177,15 @@ class AGD_Testcases(IntEnum):
     AGD_TC_COMPREHENSIVE = 6
     AGD_TC_MAXIMUM       = 7
 
+
+TD_PATCH_FILES  = ['"' + CMN_DIR.ROOT_DIR + CMN_DIR.TD_DIR + '/patches/none.toe"',
+                   '"' + CMN_DIR.ROOT_DIR + CMN_DIR.TD_DIR + '/patches/loop.toe"',
+                   '"' + CMN_DIR.ROOT_DIR + CMN_DIR.TD_DIR + '/patches/shore.toe"',
+                   '"' + CMN_DIR.ROOT_DIR + CMN_DIR.TD_DIR + '/patches/instance.toe"',
+                   '"' + CMN_DIR.ROOT_DIR + CMN_DIR.TD_DIR + '/patches/hex_quake.toe"',
+                   '"' + CMN_DIR.ROOT_DIR + CMN_DIR.TD_DIR + '/patches/watercolour.toe"',
+                   '"' + CMN_DIR.ROOT_DIR + CMN_DIR.TD_DIR + '/patches/reserved-6.toe"',
+                   '"' + CMN_DIR.ROOT_DIR + CMN_DIR.TD_DIR + '/patches/reserved-7.toe"',
+                   '"' + CMN_DIR.ROOT_DIR + CMN_DIR.TD_DIR + '/patches/reserved-8.toe"'];
 
 AGD_TESTCASE_METHODS = [ 'runBaselineTest', 'runLoopTest', 'runShoreTest', 'runInstanceTest', 'runHexQuakeTest', 'runWatercolorTest', 'runComprehensiveTest'];

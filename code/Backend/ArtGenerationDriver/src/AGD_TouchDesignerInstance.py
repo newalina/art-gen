@@ -116,9 +116,9 @@ class AGD_TouchDesignerInstance:
     def initializePatch(self):
          #log.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_TouchDesignerInstance.initializePatch() in")
 
-        if(self.artDriverID_ == AGD_TDP.TD_PATCH_NONE.value):
+        if(self.artDriverID_ == AGD_TDP.TD_PATCH_NONE):
             return
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_LOOP.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_LOOP):
             td.op("grid1").par.sizex = 6;
             td.op("grid1").par.sizey = 10;
             td.op("math3").par.gain = 0.1;
@@ -126,12 +126,12 @@ class AGD_TouchDesignerInstance:
 
             # Add color control
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_SHORE.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_SHORE):
             td.op("noise1").par.amp = 4;
             td.op("noise1").par.harmon = 1.4;
             td.op("cam1").par.tz = 14;
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_INSTANCE.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_INSTANCE):
             td.op("noise1").par.rate = 6;
             td.op("noise1").par.amp = 5;
             td.op("noise1").par.period = 0.9;
@@ -139,14 +139,14 @@ class AGD_TouchDesignerInstance:
             
             # Add Video Source control here
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_HEX_QUAKE.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_HEX_QUAKE):
             td.op("noise4").par.amp = 2;
             td.op("noise4").par.period = 6;
             td.op("noise4").par.gain = 0.6;
 
             # Add color control
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_WATERCOLOR.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_WATERCOLOR):
             td.op("displace1").par.displaceweightx = 0.0001;
             td.op("displace1").par.displaceweighty = 0.001;
             td.op("displace1").par.uvweight = 0.999;
