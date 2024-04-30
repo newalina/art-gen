@@ -59,6 +59,7 @@ socketio.run(app,
 
 # Enable CORS to allow requests from the frontend
 CORS(app)
+
 logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Server started")
 
 # ############################ DATABASE INIT #############################
@@ -265,20 +266,24 @@ def artGeneration():
     
     try:
         logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Getting user data from request")  
-        modelSelection = slider1Value = slider2Value = slider3Value = 0
-        if request.method == 'POST':
+        modelSelection = slider1Value = slider2Value = slider3Value = slider4Value = slider5Value = slider6Value = 0
+        if request.method == 'GET':
             logging.log(CMN_LL.ERR_LEVEL_DEBUG, "GET request")
-            modelSelection = request.args.get('modelSelection')
-            slider1Value = request.args.get('slider1Value')
-            slider2Value = request.args.get('slider2Value')
-            slider3Value = request.args.get('slider3Value')
-            logging.log(CMN_LL.ERR_LEVEL_DEBUG, f"Model Selection: {modelSelection}, Slider 1: {slider1Value}, Slider 2: {slider2Value}, Slider 3: {slider3Value}")
+            modelSelection = int(request.args.get('modelSelection'))
+            slider1Value = int(request.args.get('slider1Value'))
+            slider2Value = int(request.args.get('slider2Value'))
+            slider3Value = int(request.args.get('slider3Value'))
+            slider4Value = int(request.args.get('slider4Value'))
+            slider5Value = int(request.args.get('slider5Value'))
+            slider6Value = int(request.args.get('slider6Value'))
+
+            logging.log(CMN_LL.ERR_LEVEL_DEBUG, f"Model Selection: {modelSelection}, Slider 1: {slider1Value}, Slider 2: {slider2Value}, Slider 3: {slider3Value}. Slider 4: {slider4Value}, Slider 5: {slider5Value}, Slider 6: {slider6Value}")
         
         logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Appending generation request to queue")
         curLen = len(artSubSystem.generatedOutput_)
 
         # to work with TouchDesigner Potentially, @Alec
-        artSubSystem.appendGenerationRequest([modelSelection, slider1Value, slider2Value, slider3Value])
+        artSubSystem.appendGenerationRequest([modelSelection, slider1Value, slider2Value, slider3Value, slider4Value, slider5Value, slider6Value])
 
         # wait for the art to be generated
         while len(artSubSystem.generatedOutput_) == curLen:
@@ -319,8 +324,8 @@ def get_video(filename):
     return response
     
 if __name__ == '__main__':
-    app.run(debug=True)
-    storageMonitor.stop()
-    logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Server closed")
-    logging.closeFile()
-    sys.exit(0)
+    app.run(host='10.38.171.41', debug=True)
+    #storageMonitor.stop()
+    #logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Server closed")
+    #logging.closeFile()
+    #sys.exit(0)

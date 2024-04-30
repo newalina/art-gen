@@ -112,7 +112,16 @@ class AGD_Simulator:
         self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.runBaselineTest() Starting runBaselineTest testcase");
 
         # Object 0
-        testGeneration1 = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_NONE.value, 125, 32, 51, self.logger_);
+
+        # Initialize Parameters
+        paramA = 125;
+        paramB = 32;
+        paramC = 51;
+        paramD = None;
+        paramE = None;
+        paramF = None;
+
+        testGeneration1 = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_NONE.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
         # Do some API stuff here
         testGeneration1.updateArtGenerationData();
         testGeneration1.writeToJSON();
@@ -121,7 +130,16 @@ class AGD_Simulator:
         self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runBaselineTest() Succesfully Quit Instance " + str(testGeneration1.instance_id_));
 
         # Object 1
-        testGeneration2 = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_NONE.value, 1, 24, 61, self.logger_);
+
+        # Initialize Parameters
+        paramA = 1;
+        paramB = 2;
+        paramC = 4;
+        paramD = None;
+        paramE = None;
+        paramF = None;
+
+        testGeneration2 = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_NONE.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
         # Do some API stuff here
         testGeneration2.updateArtGenerationData();
         testGeneration2.writeToJSON();
@@ -144,8 +162,16 @@ class AGD_Simulator:
 
         self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.runLoopTest() Starting runLoopTest testcase");   
 
+        # Initialize Parameters
+        paramA = 6;
+        paramB = 10;
+        paramC = 0.1;
+        paramD = 1.8
+        paramE = None;
+        paramF = None;
+
         # Object 0
-        loopGeneration0 = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_LOOP.value, 125, 32, 51, self.logger_);
+        loopGeneration0 = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_LOOP.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
         # Do some API stuff here
         loopGeneration0.updateArtGenerationData();
         loopGeneration0.writeToJSON();
@@ -167,8 +193,16 @@ class AGD_Simulator:
     def runShoreTest(self):
         self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.runShoreTest() Starting runShoreTest testcase");   
 
+        # Initialize Parameters
+        paramA = 4;
+        paramB = 1.4;
+        paramC = 14;
+        paramD = None;
+        paramE = None;
+        paramF = None;
+
         # Object 0
-        shoreGeneration = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_SHORE.value, 125, 32, 51, self.logger_);
+        shoreGeneration = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_SHORE.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
         # Do some API stuff here
         shoreGeneration.updateArtGenerationData();
         shoreGeneration.writeToJSON();
@@ -191,8 +225,16 @@ class AGD_Simulator:
     def runInstanceTest(self):
         self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.runInstanceTest() Starting runInstanceTest testcase");   
 
+        # Initialize Parameters
+        paramA = 6;
+        paramB = 5;
+        paramC = 0.9;
+        paramD = None;
+        paramE = None;
+        paramF = None;
+
         # Object 0
-        instanceGeneration = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_INSTANCE.value, 125, 32, 51, self.logger_);
+        instanceGeneration = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_INSTANCE.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
         # Do some API stuff here
         instanceGeneration.updateArtGenerationData();
         instanceGeneration.writeToJSON();
@@ -214,8 +256,16 @@ class AGD_Simulator:
     def runHexQuakeTest(self):
         self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.runHexQuakeTest() Starting runHexQuakeTest testcase");   
 
+        # Initialize Parameters
+        paramA = 2;
+        paramB = 6;
+        paramC = 0.6;
+        paramD = None;
+        paramE = None;
+        paramF = None;
+
         # Object 0
-        particleGeneration = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_HEX_QUAKE.value, 125, 32, 51, self.logger_);
+        particleGeneration = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_HEX_QUAKE.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
         # Do some API stuff here
         particleGeneration.updateArtGenerationData();
         particleGeneration.writeToJSON();
@@ -237,8 +287,16 @@ class AGD_Simulator:
     def runWatercolorTest(self):
         self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.runWatercolorTest() Starting runWatercolorTest testcase");   
 
+        # Initialize Parameters
+        paramA = 0.0001;
+        paramB = 0.001;
+        paramC = 0.999;
+        paramD = 42;
+        paramE = None;
+        paramF = None;
+
         # Object 0
-        watercolorGeneration = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_WATERCOLOR.value, 125, 32, 51, self.logger_);
+        watercolorGeneration = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_WATERCOLOR.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
         # Do some API stuff here
         watercolorGeneration.updateArtGenerationData();
         watercolorGeneration.writeToJSON();
@@ -261,7 +319,16 @@ class AGD_Simulator:
         self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.runBaselineTest() Starting runComprehensiveTest testcase");
 
         # Object 0 - 'None'
-        genNone = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_NONE.value, 125, 32, 51, self.logger_);
+
+        # Initialize Parameters
+        paramA = 6;
+        paramB = 10;
+        paramC = 0.1;
+        paramD = 1.8
+        paramE = None;
+        paramF = None;
+        
+        genNone = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_NONE.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
         # Do some API stuff here
         genNone.updateArtGenerationData();
         genNone.writeToJSON();
@@ -270,7 +337,16 @@ class AGD_Simulator:
         self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runBaselineTest() Succesfully Quit Instance " + str(genNone.instance_id_));
 
         # Object 1 - 'Loop'
-        genLoop = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_LOOP.value, 125, 32, 51, self.logger_);
+
+        # Initialize Parameters
+        paramA = 6;
+        paramB = 10;
+        paramC = 0.1;
+        paramD = 1.8
+        paramE = None;
+        paramF = None;
+
+        genLoop = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_LOOP.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
         # Do some API stuff here
         genLoop.updateArtGenerationData();
         genLoop.writeToJSON();
@@ -279,7 +355,16 @@ class AGD_Simulator:
         self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runLoopTest() Succesfully Quit Instance " + str(genLoop.instance_id_));
 
         # Object 2 - 'Shore'
-        genShore = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_SHORE.value, 125, 32, 51, self.logger_);
+
+        # Initialize Parameters
+        paramA = 4;
+        paramB = 1.4;
+        paramC = 14;
+        paramD = None;
+        paramE = None;
+        paramF = None;
+
+        genShore = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_SHORE.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
         # Do some API stuff here
         genShore.updateArtGenerationData();
         genShore.writeToJSON();
@@ -288,7 +373,16 @@ class AGD_Simulator:
         self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runShoreTest() Succesfully Quit Instance " + str(genShore.instance_id_));
 
         # Object 3 - 'Instance'
-        genInstance = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_INSTANCE.value, 125, 32, 51, self.logger_);
+        
+        # Initialize Parameters
+        paramA = 6;
+        paramB = 5;
+        paramC = 0.9;
+        paramD = None;
+        paramE = None;
+        paramF = None;
+
+        genInstance = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_INSTANCE.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
         # Do some API stuff here
         genInstance.updateArtGenerationData();
         genInstance.writeToJSON();
@@ -297,7 +391,16 @@ class AGD_Simulator:
         self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runInstanceTest() Succesfully Quit Instance " + str(genInstance.instance_id_));
 
         # Object 4 - 'Particle'
-        genParticle = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_HEX_QUAKE.value, 125, 32, 51, self.logger_);
+
+        # Initialize Parameters
+        paramA = 2;
+        paramB = 6;
+        paramC = 0.6;
+        paramD = None;
+        paramE = None;
+        paramF = None;
+
+        genParticle = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_HEX_QUAKE.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
         # Do some API stuff here
         genParticle.updateArtGenerationData();
         genParticle.writeToJSON();
@@ -306,7 +409,16 @@ class AGD_Simulator:
         self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runParticleTest() Succesfully Quit Instance " + str(genParticle.instance_id_));
 
         # Object 5 - 'Watercolor'
-        genWatercolor = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_WATERCOLOR.value, 125, 32, 51, self.logger_);
+
+        # Initialize Parameters
+        paramA = 0.0001;
+        paramB = 0.001;
+        paramC = 0.999;
+        paramD = 42;
+        paramE = None;
+        paramF = None;
+
+        genWatercolor = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_WATERCOLOR.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
         # Do some API stuff here
         genWatercolor.updateArtGenerationData();
         genWatercolor.writeToJSON();

@@ -148,7 +148,7 @@ class AGD_TouchDesignerPatch(IntEnum):
 
 # Count of # of args needed for each init type
 class AGD_UnitInitializationTypes(IntEnum):
-    AGD_UIT_DATA = 5
+    AGD_UIT_DATA = 8
     AGD_UIT_JSON = 1
 
 
