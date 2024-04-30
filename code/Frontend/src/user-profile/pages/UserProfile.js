@@ -48,6 +48,7 @@ const UserProfile = () => {
     const closeMediaPopup = () => {
         setMediaPopupOpen(false);
         setSelectedMedia(null);
+        setDocPopupOpen(false);
     };
 
     const handleSignout = () => {
@@ -78,9 +79,7 @@ const UserProfile = () => {
         ['https://randompicturegenerator.com/img/national-park-generator/ge4290ee08d35a651b01287320254787c28f0925b038712835227bec4a7be747aa3841fbf31e02123084616a2a5cb2791_640.jpg'],
         ['https://randompicturegenerator.com/img/national-park-generator/g0006086023a5ee189596aaafa505a5a598f0405db4b879bf59c515b9da783351111d35ee716fb286df19d0e3191256c2_640.jpg'],
         ['https://randompicturegenerator.com/img/national-park-generator/g7cab038303cf39a1fe3274ed0a4dc6069803514b4edb87218e5e39bc433d314006cc4c6d7c9f7489dea15c1d54316f47_640.jpg'],
-
     ];
-
 
     return (
         <div className={'container'}>
@@ -140,10 +139,16 @@ const UserProfile = () => {
                             <svg className={'close-btn-icon'} onClick={closeMediaPopup} width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 5L19 19M5 19L19 5" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
 
                         </div>
-                            <div className={`doc-popup ${!docPopupOpen ? "doc-popup-transparent" : ""}`}>
-                                <h5>Dataset: Watercolor</h5>
-                            </div>
+
                         <div className={ "media-player-container"}>
+
+                            <div className={`doc-popup ${!docPopupOpen ? "doc-popup-transparent" : ""}`}>
+                                <div className={'doc-info-container'}>
+                                    <h5 className={'doc-info'}>Dataset: Watercolor</h5>
+                                    <h5 className={'doc-info'}>Setting: .0001</h5>
+                                    <h5 className={'doc-info'}>Setting: 6</h5>
+                                </div>
+                            </div>
 
                             <video id="media-player" className="video-js vjs-default-skin" controls autoPlay>
                             <source className={'source'} src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'} type="video/mp4" />

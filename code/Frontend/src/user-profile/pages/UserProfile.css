@@ -194,9 +194,8 @@
     justify-content: center;
     top: 0;
     left: 0;
-    width: 50%;
-    height: 50%;
-    transform: translate(50%, 50%);
+    width: 100%;
+    height: 100%;
     z-index: 101;
     color: white;
     background-color: #505050;
@@ -226,4 +225,15 @@
 
 .doc-open {
     fill: cornflowerblue;
+}
+
+.doc-info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.doc-info {
+    margin: 0px;
+    padding: 0;
 }
