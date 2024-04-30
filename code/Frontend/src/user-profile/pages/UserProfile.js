@@ -4,6 +4,10 @@ import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import './UserProfile.css';
 import { useUser } from '../../context/UserContext';
+import MediaPopup from '../component/MediaPopup';
+import ArtDisplay from "../component/ArtDisplay";
+import SliderIcon from "../component/SliderIcon";
+import GridIcon from "../component/GridIcon";
 
 const UserProfile = () => {
     const { userInfo, logout } = useUser();
@@ -11,8 +15,7 @@ const UserProfile = () => {
     const [isGrid, setIsGrid] = useState(true);
     const [mediaPopupOpen, setMediaPopupOpen] = useState(false);
     const [selectedMedia, setSelectedMedia] = useState(null);
-    const [docPopupOpen, setDocPopupOpen] = useState(false);
-    const [mediaIsVideo, setMediaIsVideo] = useState(true);
+    const [mediaIsVideo, setMediaIsVideo] = useState(false);
 
     let player = null;
 
@@ -51,17 +54,12 @@ const UserProfile = () => {
     const closeMediaPopup = () => {
         setMediaPopupOpen(false);
         setSelectedMedia(null);
-        setDocPopupOpen(false);
     };
 
     const handleSignout = () => {
         logout();
         history.push('/home');
     }
-
-    const handleDocPopup = () => {
-        setDocPopupOpen(!docPopupOpen);
-    };
 
     const responseFromApi = [
         ['https://randompicturegenerator.com/img/national-park-generator/g622bccfa3263195caf998e13ba1c1d43831b73fa15797fda0f7f3f325d267d6146ba55f8b845305057d3cb7594b74fb8_640.jpg'],
@@ -89,85 +87,18 @@ const UserProfile = () => {
             <div className={'username-container'}>
                 Hi, {userInfo.name}
             </div>
+
             <div className={'view-toggle'} onClick={toggleView}>
-                {isGrid ?
-                    (<svg width="35" height="27" viewBox="0 0 35 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="0.516113" y="4.35498" width="6.09677" height="18.2903" fill="#D9D9D9"/>
-                        <rect x="10.0967" width="14.8065" height="27" fill="#D9D9D9"/>
-                        <rect x="28.387" y="4.35498" width="6.09677" height="18.2903" fill="#D9D9D9"/>
-                    </svg>)
-                    : (<svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="13.61" height="13.61" transform="matrix(-1 0 0 1 31.0005 0)" fill="#D9D9D9"/>
-                        <rect width="13.61" height="13.61" transform="matrix(-1 0 0 1 13.6099 0)" fill="#D9D9D9"/>
-                        <rect width="13.61" height="13.61" transform="matrix(-1 0 0 1 31.0002 17.3892)" fill="#D9D9D9"/>
-                        <rect width="13.61" height="13.61" transform="matrix(-1 0 0 1 13.6099 17.3892)" fill="#D9D9D9"/>
-                    </svg>)}
+                {isGrid ? (<SliderIcon/>) : (<GridIcon/>)}
             </div>
-            {isGrid ?
-                (<div className="container">
-                    <div id="image-grid" className={`grid-container grid`}>
-                        {responseFromApi.map((image, index) => (
-                            <div key={index} className="grid-item" onClick={() => openMediaPopup(image[0])}>
-                                <img className="grid-item-img" src={image[0]} alt={`Image ${index}`} />
-                            </div>
-                        ))}
-                    </div>
-                </div>) :
-                <div className="slider">
-                    <div id="px-8 slides" className="slide-track">
-                        {responseFromApi.map((imageUrl, index) => (
-                            <div key={index} className="px-8 slide text-center grid-item" onClick={() => openMediaPopup(imageUrl[0])}>
-                                <img className="grid-item-img" src={imageUrl[0]} alt={`Image ${index}`} />
-                            </div>
-                        ))}
-                    </div>
-                </div>}
+
+            <ArtDisplay isGrid={isGrid} responseFromApi={responseFromApi} openMediaPopup={openMediaPopup}/>
 
             <div className="ok">
                 <button className={'sign-out-button'} onClick={handleSignout}>Sign Out</button>
             </div>
 
-            {/* Media Player Popup */}
-            {mediaPopupOpen && (
-                <div className="media-popup">
-                    <div className="media-popup-content">
-                        <div className={"media-controls"}>
-
-                            <svg className={'doc-btn-icon'} onClick={handleDocPopup} width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path className={'doc-icon-path ' + (docPopupOpen ? 'doc-open' : '')} d="M30 4.5H6C4.3455 4.5 3 5.8455 3 7.5V28.5C3 30.1545 4.3455 31.5 6 31.5H30C31.6545 31.5 33 30.1545 33 28.5V7.5C33 5.8455 31.6545 4.5 30 4.5ZM6 28.5V7.5H30L30.003 28.5H6Z" fill="white"/>
-                                <path className={'doc-icon-path ' + (docPopupOpen ? 'doc-open' : '')} d="M9 10.5H27V13.5H9V10.5ZM9 16.5H27V19.5H9V16.5ZM9 22.5H18V25.5H9V22.5Z" fill="white"/>
-                            </svg>
-
-
-                            <svg className={'close-btn-icon'} onClick={closeMediaPopup} width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 5L19 19M5 19L19 5" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
-
-                        </div>
-
-                        <div className={ "media-player-container"}>
-
-                            <div className={`doc-popup ${!docPopupOpen ? "doc-popup-transparent" : ""}`}>
-                                <div className={'doc-info-container'}>
-                                    <h5 className={'doc-info'}>Dataset: Watercolor</h5>
-                                    <h5 className={'doc-info'}>Setting: .0001</h5>
-                                    <h5 className={'doc-info'}>Setting: 6</h5>
-                                </div>
-                            </div>
-
-                            {mediaIsVideo ?
-                                (<video id="media-player" className="video-js vjs-default-skin" controls autoPlay>
-                                    <source className={'source'} src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'} type="video/mp4" />
-                                    Your browser does not support the video tag.
-                                </video>) :
-
-                                (<div className="media-image">
-                                    <img src={'https://randompicturegenerator.com/img/picture-generator/52e2d5404c55ab14f1dc8460962e33791c3ad6e04e5074417c2d78d19748cd_640.jpg'} />
-                                </div>)
-                            }
-                        </div>
-
-                    </div>
-                </div>
-            )}
+            {mediaPopupOpen && (<MediaPopup closeMediaPopup={closeMediaPopup} mediaIsVideo={mediaIsVideo}/>)}
         </div>
     );
 };
