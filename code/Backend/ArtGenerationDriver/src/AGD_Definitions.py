@@ -107,11 +107,13 @@ class AGD_TouchDesignerNodes(StrEnum):
 #   LENGTH_UNIT_SAMPLES - Sample Count Mode
 #   LENGTH_UNIT_FRAMES - Frame Count Mode
 #   LENGTH_UNIT_SECONDS - Time Count Mode
+#   LENGTH_UNIT_FRACTION = Fraction Count Mode
 #####################################################################
 class AGD_LengthUnits(IntEnum):
     LENGTH_UNIT_SAMPLES = 0
     LENGTH_UNIT_FRAMES  = 1
     LENGTH_UNIT_SECONDS = 2
+    LENGTH_UNIT_FRACTION = 3
 
 #####################################################################
 # Enum:         AGD_TouchDesignerPatch
@@ -138,7 +140,7 @@ class AGD_TouchDesignerPatch(Enum):
     TD_PATCH_LOOP       = 1;
     TD_PATCH_SHORE      = 2;
     TD_PATCH_INSTANCE   = 3;
-    TD_PATCH_PARTICLE   = 4;
+    TD_PATCH_HEX_QUAKE  = 4;
     TD_PATCH_WATERCOLOR = 5;
     TD_PATCH_RESERVED_6 = 6;
     TD_PATCH_RESERVED_7 = 7;
@@ -149,7 +151,7 @@ class AGD_TouchDesignerPatch(Enum):
                            '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/loop.toe"',
                            '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/shore.toe"',
                            '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/instance.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/particle.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/hex_quake.toe"',
                            '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/watercolour.toe"',
                            '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/reserved-6.toe"',
                            '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/reserved-7.toe"',
@@ -189,3 +191,18 @@ class AGD_VideoCodecTypes(IntEnum):
     AGD_CODEC_VP8 = 9
     AGD_CODEC_VP9 = 10
     AGD_CODEC_APPLE_PRORES = 11
+
+
+
+class AGD_Testcases(IntEnum):
+    AGD_TC_BASELINE      = 0
+    AGD_TC_LOOP          = 1
+    AGD_TC_SHORE         = 2
+    AGD_TC_INSTANCE      = 3
+    AGD_TC_HEXQUAKE      = 4
+    AGD_TC_WATERCOLOR    = 5
+    AGD_TC_COMPREHENSIVE = 6
+    AGD_TC_MAXIMUM       = 7
+
+
+AGD_TESTCASE_METHODS = [ 'runBaselineTest', 'runLoopTest', 'runShoreTest', 'runInstanceTest', 'runHexQuakeTest', 'runWatercolorTest', 'runComprehensiveTest'];

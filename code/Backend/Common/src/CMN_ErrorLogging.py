@@ -41,7 +41,7 @@ class CMN_Logging:
             self.path_ = str(CMN_DIR.LOGGING_PATH_BASE) + "touch_designer_runLog_" + self.createTime(self.getTime()) + ".log";
         elif(domain == CMN_LD.CMN_LOG_DOMAIN_UT):
             # Logging for Unit Tests
-            self.path_ = str(CMN_DIR.LOGGING_PATH_BASE) + "unit_test_runLog_" + self.createTime(self.getTime()) + ".log";
+            self.path_ = str(CMN_DIR.LOGGING_PATH_BASE_UT) + "unit_test_runLog_" + self.createTime(self.getTime()) + ".log";
         else:
             print("ERROR");
         

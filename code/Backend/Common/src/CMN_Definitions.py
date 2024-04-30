@@ -58,6 +58,7 @@ class CMN_Directories(StrEnum):
     TD_DIR = '/code/TouchDesigner';
     TD_EXEC = get_touch_designer_executable();
     LOGGING_PATH_BASE = ROOT_DIR + '/code/Backend/Common/logs/'
+    LOGGING_PATH_BASE_UT = ROOT_DIR + '/code/Backend/ArtGenerationDriver/test/logs/'
 
 
 #####################################################################
@@ -80,7 +81,6 @@ class CMN_LoggingLevels(IntEnum):
     ERR_LEVEL_DEBUG     = 2
     ERR_LEVEL_TRACE     = 3
     ERR_LEVEL_ALL       = 4 
-
 
 
 class CMN_LoggingDomain(IntEnum):
