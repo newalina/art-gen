@@ -147,15 +147,15 @@ class AGD_TouchDesignerPatch(Enum):
     TD_PATCH_RESERVED_8 = 8;
     TD_PATCH_MAX_PATCH  = 9;
 
-    TD_PATCH_FILES      = ['"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/none.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/loop.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/shore.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/instance.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/hex_quake.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/watercolour.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/reserved-6.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/reserved-7.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/Patches/reserved-8.toe"']
+    TD_PATCH_FILES      = ['"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/patches/none.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/patches/loop.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/patches/shore.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/patches/instance.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/patches/hex_quake.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/patches/watercolour.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/patches/reserved-6.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/patches/reserved-7.toe"',
+                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '/patches/reserved-8.toe"']
 
     @classmethod
     def getPathToPatch(self, patchNumber):
