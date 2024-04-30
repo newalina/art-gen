@@ -33,7 +33,8 @@ import sys;
 #####################################################################
 def onDone(timerOp, segment, interrupt):
 	sys.stdout.write("Exiting Program...\n");
-	quit();
+	# exit();
+	project.quit();
 	return
 
 #####################################################################

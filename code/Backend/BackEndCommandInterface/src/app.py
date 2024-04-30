@@ -14,7 +14,6 @@
 # Public Modules
 import requests
 from flask_cors import CORS
-from flask_socketio import SocketIO
 from google.cloud import storage
 from pymongo import MongoClient
 from moviepy.editor import VideoFileClip
@@ -52,10 +51,6 @@ ART_GENERATION_ID = -1
 logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the Flask Server")
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'artgen-secret-key-csci2340'
-socketio = SocketIO(app, logger=True)
-socketio.run(app, 
-             host='wss://websocket-csci2340-78f5f096308b.herokuapp.com', 
-             port=443)
 
 # Enable CORS to allow requests from the frontend
 CORS(app)

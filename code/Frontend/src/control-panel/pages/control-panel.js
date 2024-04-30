@@ -11,22 +11,26 @@ const ControlPanel = () => {
   const [selectedDatabase, setSelectedDatabase] = useState(0);
   const [mediaPopupOpen, setMediaPopupOpen] = useState(false);
   const [vidURL, setVidURL] = useState("");
-    // potential user input params:
+  // potential user input params:
   const [parameter1, setParameter1] = useState(20);
   const [parameter2, setParameter2] = useState(40);
   const [parameter3, setParameter3] = useState(80);
 
   const closeMediaPopup = () => {
-      setMediaPopupOpen(false);
+    setMediaPopupOpen(false);
   };
 
   const handleGenerateArt = async () => {
-    Axios.get("http://127.0.0.1:5000/api/artGeneration", {
+    // Axios.get("http://127.0.0.1:5000/api/artGeneration", {
+    Axios.get("http://172.20.10.4/api/artGeneration", {
       params: {
-        modelSelection: selectedDatabase,
+        modelSelection: 4,
         slider1Value: parameter1,
         slider2Value: parameter2,
         slider3Value: parameter3,
+        slider4Value: 1,
+        slider5Value: 1,
+        slider6Value: 1,
       },
     }).then((response) => {
       console.log(response.data.videoUrl);
@@ -78,10 +82,33 @@ const ControlPanel = () => {
                 />
               </svg>
 
-                <svg onClick={closeMediaPopup} width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 5L19 19M5 19L19 5" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+              <svg
+                onClick={closeMediaPopup}
+                width="36"
+                height="36"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  {" "}
+                  <path
+                    d="M5 5L19 19M5 19L19 5"
+                    stroke="#ffffff"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>{" "}
+                </g>
+              </svg>
 
-
-                <svg
+              <svg
                 width="36"
                 height="36"
                 viewBox="0 0 36 36"
@@ -99,6 +126,7 @@ const ControlPanel = () => {
               className="video-js vjs-default-skin"
               controls
               autoPlay
+              loop={true}
             >
               <source className={"source"} src={vidURL} type="video/mp4" />
               Your browser does not support the video tag.
