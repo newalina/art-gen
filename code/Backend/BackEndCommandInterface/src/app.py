@@ -10,7 +10,8 @@
 # Author: David Doan, Alec Pratt, Malique Bodie
 #       
 ##########################################################################
-# File imports
+
+# Public Modules
 import requests
 from flask_cors import CORS
 from flask_socketio import SocketIO
@@ -20,44 +21,25 @@ from moviepy.editor import VideoFileClip
 from PIL import Image
 import json
 from flask import Flask, jsonify, request, send_file, send_from_directory, url_for
-
-
-# move to a common file eventually
+import ffmpeg
 import sys
-import os
 
-##########################################################################
-# Function:     findTopLevelDirectory
-# Purpose:      Find the top level directory of the project
-# Requirements: N/A
-# Inputs:       startPath - the path to start the search from       
-# Outputs:      currentPath - the path to the top level directory
-##########################################################################
-def findTopLevelDirectory(startPath):
-    currentPath = startPath
-    while currentPath != os.path.dirname(currentPath):
-        if os.path.basename(currentPath) == 'code':
-            return currentPath 
-    
-        currentPath = os.path.dirname(currentPath) 
-    return currentPath
-
-currentFilePath = os.path.abspath(__file__)
-artGenPath = findTopLevelDirectory(currentFilePath)
-sys.path.insert(0, artGenPath)
-
+# Project Modules
 from Backend.ArtGenerationDriver.src.AGD_Subsystem import AGD_Subsystem
+from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_Directories as AGD_DIR
+from Backend.Common.src.CMN_Definitions import CMN_Directories as CMN_DIR
 from Backend.Common.src.CMN_Definitions import CMN_LoggingLevels as CMN_LL
 from Backend.Common.src.CMN_Definitions import CMN_LoggingDomain as CMN_LD
 from Backend.Common.src.CMN_ErrorLogging import CMN_Logging
 from Backend.Common.src.CMN_StorageMonitor import CMN_StorageMonitor
+from Backend.BackEndCommandInterface.src.BCI_Definitions import BCI_Directories as BCI_DIR
 
 # Open the log file
 logging = CMN_Logging(CMN_LL.ERR_LEVEL_DEBUG, CMN_LD.CMN_LOG_DOMAIN_BE)
 logging.openFile()
 
 # Storage Monitor initialization
-storageMonitor = CMN_StorageMonitor(artGenPath + '/projectCode/Backend/Common/debugLogs', artGenPath + '/projectCode/Backend/ArtGenerationDriver/data')
+storageMonitor = CMN_StorageMonitor(CMN_DIR.LOGGING_PATH_BASE, AGD_DIR.AGD_DATA_DIR)
 
 # ########################### INIT SERVER ################################
 logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the Subsystem")
@@ -272,6 +254,10 @@ def get_next_art_generation_id():
     ART_GENERATION_ID += 1
     return ART_GENERATION_ID
 
+def convert_mov_to_mp4(input_path, output_path):
+    ret = ffmpeg.input(input_path).output(output_path).overwrite_output().run()
+    print(ret);
+
 @app.route('/api/artGeneration', methods=['GET', 'POST'])
 def artGeneration():
     logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation Endpoint requested")
@@ -301,7 +287,10 @@ def artGeneration():
         # generatedArtPath = artSubSystem.generatedOutput_.popleft().pathToOutputData
         logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation completed")
 
-        videoUrl = url_for('get_video', filename=f'artGenerationOutput_{artGenerationId}.mov',  _external=True)
+        print(AGD_DIR.AGD_OUTPUT_FILE_BASE + str(artGenerationId) + '.mov')
+        print(BCI_DIR.BCI_OUTPUT_FILE_BASE + str(artGenerationId) + '.mp4')
+        convert_mov_to_mp4(AGD_DIR.AGD_OUTPUT_FILE_BASE + str(artGenerationId) + '.mov', BCI_DIR.BCI_OUTPUT_FILE_BASE + str(artGenerationId) + '.mp4')
+        videoUrl = url_for('get_video', filename=f'artGenerationOutput_{artGenerationId}.mp4',  _external=True)
 
         # old method of sending data directly to frontend
         # filePath = f'{artGenPath}/Backend/ArtGenerationDriver/data/artGenerationOutput_{artGenerationId}.mov'
@@ -323,16 +312,15 @@ def artGeneration():
 # host the videos as urls
 @app.route('/videos/<filename>')
 def get_video(filename):
-    #return send_file(f'{artGenPath}/Backend/ArtGenerationDriver/data/{filename}', mimetype='video/mp4')
-    response = send_from_directory(f'{artGenPath}/Backend/ArtGenerationDriver/data', filename)
-    response.headers['Content-Type'] = 'video/mp4'
+    response = send_from_directory(BCI_DIR.BCI_DATA_DIR, filename, mimetype='video/mp4', as_attachment=True)
+    response.headers['Content-Type'] = 'video/mp4;'
     response.headers['Accept-Ranges'] = 'bytes' 
     response.headers['Content-Disposition'] = 'inline; filename="{}"'.format(filename)
     return response
     
 if __name__ == '__main__':
     app.run(debug=True)
-    logging.closeFile()
     storageMonitor.stop()
     logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Server closed")
+    logging.closeFile()
     sys.exit(0)

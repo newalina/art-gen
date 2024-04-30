@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import './UserProfile.css';
 import { useUser } from '../../context/UserContext';
 
 const UserProfile = () => {
-    const { userInfo } = useUser();
+    const { userInfo, logout } = useUser();
+    const history = useHistory();
     const [isGrid, setIsGrid] = useState(true);
     const [mediaPopupOpen, setMediaPopupOpen] = useState(false);
     const [selectedMedia, setSelectedMedia] = useState(null);
+    const [docPopupOpen, setDocPopupOpen] = useState(false);
+    const [mediaIsVideo, setMediaIsVideo] = useState(true);
+
     let player = null;
 
     useEffect(() => {
         // Initialize Video.js player when the media popup opens
-        if (mediaPopupOpen && selectedMedia) {
+        if (mediaPopupOpen && selectedMedia && mediaIsVideo) {
             player = videojs('media-player');
         }
 
@@ -39,12 +44,23 @@ const UserProfile = () => {
 
     const openMediaPopup = (mediaUrl) => {
         setSelectedMedia(mediaUrl);
+        // setMediaIsVideo(...)
         setMediaPopupOpen(true);
     };
 
     const closeMediaPopup = () => {
         setMediaPopupOpen(false);
         setSelectedMedia(null);
+        setDocPopupOpen(false);
+    };
+
+    const handleSignout = () => {
+        logout();
+        history.push('/home');
+    }
+
+    const handleDocPopup = () => {
+        setDocPopupOpen(!docPopupOpen);
     };
 
     const responseFromApi = [
@@ -66,9 +82,7 @@ const UserProfile = () => {
         ['https://randompicturegenerator.com/img/national-park-generator/ge4290ee08d35a651b01287320254787c28f0925b038712835227bec4a7be747aa3841fbf31e02123084616a2a5cb2791_640.jpg'],
         ['https://randompicturegenerator.com/img/national-park-generator/g0006086023a5ee189596aaafa505a5a598f0405db4b879bf59c515b9da783351111d35ee716fb286df19d0e3191256c2_640.jpg'],
         ['https://randompicturegenerator.com/img/national-park-generator/g7cab038303cf39a1fe3274ed0a4dc6069803514b4edb87218e5e39bc433d314006cc4c6d7c9f7489dea15c1d54316f47_640.jpg'],
-
     ];
-
 
     return (
         <div className={'container'}>
@@ -110,31 +124,47 @@ const UserProfile = () => {
                 </div>}
 
             <div className="ok">
-                <button className={'sign-out-button'} onClick={toggleView}>Sign Out</button>
+                <button className={'sign-out-button'} onClick={handleSignout}>Sign Out</button>
             </div>
 
             {/* Media Player Popup */}
             {mediaPopupOpen && (
                 <div className="media-popup">
                     <div className="media-popup-content">
-                        <svg className={"close-btn"} onClick={closeMediaPopup} fill="#000000" height="28" width="28" viewBox="0 0 256 256" id="Flat" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="10.495999999999999"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="27.136000000000003"> <path d="M202.82861,197.17188a3.99991,3.99991,0,1,1-5.65722,5.65624L128,133.65723,58.82861,202.82812a3.99991,3.99991,0,0,1-5.65722-5.65624L122.343,128,53.17139,58.82812a3.99991,3.99991,0,0,1,5.65722-5.65624L128,122.34277l69.17139-69.17089a3.99991,3.99991,0,0,1,5.65722,5.65624L133.657,128Z"></path> </g><g id="SVGRepo_iconCarrier"> <path d="M202.82861,197.17188a3.99991,3.99991,0,1,1-5.65722,5.65624L128,133.65723,58.82861,202.82812a3.99991,3.99991,0,0,1-5.65722-5.65624L122.343,128,53.17139,58.82812a3.99991,3.99991,0,0,1,5.65722-5.65624L128,122.34277l69.17139-69.17089a3.99991,3.99991,0,0,1,5.65722,5.65624L133.657,128Z"></path> </g></svg>
                         <div className={"media-controls"}>
-                            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M30 4.5H6C4.3455 4.5 3 5.8455 3 7.5V28.5C3 30.1545 4.3455 31.5 6 31.5H30C31.6545 31.5 33 30.1545 33 28.5V7.5C33 5.8455 31.6545 4.5 30 4.5ZM6 28.5V7.5H30L30.003 28.5H6Z" fill="white"/>
-                                <path d="M9 10.5H27V13.5H9V10.5ZM9 16.5H27V19.5H9V16.5ZM9 22.5H18V25.5H9V22.5Z" fill="white"/>
+
+                            <svg className={'doc-btn-icon'} onClick={handleDocPopup} width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path className={'doc-icon-path ' + (docPopupOpen ? 'doc-open' : '')} d="M30 4.5H6C4.3455 4.5 3 5.8455 3 7.5V28.5C3 30.1545 4.3455 31.5 6 31.5H30C31.6545 31.5 33 30.1545 33 28.5V7.5C33 5.8455 31.6545 4.5 30 4.5ZM6 28.5V7.5H30L30.003 28.5H6Z" fill="white"/>
+                                <path className={'doc-icon-path ' + (docPopupOpen ? 'doc-open' : '')} d="M9 10.5H27V13.5H9V10.5ZM9 16.5H27V19.5H9V16.5ZM9 22.5H18V25.5H9V22.5Z" fill="white"/>
                             </svg>
 
-                            <svg onClick={closeMediaPopup} width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 5L19 19M5 19L19 5" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
 
-                            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M27 33C25.75 33 24.6875 32.5625 23.8125 31.6875C22.9375 30.8125 22.5 29.75 22.5 28.5C22.5 28.325 22.5125 28.1435 22.5375 27.9555C22.5625 27.7675 22.6 27.599 22.65 27.45L12.075 21.3C11.65 21.675 11.175 21.969 10.65 22.182C10.125 22.395 9.575 22.501 9 22.5C7.75 22.5 6.6875 22.0625 5.8125 21.1875C4.9375 20.3125 4.5 19.25 4.5 18C4.5 16.75 4.9375 15.6875 5.8125 14.8125C6.6875 13.9375 7.75 13.5 9 13.5C9.575 13.5 10.125 13.6065 10.65 13.8195C11.175 14.0325 11.65 14.326 12.075 14.7L22.65 8.55C22.6 8.4 22.5625 8.2315 22.5375 8.0445C22.5125 7.8575 22.5 7.676 22.5 7.5C22.5 6.25 22.9375 5.1875 23.8125 4.3125C24.6875 3.4375 25.75 3 27 3C28.25 3 29.3125 3.4375 30.1875 4.3125C31.0625 5.1875 31.5 6.25 31.5 7.5C31.5 8.75 31.0625 9.8125 30.1875 10.6875C29.3125 11.5625 28.25 12 27 12C26.425 12 25.875 11.894 25.35 11.682C24.825 11.47 24.35 11.176 23.925 10.8L13.35 16.95C13.4 17.1 13.4375 17.269 13.4625 17.457C13.4875 17.645 13.5 17.826 13.5 18C13.5 18.174 13.4875 18.3555 13.4625 18.5445C13.4375 18.7335 13.4 18.902 13.35 19.05L23.925 25.2C24.35 24.825 24.825 24.5315 25.35 24.3195C25.875 24.1075 26.425 24.001 27 24C28.25 24 29.3125 24.4375 30.1875 25.3125C31.0625 26.1875 31.5 27.25 31.5 28.5C31.5 29.75 31.0625 30.8125 30.1875 31.6875C29.3125 32.5625 28.25 33 27 33Z" fill="white"/>
-                            </svg>
+                            <svg className={'close-btn-icon'} onClick={closeMediaPopup} width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 5L19 19M5 19L19 5" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
 
                         </div>
-                        <video id="media-player" className="video-js vjs-default-skin" controls autoPlay>
-                            <source className={'source'} src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'} type="video/mp4" />
-                            Your browser does not support the video tag.
-                        </video>
+
+                        <div className={ "media-player-container"}>
+
+                            <div className={`doc-popup ${!docPopupOpen ? "doc-popup-transparent" : ""}`}>
+                                <div className={'doc-info-container'}>
+                                    <h5 className={'doc-info'}>Dataset: Watercolor</h5>
+                                    <h5 className={'doc-info'}>Setting: .0001</h5>
+                                    <h5 className={'doc-info'}>Setting: 6</h5>
+                                </div>
+                            </div>
+
+                            {mediaIsVideo ?
+                                (<video id="media-player" className="video-js vjs-default-skin" controls autoPlay>
+                                    <source className={'source'} src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'} type="video/mp4" />
+                                    Your browser does not support the video tag.
+                                </video>) :
+
+                                (<div className="media-image">
+                                    <img src={'https://randompicturegenerator.com/img/picture-generator/52e2d5404c55ab14f1dc8460962e33791c3ad6e04e5074417c2d78d19748cd_640.jpg'} />
+                                </div>)
+                            }
+                        </div>
+
                     </div>
                 </div>
             )}

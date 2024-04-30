@@ -21,9 +21,9 @@ import td
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_LengthUnits as AGD_LU
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_RecordingParameters as AGD_RP
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_TouchDesignerNodes as AGD_TDN
+from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_TouchDesignerPatch as AGD_TDP
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_Directories as AGD_DIR
-
-#from Backend.BackEndCommandInterface.flask.app import logging as log
+from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_VideoCodecTypes as AGD_VCT
 from Backend.Common.src.CMN_Definitions import CMN_LoggingLevels as CMN_LL
 
 
@@ -75,6 +75,8 @@ class AGD_TouchDesignerInstance:
         # Right now a delay goes through a timer object, which can then be used to call a callback to exit out of TD.
         #  Ideally it would be nice to use a class method to handle the stopping of recording cleanly, and then exiting.
         #  THe current implementation works for now.
+
+        sys.stdout.write("Starting Delay");
         self.startGenerationDelay();
         #log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.run: run complete")
 
@@ -91,20 +93,76 @@ class AGD_TouchDesignerInstance:
         # Initialize Recording Node
 
         td.op(AGD_TDN.AGD_TD_RECORD_NODE).par.record = AGD_RP.AGD_RECORDING_OFF.value;
+        td.op(AGD_TDN.AGD_TD_RECORD_NODE).par.videocodec = AGD_VCT.AGD_CODEC_PHOTO_MOTION_JPEG;
         td.op(AGD_TDN.AGD_TD_RECORD_NODE).par.file = self.pathToOutputData_;
         td.op(AGD_TDN.AGD_TD_RECORD_NODE).par.limitlength = 1; # Create def for this
         td.op(AGD_TDN.AGD_TD_RECORD_NODE).par.length = AGD_RP.AGD_RECORDING_DURATION;
         td.op(AGD_TDN.AGD_TD_RECORD_NODE).par.lengthunit = AGD_LU.LENGTH_UNIT_SECONDS;
 
         # Initialize Timer Node
-        td.op(AGD_TDN.AGD_TD_TIMER_NODE).par.length = AGD_RP.AGD_RECORDING_DURATION;
+        td.op(AGD_TDN.AGD_TD_TIMER_NODE).par.length = AGD_RP.AGD_RECORDING_DURATION + AGD_RP.AGD_RECORDING_DELAY;
         td.op(AGD_TDN.AGD_TD_TIMER_NODE).par.lengthunits = AGD_LU.LENGTH_UNIT_SECONDS;
         
         # Initialize Timer Trigger
         td.op(AGD_TDN.AGD_TD_TIMER_TRIGGER).par.const0value = 0;
 
+        # Initialize Specific Patch
+        self.initializePatch();
+
         #log.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_TouchDesignerInstance.initializeTouchDesigner: Touch Designer initialized")
         return 0;
+
+
+    def initializePatch(self):
+         #log.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_TouchDesignerInstance.initializePatch() in")
+
+        if(self.artDriverID_ == AGD_TDP.TD_PATCH_NONE):
+            return
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_LOOP):
+            td.op("grid1").par.sizex = 6;
+            td.op("grid1").par.sizey = 10;
+            td.op("math3").par.gain = 0.1;
+            # Add updates for Feedback >> level 1 >> Gamma1
+
+            # Add color control
+
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_SHORE):
+            td.op("noise1").par.amp = 4;
+            td.op("noise1").par.harmon = 1.4;
+            td.op("cam1").par.tz = 14;
+
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_INSTANCE):
+            td.op("noise1").par.rate = 6;
+            td.op("noise1").par.amp = 5;
+            td.op("noise1").par.period = 0.9;
+            td.op("noise1").par.periodunit = AGD_LU.LENGTH_UNIT_SECONDS;
+            
+            # Add Video Source control here
+
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_HEX_QUAKE):
+            td.op("noise4").par.amp = 2;
+            td.op("noise4").par.period = 6;
+            td.op("noise4").par.gain = 0.6;
+
+            # Add color control
+
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_WATERCOLOR):
+            td.op("displace1").par.displaceweightx = 0.0001;
+            td.op("displace1").par.displaceweighty = 0.001;
+            td.op("displace1").par.uvweight = 0.999;
+            td.op("emboss1").par.strength = 42;
+
+            # Add Image control from nasa
+
+        else:
+            #log.log(CMN_LL.ERR_LEVEL_ERROR, "AGD_TouchDesignerInstance.initializePatch: Invalid Touch Designer Module")
+            return
+
+         #log.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_TouchDesignerInstance.initializePatch() out")
+        return
+
+
+
 
     #####################################################################
     # Method:       startArtGeneration

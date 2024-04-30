@@ -21,9 +21,9 @@ import json
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_Directories as AGD_DIR
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_UnitInitializationTypes as AGD_UIT
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_TouchDesignerPatch as AGD_TDP
+from Backend.ArtGenerationDriver.src.AGD_Definitions import TD_PATCH_FILES
 from Backend.Common.src.CMN_Definitions import CMN_Directories as CMN_DIR
 from Backend.Common.src.CMN_Definitions import CMN_LoggingLevels as CMN_LL
-# from Backend.BackEndCommandInterface.flask.app import logging as log
 
 # Class Definitions
 class AGD_ArtGeneratorUnit:
@@ -55,8 +55,8 @@ class AGD_ArtGeneratorUnit:
             self.paramZ_ = args[3];
             self.logger_ = args[4];
 
-            self.pathToPatch_ = AGD_TDP.getPathToPatch(self.artDriverID_);
-            self.pathToOutputData_ = str(AGD_DIR.AGD_DATA_DIR) + str(AGD_DIR.AGD_OUTPUT_FILE_BASE) + str(self.instance_id_) + '.mov'; # Can make more robust file extensions.
+            self.pathToPatch_ = TD_PATCH_FILES[self.artDriverID_];
+            self.pathToOutputData_ = AGD_DIR.AGD_OUTPUT_FILE_BASE + str(self.instance_id_) + '.mov'; # Can make more robust file extensions.
             # Store required parameters for generation here?
 
 
@@ -64,18 +64,18 @@ class AGD_ArtGeneratorUnit:
             self.generatedOutput_ = 0;
 
             if(self.pathToPatch_ == -1):
-                self.logger_.log(CMN_LL.ERR_LEVEL_ERROR, "AGD_ArtGeneratorUnit.__init__: Unable to properly initialize object " + str(self.instance_id_));
+                self.logger_.log(CMN_LL.ERR_LEVEL_ERROR, "AGD_ArtGeneratorUnit.__init__() Unable to properly initialize object " + str(self.instance_id_));
 
-            self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.__init__: Created object " + str(self.instance_id_));
+            self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.__init__() Created object " + str(self.instance_id_));
 
         elif(len(args) == AGD_UIT.AGD_UIT_JSON):
             self.logger_ = args[1];
             self.readFromJSON();
-            self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.__init__: Initialized with JSON data for object " + str(self.instance_id_));
+            self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.__init__() Initialized with JSON data for object " + str(self.instance_id_));
         else:
-            self.logger_.log(CMN_LL.ERR_LEVEL_ERROR, "AGD_ArtGeneratorUnit.__init__: Invalid Attempt to Initialize Art Generator Object");
+            self.logger_.log(CMN_LL.ERR_LEVEL_ERROR, "AGD_ArtGeneratorUnit.__init__() Invalid Attempt to Initialize Art Generator Object");
 
-        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit: Out")
+        self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_ArtGeneratorUnit() Out")
 
 
     #####################################################################
@@ -87,7 +87,7 @@ class AGD_ArtGeneratorUnit:
     # Outputs:      None  
     #####################################################################
     def startTouchDesigner(self):
-        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.startTouchDesigner() in")
+        self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_ArtGeneratorUnit.startTouchDesigner() in")
 
         executeString = str(CMN_DIR.TD_EXEC) + " " + self.pathToPatch_;
         
@@ -99,7 +99,7 @@ class AGD_ArtGeneratorUnit:
         if(errCode.returncode != 0):
             print("ERROR: Unable to run Touch Designer with exit code: " + str(errCode.returncode));
         
-        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.startTouchDesigner() out")
+        self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_ArtGeneratorUnit.startTouchDesigner() out")
     
     #####################################################################
     # Method:       updateArtGenerationData
@@ -109,8 +109,8 @@ class AGD_ArtGeneratorUnit:
     # Outputs:      None  
     #####################################################################
     def updateArtGenerationData(self):
-        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.updateArtGenerationData() in")
-        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.updateArtGenerationData() out")
+        self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_ArtGeneratorUnit.updateArtGenerationData() in")
+        self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_ArtGeneratorUnit.updateArtGenerationData() out")
         return None;
 
     #####################################################################
@@ -124,7 +124,7 @@ class AGD_ArtGeneratorUnit:
     #                data for Touch Designer processing.   
     #####################################################################
     def packageJSONData(self):
-        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.packagaeJSONData() in")
+        self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_ArtGeneratorUnit.packagaeJSONData() in")
         jsonData = {};
 
         # Add Shared Data
@@ -136,38 +136,38 @@ class AGD_ArtGeneratorUnit:
         jsonData["OutputPath"] = self.pathToOutputData_;
 
         # Add Driver Specific Data
-        if(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_1.value):
+        if(self.artDriverID_ == AGD_TDP.TD_PATCH_LOOP):
             jsonData["SEA"] = "SAW";
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_2.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_SHORE):
             jsonData["WOODS"] = "BURN";
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_3.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_INSTANCE):
             jsonData["ICE"] = "T";
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_4.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_HEX_QUAKE):
             jsonData["TRASH"] = "CAN";
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_5.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_WATERCOLOR):
             jsonData["RES"] = "5";
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_6.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_6):
             jsonData["RES"] = "6";
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_7.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_7):
             jsonData["RES"] = "7";
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_8.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_RESERVED_8):
             jsonData["RES"] = "8";
 
-        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_NONE.value):
+        elif(self.artDriverID_ == AGD_TDP.TD_PATCH_NONE):
             self.logger_.log(CMN_LL.ERR_LEVEL_WARNING, "AGD_ArtGeneratorUnit.packagaeJSONData() NONE Mode is for debug and development purposes")
             jsonData["NONE"] = "True";
         else:
             self.logger_.log(CMN_LL.ERR_LEVEL_ERROR, "AGD_ArtGeneratorUnit.packagaeJSONData() Unsupported Data to Package")
             return -1;
 
-        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.packagaeJSONData() out")
+        self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_ArtGeneratorUnit.packagaeJSONData() out")
         return jsonData;
 
     #####################################################################
@@ -178,11 +178,11 @@ class AGD_ArtGeneratorUnit:
     # Outputs:      None
     #####################################################################
     def writeToJSON(self):
-        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.writeToJSON() in")
+        self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_ArtGeneratorUnit.writeToJSON() in")
         jsonData = self.packageJSONData();
 
         with open(str(AGD_DIR.AGD_INPUT_JSON) , "w") as jsonFile:
             json.dump(jsonData, jsonFile);
 
-        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_ArtGeneratorUnit.writeToJSON() out")
+        self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_ArtGeneratorUnit.writeToJSON() out")
         return 0;

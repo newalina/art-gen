@@ -5,7 +5,7 @@ code/TouchDesigner/Patches/Backup
 code/Backend/ArtGenerationDriver/data/artGenerationDataInput.json
 code/Backend/ArtGenerationDriver/data/artGenerationOutput*mov
 code/Backend/Common/logs/*runLog.log
-code/Backend/BackEndCommandInterface/flask/gcp-key.json
+code/Backend/BackEndCommandInterface/src/gcp-key.json
 
 # dupes
 *.*.toe

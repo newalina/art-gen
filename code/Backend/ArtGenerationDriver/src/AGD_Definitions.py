@@ -49,10 +49,11 @@ class AGD_Definitions(Enum):
 #    art generation output file
 #####################################################################
 class AGD_Directories(StrEnum):
-    AGD_DATA_DIR = str(CMN_DIR.ROOT_DIR) + '\\code\\Backend\\ArtGenerationDriver\\data';
-    AGD_INPUT_JSON = AGD_DATA_DIR + '\\artGenerationDataInput.json';
-    AGD_OUTPUT_JSON = AGD_DATA_DIR + '\\artGenerationDataOutput.json';
-    AGD_OUTPUT_FILE_BASE = '\\artGenerationOutput_';
+    AGD_SRC_DIR = CMN_DIR.ROOT_DIR + '/code/Backend/ArtGenerationDriver/src'
+    AGD_DATA_DIR = CMN_DIR.ROOT_DIR + '/code/Backend/ArtGenerationDriver/data';
+    AGD_INPUT_JSON = AGD_DATA_DIR + '/artGenerationDataInput.json';
+    AGD_OUTPUT_JSON = AGD_DATA_DIR + '/artGenerationDataOutput.json';
+    AGD_OUTPUT_FILE_BASE = AGD_DATA_DIR + '/artGenerationOutput_';
 
 
 #####################################################################
@@ -64,11 +65,14 @@ class AGD_Directories(StrEnum):
 #   AGD_RECORDING_OFF - Disables recording in Touch Designer
 #   AGD_RECORDING_ON - Enables recording in Touch Designer
 #   AGD_RECORDING_DURATION - Duration of Touch Designer output (s)
+#   AGD_RECORDING_DELAY - Duration of a delay introduced to prevent
+#    any corruption of recording video files. 
 #####################################################################
 class AGD_RecordingParameters(IntEnum):
     AGD_RECORDING_OFF = 0;
     AGD_RECORDING_ON = 1;
     AGD_RECORDING_DURATION = 5;
+    AGD_RECORDING_DELAY = 1;
 
 #####################################################################
 # Enum:         AGD_TouchDesignerNodes
@@ -103,15 +107,17 @@ class AGD_TouchDesignerNodes(StrEnum):
 #   LENGTH_UNIT_SAMPLES - Sample Count Mode
 #   LENGTH_UNIT_FRAMES - Frame Count Mode
 #   LENGTH_UNIT_SECONDS - Time Count Mode
+#   LENGTH_UNIT_FRACTION = Fraction Count Mode
 #####################################################################
 class AGD_LengthUnits(IntEnum):
     LENGTH_UNIT_SAMPLES = 0
     LENGTH_UNIT_FRAMES  = 1
     LENGTH_UNIT_SECONDS = 2
+    LENGTH_UNIT_FRACTION = 3
 
 #####################################################################
 # Enum:         AGD_TouchDesignerPatch
-# Enum Type:    Enum
+# Enum Type:    IntEnum
 # Description:  This enum contains the different patches that can
 #                be run in Touch Designer.  
 # Values:
@@ -125,47 +131,61 @@ class AGD_LengthUnits(IntEnum):
 #   TD_PATCH_RESERVED_7 - Reserved Patch 7
 #   TD_PATCH_RESERVED_8 - Reserved Patch 8
 #   TD_PATCH_MAX_PATCH - Maximum Patch Number
-#   TD_PATCH_FILES - List of paths to the patches
 #####################################################################
-class AGD_TouchDesignerPatch(Enum):
+class AGD_TouchDesignerPatch(IntEnum):
 
     #def __init__(Enum):
     TD_PATCH_NONE       = 0;
-    TD_PATCH_RESERVED_1 = 1;
-    TD_PATCH_RESERVED_2 = 2;
-    TD_PATCH_RESERVED_3 = 3;
-    TD_PATCH_RESERVED_4 = 4;
-    TD_PATCH_RESERVED_5 = 5;
+    TD_PATCH_LOOP       = 1;
+    TD_PATCH_SHORE      = 2;
+    TD_PATCH_INSTANCE   = 3;
+    TD_PATCH_HEX_QUAKE  = 4;
+    TD_PATCH_WATERCOLOR = 5;
     TD_PATCH_RESERVED_6 = 6;
     TD_PATCH_RESERVED_7 = 7;
     TD_PATCH_RESERVED_8 = 8;
     TD_PATCH_MAX_PATCH  = 9;
 
-    TD_PATCH_FILES      = ['"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\none.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\hex-quakes.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\reserved-2.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\reserved-3.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\reserved-4.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\reserved-5.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\reserved-6.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\reserved-7.toe"',
-                           '"' + str(CMN_DIR.ROOT_DIR) + str(CMN_DIR.TD_DIR) + '\\Patches\\reserved-8.toe"']
-
-    @classmethod
-    def getPathToPatch(self, patchNumber):
-        # if(patchNumber < AGD_TouchDesignerPatch.TD_PATCH_MAX_PATCH.value):
-        #     return list(AGD_TouchDesignerPatch.TD_PATCH_FILES.value)[patchNumber];
-        # else:
-        #     print("ERROR: Cannot print");
-        #     return -1;
-        try:
-            return list(AGD_TouchDesignerPatch.TD_PATCH_FILES.value)[patchNumber];
-        except:
-            #log.log(CMN_LL.ERR_LEVEL_ERROR, "AGD_TouchDesignerPatch.getPathToPatch() Unsupported Patch Number")
-            return -1;
-
-
 # Count of # of args needed for each init type
 class AGD_UnitInitializationTypes(IntEnum):
     AGD_UIT_DATA = 5
     AGD_UIT_JSON = 1
+
+
+
+class AGD_VideoCodecTypes(IntEnum):
+    AGD_CODEC_ANIMATION = 0
+    AGD_CODEC_PHOTO_MOTION_JPEG = 1
+    AGD_CODEC_MPEG4_PART2 = 2
+    AGD_CODEC_H264 = 3
+    AGD_CODEC_GOPRO = 4
+    AGD_CODEC_HAP = 5
+    AGD_CODEC_H265 = 6
+    AGD_CODEC_GIF = 7
+    AGD_CODEC_NOTCHLC = 8
+    AGD_CODEC_VP8 = 9
+    AGD_CODEC_VP9 = 10
+    AGD_CODEC_APPLE_PRORES = 11
+
+class AGD_Testcases(IntEnum):
+    AGD_TC_BASELINE      = 0
+    AGD_TC_LOOP          = 1
+    AGD_TC_SHORE         = 2
+    AGD_TC_INSTANCE      = 3
+    AGD_TC_HEXQUAKE      = 4
+    AGD_TC_WATERCOLOR    = 5
+    AGD_TC_COMPREHENSIVE = 6
+    AGD_TC_MAXIMUM       = 7
+
+
+TD_PATCH_FILES  = ['"' + CMN_DIR.ROOT_DIR + CMN_DIR.TD_DIR + '/patches/none.toe"',
+                   '"' + CMN_DIR.ROOT_DIR + CMN_DIR.TD_DIR + '/patches/loop.toe"',
+                   '"' + CMN_DIR.ROOT_DIR + CMN_DIR.TD_DIR + '/patches/shore.toe"',
+                   '"' + CMN_DIR.ROOT_DIR + CMN_DIR.TD_DIR + '/patches/instance.toe"',
+                   '"' + CMN_DIR.ROOT_DIR + CMN_DIR.TD_DIR + '/patches/hex_quake.toe"',
+                   '"' + CMN_DIR.ROOT_DIR + CMN_DIR.TD_DIR + '/patches/watercolour.toe"',
+                   '"' + CMN_DIR.ROOT_DIR + CMN_DIR.TD_DIR + '/patches/reserved-6.toe"',
+                   '"' + CMN_DIR.ROOT_DIR + CMN_DIR.TD_DIR + '/patches/reserved-7.toe"',
+                   '"' + CMN_DIR.ROOT_DIR + CMN_DIR.TD_DIR + '/patches/reserved-8.toe"'];
+
+AGD_TESTCASE_METHODS = [ 'runBaselineTest', 'runLoopTest', 'runShoreTest', 'runInstanceTest', 'runHexQuakeTest', 'runWatercolorTest', 'runComprehensiveTest'];

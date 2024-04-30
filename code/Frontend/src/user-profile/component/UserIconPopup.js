@@ -8,11 +8,9 @@ import UserIcon from './userIcon';
 import { useUser } from '../../context/UserContext';
 
 function UserIconPopup() {
-  const { userInfo, login, logout } = useUser();
+  const { userInfo, isSignedIn, login, logout } = useUser();
   const history = useHistory();
   const [showPopup, setShowPopup] = useState(false);
-  const [isSignedIn, setIsSignedIn] = useState(false);
-  // const [userInfo, setUserInfo] = useState({});
   const popupRef = useRef();
 
   useEffect(() => {
@@ -27,8 +25,7 @@ function UserIconPopup() {
 
   const handleLoginSuccess = (credentialResponse) => {
     const decodedCredential = jwtDecode(credentialResponse.credential);
-    // console.log(decodedCredential);    
-    setIsSignedIn(true);
+    // console.log(decodedCredential);        
     login({
       name: decodedCredential.name,
       email: decodedCredential.email,
@@ -41,9 +38,9 @@ function UserIconPopup() {
   };
 
   const handleSignOut = () => {
-    // Here you would also ideally clear the authentication session
-    setIsSignedIn(false);
+    // Here you would also ideally clear the authentication session    
     logout();
+    history.push('/home');
   };
 
   const handleGoHome = () => {
