@@ -6,7 +6,7 @@
     padding: 10px;
     border-radius: 5px;    
     margin-bottom: 5px;
-    background-color: white;
+    background-color: #181818;
     min-width: 1000px;
 }
 
@@ -16,6 +16,12 @@
     justify-content: space-around;
     padding: 10px;
     min-width: 900px;
+}
+
+.option-name {
+    font-size: 20px;
+    margin-top: 10px;
+    color: white;
 }
 
 .circle-container {
@@ -40,7 +46,7 @@
 }
 
 .circle-container.selected .circle { /* Change selector to target circle inside the selected container */
-    border: 3px solid black; /* Apply border to the circle */
+    border: 3px solid white; /* Apply border to the circle */
     background-color: #00000050; /* Darken the background color slightly on selection */
-    transform: scale(1.1); /* Optionally scale the circle to emphasize selection */
+    transform: scale(1.15); /* Optionally scale the circle to emphasize selection */
 }

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import styles from "./control-panel.module.css";
 import SliderWithInput from "../components/SliderWithInput";
 import MultipleChoice from "../components/MultipleChoice";
@@ -64,6 +63,7 @@ const ControlPanel = () => {
         slider1Value: parameter1,
         slider2Value: parameter2,
         slider3Value: parameter3,
+        slider4Value: parameter4
       },
     }).then((response) => {
       console.log(response.data.videoUrl);
@@ -74,7 +74,8 @@ const ControlPanel = () => {
 
   return (
     <div className={styles.container}>
-      <h3>
+      <h1 style={{ color: "white" }}>Choose Scene</h1>
+      <h3 style={{ color: "white" }}>
         Current Database selection: {selectedDatabase}
         <br />
         just for debug: Current Parameter selection: Param1: {parameter1}, Param2: {parameter2},
