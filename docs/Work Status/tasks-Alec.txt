@@ -1,8 +1,14 @@
 // Status of work for Alec
 
+By Wednesday
 List to Do (In Order of Importance):
 * Connect all patches to AGD
-  - Implement file loading on initialize for quake, watercolor, and instance
+  - Implement RGB Control for Patches
+  - Image Loading
+* Clean up app.py
+
+Optional for later
+
 * Implement robust error logging in both Python and TD
   - Look into why logging is inconsistent when running with app.py.
     o Is something overwriting the file when passed to a new object?
