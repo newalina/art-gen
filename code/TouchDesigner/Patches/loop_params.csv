@@ -1,0 +1,5 @@
+path,parameter,value,enable
+grid1,sizex,6,1
+grid1,sizey,6,1
+math3,multiply,.3,1
+feedback/level1,gamma,1,1

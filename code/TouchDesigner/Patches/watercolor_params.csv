@@ -1,0 +1,4 @@
+path,parameter,value,enable
+displace1,displaceweightx,.0009,1
+displace1,displaceweighty,.0001,1
+emboss1,strength,100,1

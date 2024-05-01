@@ -8,6 +8,8 @@ code/Backend/Common/logs/*runLog.log
 code/Backend/BackEndCommandInterface/src/gcp-key.json
 code/Backend/BackEndCommandInterface/data/artGenerationOutput_*.mp4
 
+# dupes
+*.*.toe
 
 ### Generic Excludes ? ###
 
