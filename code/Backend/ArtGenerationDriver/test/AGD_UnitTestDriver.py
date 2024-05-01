@@ -56,7 +56,7 @@ if __name__ == "__main__":
             else:
                 print("ERROR: Invalid Parameter. To see valid input options, enter 'h'");
         else:
-            print("ERROR: Invalid Parameter. To see valid input options, enter 'h'");    
+            print("ERROR: Invalid Parameter. To see valid input options, enter 'h'");
     
     sim = AGD_Simulator(list(argsIn), logFile);
     
