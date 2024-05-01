@@ -13,11 +13,7 @@
 #       
 ##########################################################################
 
-# Public Modules
-import sys
-from enum import IntEnum
-
-# Private Modules
+# Project Modules
 from Backend.ArtGenerationDriver.src.AGD_ArtGeneratorUnit import AGD_ArtGeneratorUnit
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_TouchDesignerPatch as AGD_TDP
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_Testcases as AGD_TC
@@ -30,7 +26,7 @@ from Backend.Common.src.CMN_ErrorLogging import CMN_Logging
 class AGD_Simulator:
 
     #####################################################################
-    # Function:     __init__
+    # Method:       __init__
     # Purpose:      Initialize a new instance of the AGD_Simulator
     #                class. 
     # Requirements: N/A
@@ -44,24 +40,24 @@ class AGD_Simulator:
     #####################################################################
     def __init__(self, args, logger):
         self.logger_ = logger;
-
         self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.__init__() in");
 
+        # Initialize class members
         self.numberOfTests_ = len(args);
         self.testsToRun_ = self.createTestQueue(args);
 
         self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.__init__() out");
     
     #####################################################################
-    # Function:     createTestQueue
+    # Method:       createTestQueue
     # Purpose:      This method creates the test queue that is used to
     #                call all of the tests requested by the user.
     # Requirements: N/A
-    # Inputs:       self - current class member  
+    # Inputs:       self - current class member
+    #               tests - A list of tests that should be run
     # Outputs:      None  
     #####################################################################
     def createTestQueue(self, tests):
-
         self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.createTestQueue() in");
 
         testQueue = [];
@@ -80,7 +76,7 @@ class AGD_Simulator:
         return testQueue;
 
     #####################################################################
-    # Function:     runTests
+    # Method:       runTests
     # Purpose:      This method runs the entire test suite that is
     #                selected by the user. 
     # Requirements: N/A
@@ -94,11 +90,10 @@ class AGD_Simulator:
             self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, f"AGD_Simulator.runTests() Starting test: {test}");   
             exec(f"self.{test}()")
 
-
         self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.runTests() out");   
 
     #####################################################################
-    # Function:     runBaselineTest
+    # Method:       runBaselineTest
     # Purpose:      The baseline test tests the basic functionality of
     #                the Art Generation Driver without the use of user 
     #                inputs to the queue. This test creates new art
@@ -111,8 +106,6 @@ class AGD_Simulator:
     def runBaselineTest(self):
         self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.runBaselineTest() Starting runBaselineTest testcase");
 
-        # Object 0
-
         # Initialize Parameters
         paramA = 125;
         paramB = 32;
@@ -121,6 +114,7 @@ class AGD_Simulator:
         paramE = None;
         paramF = None;
 
+        # Object 0
         testGeneration1 = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_NONE.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
         # Do some API stuff here
         testGeneration1.updateArtGenerationData();
@@ -128,8 +122,6 @@ class AGD_Simulator:
         testGeneration1.startTouchDesigner();
         # Here do something with the data...
         self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runBaselineTest() Succesfully Quit Instance " + str(testGeneration1.instance_id_));
-
-        # Object 1
 
         # Initialize Parameters
         paramA = 1;
@@ -139,6 +131,7 @@ class AGD_Simulator:
         paramE = None;
         paramF = None;
 
+        # Object 1
         testGeneration2 = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_NONE.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
         # Do some API stuff here
         testGeneration2.updateArtGenerationData();
@@ -150,7 +143,7 @@ class AGD_Simulator:
         self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.runBaselineTest() Finishing runBaselineTest testcase");
 
     #####################################################################
-    # Function:     runLoopTest
+    # Method:       runLoopTest
     # Purpose:      This test confirms that the 'loop' patch can properly
     #                be run with Python inputs and with a proper file
     #                output. 
@@ -159,7 +152,6 @@ class AGD_Simulator:
     # Outputs:      None  
     #####################################################################
     def runLoopTest(self):
-
         self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.runLoopTest() Starting runLoopTest testcase");   
 
         # Initialize Parameters
@@ -182,7 +174,7 @@ class AGD_Simulator:
         self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.runLoopTest() Finishing runLoopTest testcase");
 
     #####################################################################
-    # Function:     runShoreTest
+    # Method:       runShoreTest
     # Purpose:      This test confirms that the 'shore' patch can 
     #                properly be run with Python inputs and with a proper 
     #                file output. 
@@ -214,7 +206,7 @@ class AGD_Simulator:
 
 
     #####################################################################
-    # Function:     runInstanceTest
+    # Method:       runInstanceTest
     # Purpose:      This test confirms that the 'instance' patch can 
     #                properly be run with Python inputs and with a proper 
     #                file output. 
@@ -245,7 +237,7 @@ class AGD_Simulator:
         self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.runInstanceTest() Finishing runInstanceTest testcase");
     
     #####################################################################
-    # Function:     runHexQuakeTest
+    # Method:       runHexQuakeTest
     # Purpose:      This test confirms that the 'hex_quake' patch can 
     #                properly be run with Python inputs and with a proper 
     #                file output. 
@@ -276,7 +268,7 @@ class AGD_Simulator:
         self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.runHexQuakeTest() Finishing runHexQuakeTest testcase");
     
     #####################################################################
-    # Function:     runWatercolorTest
+    # Method:       runWatercolorTest
     # Purpose:      This test confirms that the 'watercolor' patch can 
     #                properly be run with Python inputs and with a proper 
     #                file output. 
@@ -307,7 +299,7 @@ class AGD_Simulator:
         self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.runWatercolorTest() Finishing runWatercolorTest testcase");
     
     #####################################################################
-    # Function:     runComprehensiveTest
+    # Method:       runComprehensiveTest
     # Purpose:      This test is a comprehensive test suite that tests 
     #                every patch associated with the Art Generation 
     #                Project. 
@@ -318,8 +310,6 @@ class AGD_Simulator:
     def runComprehensiveTest(self):
         self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.runComprehensiveTest() Starting runComprehensiveTest testcase");
 
-        # Object 0 - 'None'
-
         # Initialize Parameters
         paramA = 6;
         paramB = 10;
@@ -327,7 +317,8 @@ class AGD_Simulator:
         paramD = 1.8
         paramE = 0xfe52d0;
         paramF = None;
-        
+
+        # Object 0 - 'None'
         genNone = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_NONE.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
         # Do some API stuff here
         genNone.updateArtGenerationData();
@@ -336,8 +327,6 @@ class AGD_Simulator:
         # Here do something with the data...
         self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runComprehensiveTest() Succesfully Quit Instance " + str(genNone.instance_id_));
 
-        # Object 1 - 'Loop'
-
         # Initialize Parameters
         paramA = 6;
         paramB = 10;
@@ -346,6 +335,7 @@ class AGD_Simulator:
         paramE = 0xfe52d0;
         paramF = None;
 
+        # Object 1 - 'Loop'
         genLoop = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_LOOP.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
         # Do some API stuff here
         genLoop.updateArtGenerationData();
@@ -353,8 +343,6 @@ class AGD_Simulator:
         genLoop.startTouchDesigner();
 
         self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runComprehensiveTest() Succesfully Quit Instance " + str(genLoop.instance_id_));
-
-        # Object 2 - 'Shore'
 
         # Initialize Parameters
         paramA = 4;
@@ -364,6 +352,7 @@ class AGD_Simulator:
         paramE = None;
         paramF = None;
 
+        # Object 2 - 'Shore'
         genShore = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_SHORE.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
         # Do some API stuff here
         genShore.updateArtGenerationData();
@@ -372,8 +361,6 @@ class AGD_Simulator:
 
         self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runComprehensiveTest() Succesfully Quit Instance " + str(genShore.instance_id_));
 
-        # Object 3 - 'Instance'
-        
         # Initialize Parameters
         paramA = 6;
         paramB = 5;
@@ -382,6 +369,7 @@ class AGD_Simulator:
         paramE = None;
         paramF = None;
 
+        # Object 3 - 'Instance'
         genInstance = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_INSTANCE.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
         # Do some API stuff here
         genInstance.updateArtGenerationData();
@@ -389,8 +377,6 @@ class AGD_Simulator:
         genInstance.startTouchDesigner();
 
         self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runComprehensiveTest() Succesfully Quit Instance " + str(genInstance.instance_id_));
-
-        # Object 4 - 'Hex Quake'
 
         # Initialize Parameters
         paramA = 2;
@@ -400,6 +386,7 @@ class AGD_Simulator:
         paramE = None;
         paramF = None;
 
+        # Object 4 - 'Hex Quake'
         genParticle = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_HEX_QUAKE.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
         # Do some API stuff here
         genParticle.updateArtGenerationData();
@@ -407,8 +394,6 @@ class AGD_Simulator:
         genParticle.startTouchDesigner();
 
         self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runComprehensiveTest() Succesfully Quit Instance " + str(genParticle.instance_id_));
-
-        # Object 5 - 'Watercolor'
 
         # Initialize Parameters
         paramA = 0.0001;
@@ -418,6 +403,7 @@ class AGD_Simulator:
         paramE = None;
         paramF = None;
 
+        # Object 5 - 'Watercolor'
         genWatercolor = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_WATERCOLOR.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
         # Do some API stuff here
         genWatercolor.updateArtGenerationData();

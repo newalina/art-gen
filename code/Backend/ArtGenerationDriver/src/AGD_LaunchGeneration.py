@@ -13,24 +13,17 @@
 #       
 ##########################################################################
 
-# INSTEAD OF DOING THIS IN A SEPARATE FILE, I CAN TURN THE CONTENTS OF THIS FILE INTO A FUNCTION IN AGD_Utilities.py. HERE, I CAN JUST INSERT MY
-#  DESIRED LOGIC INTO the onStart FUNCTION USED IN AGD_launchGeneration_exec. THIS REDUCES FILE COUNT WITH LIKE 2 LINES OF CODE IN IT. 
-
 # Public Modules
 import sys
-import td
-
-# THIS SHOULD PROBABLY BE CALLED PATCH CONTROl   
+ 
 # Project Modules
 from Backend.ArtGenerationDriver.src.AGD_TouchDesignerInstance import AGD_TouchDesignerInstance;
 
 # Confirm this works in touch designer
 artGenInstance = AGD_TouchDesignerInstance();
 
+# TODO: Make logging functionality work for TD
 sys.stdout.write("\n\n***Starting New Instance***\n");
-
 sys.stdout.write("Launch Gen for: " + str(artGenInstance.artDriverID_) + "\n")
 
 artGenInstance.run();
-
-sys.stdout.write("In Launch Generation\n");
