@@ -49,8 +49,9 @@ class AGD_Definitions(Enum):
 #    art generation output file
 #####################################################################
 class AGD_Directories(StrEnum):
-    AGD_SRC_DIR = CMN_DIR.ROOT_DIR + '/code/Backend/ArtGenerationDriver/src'
+    AGD_SRC_DIR = CMN_DIR.ROOT_DIR + '/code/Backend/ArtGenerationDriver/src';
     AGD_DATA_DIR = CMN_DIR.ROOT_DIR + '/code/Backend/ArtGenerationDriver/data';
+    AGD_TD_IMG_SRC_DIR = CMN_DIR.ROOT_DIR + '/code/TouchDesigner/files/';
     AGD_INPUT_JSON = AGD_DATA_DIR + '/artGenerationDataInput.json';
     AGD_OUTPUT_JSON = AGD_DATA_DIR + '/artGenerationDataOutput.json';
     AGD_OUTPUT_FILE_BASE = AGD_DATA_DIR + '/artGenerationOutput_';

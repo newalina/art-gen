@@ -1,7 +1,7 @@
-# #########################################################################
-
-# File: app.py
-
+##########################################################################
+#
+# File: BCI_Driver.py
+# 
 # Purpose of File: The purpose of this file is run the server, handle api 
 #                   requests to our generation endpoint
 

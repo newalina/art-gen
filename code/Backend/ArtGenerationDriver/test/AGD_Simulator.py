@@ -167,7 +167,7 @@ class AGD_Simulator:
         paramB = 10;
         paramC = 0.1;
         paramD = 1.8
-        paramE = None;
+        paramE = 0xfe52d0;
         paramF = None;
 
         # Object 0
@@ -197,7 +197,7 @@ class AGD_Simulator:
         paramA = 4;
         paramB = 1.4;
         paramC = 14;
-        paramD = None;
+        paramD = 0xa76b10;
         paramE = None;
         paramF = None;
 
@@ -260,7 +260,7 @@ class AGD_Simulator:
         paramA = 2;
         paramB = 6;
         paramC = 0.6;
-        paramD = None;
+        paramD = 0x641f52;
         paramE = None;
         paramF = None;
 
@@ -316,7 +316,7 @@ class AGD_Simulator:
     # Outputs:      None  
     #####################################################################
     def runComprehensiveTest(self):
-        self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.runBaselineTest() Starting runComprehensiveTest testcase");
+        self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.runComprehensiveTest() Starting runComprehensiveTest testcase");
 
         # Object 0 - 'None'
 
@@ -325,7 +325,7 @@ class AGD_Simulator:
         paramB = 10;
         paramC = 0.1;
         paramD = 1.8
-        paramE = None;
+        paramE = 0xfe52d0;
         paramF = None;
         
         genNone = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_NONE.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
@@ -334,7 +334,7 @@ class AGD_Simulator:
         genNone.writeToJSON();
         genNone.startTouchDesigner();
         # Here do something with the data...
-        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runBaselineTest() Succesfully Quit Instance " + str(genNone.instance_id_));
+        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runComprehensiveTest() Succesfully Quit Instance " + str(genNone.instance_id_));
 
         # Object 1 - 'Loop'
 
@@ -343,7 +343,7 @@ class AGD_Simulator:
         paramB = 10;
         paramC = 0.1;
         paramD = 1.8
-        paramE = None;
+        paramE = 0xfe52d0;
         paramF = None;
 
         genLoop = AGD_ArtGeneratorUnit(AGD_TDP.TD_PATCH_LOOP.value, paramA, paramB, paramC, paramD, paramE, paramF, self.logger_);
@@ -352,7 +352,7 @@ class AGD_Simulator:
         genLoop.writeToJSON();
         genLoop.startTouchDesigner();
 
-        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runLoopTest() Succesfully Quit Instance " + str(genLoop.instance_id_));
+        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runComprehensiveTest() Succesfully Quit Instance " + str(genLoop.instance_id_));
 
         # Object 2 - 'Shore'
 
@@ -360,7 +360,7 @@ class AGD_Simulator:
         paramA = 4;
         paramB = 1.4;
         paramC = 14;
-        paramD = None;
+        paramD = 0xa76b10;
         paramE = None;
         paramF = None;
 
@@ -370,7 +370,7 @@ class AGD_Simulator:
         genShore.writeToJSON();
         genShore.startTouchDesigner();
 
-        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runShoreTest() Succesfully Quit Instance " + str(genShore.instance_id_));
+        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runComprehensiveTest() Succesfully Quit Instance " + str(genShore.instance_id_));
 
         # Object 3 - 'Instance'
         
@@ -388,15 +388,15 @@ class AGD_Simulator:
         genInstance.writeToJSON();
         genInstance.startTouchDesigner();
 
-        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runInstanceTest() Succesfully Quit Instance " + str(genInstance.instance_id_));
+        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runComprehensiveTest() Succesfully Quit Instance " + str(genInstance.instance_id_));
 
-        # Object 4 - 'Particle'
+        # Object 4 - 'Hex Quake'
 
         # Initialize Parameters
         paramA = 2;
         paramB = 6;
         paramC = 0.6;
-        paramD = None;
+        paramD = 0x641f52;
         paramE = None;
         paramF = None;
 
@@ -406,7 +406,7 @@ class AGD_Simulator:
         genParticle.writeToJSON();
         genParticle.startTouchDesigner();
 
-        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runParticleTest() Succesfully Quit Instance " + str(genParticle.instance_id_));
+        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runComprehensiveTest() Succesfully Quit Instance " + str(genParticle.instance_id_));
 
         # Object 5 - 'Watercolor'
 
@@ -424,6 +424,6 @@ class AGD_Simulator:
         genWatercolor.writeToJSON();
         genWatercolor.startTouchDesigner();
 
-        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runWatercolorTest() Succesfully Quit Instance " + str(genWatercolor.instance_id_));
+        self.logger_.log(CMN_LL.ERR_LEVEL_DEBUG, "AGD_Simulator.runComprehensiveTest() Succesfully Quit Instance " + str(genWatercolor.instance_id_));
 
-        self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.runLoopTest() Finishing runComprehensiveTest testcase");
+        self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_Simulator.runComprehensiveTest() Finishing runComprehensiveTest testcase");

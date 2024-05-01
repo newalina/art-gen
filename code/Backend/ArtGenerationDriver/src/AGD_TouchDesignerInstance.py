@@ -127,27 +127,39 @@ class AGD_TouchDesignerInstance:
             td.op("math3").par.gain = self.paramC_;
             td.op("feedback/level1").par.gamma1 = self.paramD_;
 
-            # Add color control
+            red, green, blue = self.hextoRGB(self.paramE_);
+            td.op("constant1").par.colorr = red;
+            td.op("constant1").par.colorg = green;
+            td.op("constant1").par.colorb = blue;
+
 
         elif(self.artDriverID_ == AGD_TDP.TD_PATCH_SHORE):
             td.op("noise1").par.amp = self.paramA_;
             td.op("noise1").par.harmon = self.paramB_;
             td.op("cam1").par.tz = self.paramC_;
 
+            red, green, blue = self.hextoRGB(self.paramD_);
+            td.op("line1").par.linenearcolorr = red;
+            td.op("line1").par.linenearcolorg = green;
+            td.op("line1").par.linenearcolorb = blue;
+        
         elif(self.artDriverID_ == AGD_TDP.TD_PATCH_INSTANCE):
             td.op("noise1").par.rate = self.paramA_;
             td.op("noise1").par.amp = self.paramB_;
             td.op("noise1").par.period = self.paramC_;
             td.op("noise1").par.periodunit = AGD_LU.LENGTH_UNIT_SECONDS;
             
-            # Add Video Source control here
+            td.op("moviefilein1").par.file = AGD_DIR.AGD_TD_IMG_SRC_DIR + 'nasa-image-otd.jpg';
 
         elif(self.artDriverID_ == AGD_TDP.TD_PATCH_HEX_QUAKE):
             td.op("noise4").par.amp = self.paramA_;
             td.op("noise4").par.period = self.paramB_;
             td.op("noise4").par.gain = self.paramC_;
 
-            # Add color control
+            red, green, blue = self.hextoRGB(self.paramD_);
+            td.op("ramp5_keys")[1,1].val = red;
+            td.op("ramp5_keys")[1,2].val = green;
+            td.op("ramp5_keys")[1,3].val = blue;
 
         elif(self.artDriverID_ == AGD_TDP.TD_PATCH_WATERCOLOR):
             td.op("displace1").par.displaceweightx = self.paramA_;
@@ -155,7 +167,7 @@ class AGD_TouchDesignerInstance:
             td.op("displace1").par.uvweight = self.paramC_;
             td.op("emboss1").par.strength = self.paramD_;
 
-            # Add Image control from nasa
+            td.op("moviefilein1").par.file = AGD_DIR.AGD_TD_IMG_SRC_DIR + 'nasa-image-otd.jpg';
 
         else:
             #log.log(CMN_LL.ERR_LEVEL_ERROR, "AGD_TouchDesignerInstance.initializePatch: Invalid Touch Designer Module")
@@ -165,6 +177,14 @@ class AGD_TouchDesignerInstance:
         return
 
 
+
+    def hextoRGB(self, hexIn):
+
+        red = ((hexIn >> 16) & 0xff) / 0xff;
+        green = ((hexIn >> 8) & 0xff) / 0xff;
+        blue = (hexIn & 0xff) / 0xff;
+
+        return red, green, blue;
 
 
     #####################################################################
@@ -224,17 +244,17 @@ class AGD_TouchDesignerInstance:
             elif(key == "moduleID"):
                 self.artDriverID_ = jsonData[key];
             elif(key == "ParamA"):
-                self.paramX_ = jsonData[key];
+                self.paramA_ = jsonData[key];
             elif(key == "ParamB"):
-                self.paramY_ = jsonData[key];
+                self.paramB_ = jsonData[key];
             elif(key == "ParamC"):
-                self.paramZ_ = jsonData[key];
+                self.paramC_ = jsonData[key];
             elif(key == "ParamD"):
-                self.paramX_ = jsonData[key];
+                self.paramD_ = jsonData[key];
             elif(key == "ParamE"):
-                self.paramY_ = jsonData[key];
+                self.paramE_ = jsonData[key];
             elif(key == "ParamF"):
-                self.paramZ_ = jsonData[key];
+                self.paramF_ = jsonData[key];
             elif(key == "OutputPath"):
                 self.pathToOutputData_ = jsonData[key];
             else:
