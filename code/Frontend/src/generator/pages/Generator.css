@@ -95,7 +95,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    top: 85%;
+    bottom: 15%;
     right: 50%;
     transform: translate(50%);
     z-index: 101;
