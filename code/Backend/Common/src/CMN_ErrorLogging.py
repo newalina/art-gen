@@ -13,19 +13,17 @@
 ##########################################################################
 
 # Public Modules
-from enum import IntEnum
-import sys
-import os
 from datetime import datetime
 
+# Project Modules
 from Backend.Common.src.CMN_Definitions import CMN_Directories as CMN_DIR
-# from Backend.Common.src.CMN_Definitions import CMN_LoggingLevels as CMN_LL
 from Backend.Common.src.CMN_Definitions import CMN_LoggingDomain as CMN_LD
+
 # CLass Definitions
 class CMN_Logging:
 
     #####################################################################
-    # Method:     __init__
+    # Method:       __init__
     # Purpose:      Initialize a new instance of the CMN_Logging class
     # Requirements: N/A
     # Inputs:       self - current class member        
@@ -43,6 +41,8 @@ class CMN_Logging:
             # Logging for Unit Tests
             self.path_ = str(CMN_DIR.LOGGING_PATH_BASE_UT) + "unit_test_runLog_" + self.createTime(self.getTime()) + ".log";
         else:
+            # TODO: I cant really log anything here since it would require this functionality... How to log errors
+            #  from the error class?
             print("ERROR");
         
         self.threshold_ = threshold;
@@ -52,7 +52,7 @@ class CMN_Logging:
         self.prepend = [", ERROR: ", ", WARNING: ", ", DEBUG: "," TRACE:" ]; 
 
     #####################################################################
-    # Method:     getTime
+    # Method:       getTime
     # Purpose:      Get the current time
     # Requirements: N/A
     # Inputs:       self - current class member        
@@ -62,7 +62,7 @@ class CMN_Logging:
         return datetime.now();
 
     #####################################################################
-    # Method:     createTime
+    # Method:       createTime
     # Purpose:      Format the time to be used for a filename
     # Requirements: N/A
     # Inputs:       self - current class member    
@@ -74,7 +74,7 @@ class CMN_Logging:
             + f"{time.hour:02}" + '.' + f"{time.minute:02}" + '.' + f"{time.second:02}" + '.' + str(time.microsecond);
 
     #####################################################################
-    # Method:     log
+    # Method:       log
     # Purpose:      Log a message to file
     # Requirements: N/A
     # Inputs:       self - current class member    
@@ -92,7 +92,7 @@ class CMN_Logging:
         return
 
     #####################################################################
-    # Method:     openFile
+    # Method:       openFile
     # Purpose:      Open file to write to
     # Requirements: N/A
     # Inputs:       self - current class member    
@@ -102,7 +102,7 @@ class CMN_Logging:
         self.file_ = open(self.path_, "w");
 
     #####################################################################
-    # Method:     closeFile
+    # Method:       closeFile
     # Purpose:      Close file that is being written to
     # Requirements: N/A
     # Inputs:       self - current class member    
@@ -110,8 +110,3 @@ class CMN_Logging:
     #####################################################################
     def closeFile(self):
         self.file_.close();
-
-
-
-# Instance of CMN_Logging Class to be used. 
-# log = CMN_Logging(CMN_LL.ERR_LEVEL_ALL, CMN_LD.CMN_LOG_DOMAIN_BE);

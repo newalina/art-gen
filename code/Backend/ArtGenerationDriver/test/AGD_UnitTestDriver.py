@@ -1,7 +1,7 @@
 ##########################################################################
 #
 # File: AGD_UnitTestDriver.py
-# 
+#
 # Purpose of File: The purpose of this file is to act as a wrapper to 
 #                   the unit test functionality implemented in the
 #                   AGD_Simulator class. When run, this file prompts the
@@ -11,7 +11,7 @@
 # Creation Date: April 30th, 2024
 #
 # Author: Alec Pratt
-#       
+#
 ##########################################################################
 
 # Project Includes
@@ -20,6 +20,8 @@ from Backend.ArtGenerationDriver.test.AGD_Simulator import AGD_Simulator
 from Backend.Common.src.CMN_Definitions import CMN_LoggingLevels as CMN_LL
 from Backend.Common.src.CMN_Definitions import CMN_LoggingDomain as CMN_LD
 from Backend.Common.src.CMN_ErrorLogging import CMN_Logging
+
+# Main Function
 if __name__ == "__main__":
 
     print("*************************************************************")
@@ -56,7 +58,7 @@ if __name__ == "__main__":
             else:
                 print("ERROR: Invalid Parameter. To see valid input options, enter 'h'");
         else:
-            print("ERROR: Invalid Parameter. To see valid input options, enter 'h'");    
+            print("ERROR: Invalid Parameter. To see valid input options, enter 'h'");
     
     sim = AGD_Simulator(list(argsIn), logFile);
     

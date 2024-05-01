@@ -1,6 +1,20 @@
+##########################################################################
+#
+# File: CMN_Definitions.py
+# 
+# Purpose of File: The purpose of this file is to contain all defined
+#                   values that are shared across the Art Generator
+#                   Project. 
+#
+# Creation Date: April 20th, 2024
+#
+# Author: Alec Pratt
+#       
+##########################################################################
+
+# Public Modules
 import git
 from enum import IntEnum, StrEnum
-from shutil import which
 import os
 
 #####################################################################
@@ -17,6 +31,8 @@ import os
 #    Executable.
 #   LOGGING_PATH_BASE - Contains the directory where common logs are
 #    to be written.
+#   LOGGING_PATH_BASE_UT - Contains the directory where unit test
+#    logs are to be written. 
 #####################################################################
 class CMN_Directories(StrEnum):
 
@@ -35,31 +51,11 @@ class CMN_Directories(StrEnum):
         # Do some manipulation of string to make it windows compatible
         return git_root.replace('/', '/');
 
-    #####################################################################
-    # Method:       get_touch_designer_executable
-    # Purpose:      Find the path to the Touch Designer executable on 
-    #                the current machine. 
-    # Requirements: N/A
-    # Inputs:       None      
-    # Outputs:      Path to the Touch Designer executable
-    #####################################################################
-    def get_touch_designer_executable():
-        # Only works if TD is on the PATH of machine executing this command. Hopefully there is a better
-        #  way to do this
-        try:
-            # Do some manipulation of string to cover any potential issues of
-            #  spaces in path.
-            return '"' + str(which("TouchDesigner")) + '"';
-        except:
-            print("ERROR: Failed to Find Touch Designer Executable. Is it on your PATH?");
-            return None;
-
     ROOT_DIR = get_project_root(os.getcwd());
     TD_DIR = '/code/TouchDesigner';
-    TD_EXEC = get_touch_designer_executable();
+    TD_EXEC = 'TouchDesigner';
     LOGGING_PATH_BASE = ROOT_DIR + '/code/Backend/Common/logs/'
     LOGGING_PATH_BASE_UT = ROOT_DIR + '/code/Backend/ArtGenerationDriver/test/logs/'
-
 
 #####################################################################
 # Enum:         CMN_LoggingLevels
@@ -76,14 +72,55 @@ class CMN_Directories(StrEnum):
 #   ERR_LEVEL_ALL - Logging level enabling all logging.              
 #####################################################################
 class CMN_LoggingLevels(IntEnum):
-    ERR_LEVEL_ERROR     = 0
-    ERR_LEVEL_WARNING   = 1
-    ERR_LEVEL_DEBUG     = 2
-    ERR_LEVEL_TRACE     = 3
-    ERR_LEVEL_ALL       = 4 
+    ERR_LEVEL_ERROR     = 0;
+    ERR_LEVEL_WARNING   = 1;
+    ERR_LEVEL_DEBUG     = 2;
+    ERR_LEVEL_TRACE     = 3;
+    ERR_LEVEL_ALL       = 4;
 
-
+#####################################################################
+# Enum:         CMN_LoggingDomain
+# Enum Type:    IntEnum
+# Description:  This enum contains the logging domains that are used
+#                for the logging class. This helps initialize the 
+#                class properly to output the file to the correct
+#                location with the correct naming convention
+# Values:
+#   CMN_LOG_DOMAIN_BE - Backend Logging (Run in main program)
+#   CMN_LOG_DOMAIN_TD - Touch Designer Logging (TD Errors)
+#   CMN_LOG_DOMAIN_UT - Unit Test Logging (Run in UT Driver)
+#####################################################################
 class CMN_LoggingDomain(IntEnum):
-    CMN_LOG_DOMAIN_BE   = 0
-    CMN_LOG_DOMAIN_TD   = 1
-    CMN_LOG_DOMAIN_UT   = 2
+    CMN_LOG_DOMAIN_BE   = 0;
+    CMN_LOG_DOMAIN_TD   = 1;
+    CMN_LOG_DOMAIN_UT   = 2;
+
+#####################################################################
+# Enum:         CMN_ErrorCodes
+# Enum Type:    IntEnum
+# Description:  This enum contains the error codes that can be sent
+#                and received by different functionalities of the
+#                project code. 
+# Values:
+#   CMN_ERR_OK - No error
+#   CMN_ERR_GENERIC - Generic error that can be used as a palceholder
+#   CMN_ERR_INVALID_DATA - Invalid data passed as an argument
+#####################################################################
+class CMN_ErrorCodes(IntEnum):
+    CMN_ERR_OK           = 0;
+    CMN_ERR_GENERIC      = 1;
+    CMN_ERR_INVALID_DATA = 2;
+
+#####################################################################
+# Enum:         CMN_StorageMonitorErrorCode
+# Enum Type:    IntEnum
+# Description:  This enum contains the error codes that can be sent
+#                and received by the storage monitor.
+# Values:
+#   SM_ERROR_CODE_OK - No error
+#   SM_ERROR_CODE_FULL - Storage is full
+#####################################################################
+    
+class CMN_StorageMonitorErrorCode(IntEnum):
+    SM_ERROR_CODE_OK = 0;
+    SM_ERROR_CODE_FULL = 0;

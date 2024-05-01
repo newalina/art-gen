@@ -11,5 +11,5 @@ pip install -r requirements.txt
 # flask
 
 ```bash
-flask run 
+flask --app BCI_Driver run
 ```

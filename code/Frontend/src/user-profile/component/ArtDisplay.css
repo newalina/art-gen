@@ -1,0 +1,69 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.grid-item {
+    display: flex;
+    width: 200px;
+    height: 200px;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid-item-img {
+    width: 80%;
+    height: 80%;
+    object-fit: cover;
+    cursor: pointer;
+    transition: width .5s ease, height .5s ease;
+}
+
+.grid-item-img:hover {
+    width: 100%;
+    height: 100%;
+}
+
+.grid-container {
+    display: grid;
+    gap: 10px;
+    transition: all 0.5s ease; /* Transition for smooth animation */
+}
+
+.grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px
+}
+
+.carousel {
+    grid-template-columns: repeat(9, 1fr);
+}
+
+@keyframes slideScroll {
+    0% {
+        transform: translate3d(0, 0, 0);
+    }
+    100% {
+        transform: translate3d(calc(-213px * 10), 0, 0);
+    }
+}
+.slider {
+    overflow: hidden;
+    width: 100vw;
+    display: flex;
+}
+.slider .slide-track {
+    animation: slideScroll 40s linear infinite;
+    display: inline-flex;
+    width: calc((213px * (10 * 2)));
+    gap:22px
+}
+
+.slider-reverse {
+    transform: scaleX(-100%);
+}
+.slider-reverse .slide {
+    transform: scaleX(-100%);
+}

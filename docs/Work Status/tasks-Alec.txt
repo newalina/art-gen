@@ -1,10 +1,32 @@
 // Status of work for Alec
 
-List to Do (In Order of Importance):
-* Connect all patches to AGD
-  - Implement file loading on initialize for quake, watercolor, and instance
+Optional for later
+* Use a class member to actually stop 
 * Implement robust error logging in both Python and TD
   - Look into why logging is inconsistent when running with app.py.
     o Is something overwriting the file when passed to a new object?
 * Create Garbage Collection Scheme
 * Create guide to installing and running the backend
+
+
+# Need to determine if current exit strategy is OK, or if we want a more SW heavy approach using personally declared files.
+#   This does not need to be OOP. Could use helper functions to determine if too much data in folder, program is stopped recording,
+#   etc before closing out the program .
+# Is there a way to add paths for TD either in TD or by some helper function that is called to add to sys path prior to each individula
+#   function requiring AGD code?
+# Is there a way to automate / load in personal files without having to hardcode in the directory? Can an expression be used using the ROOT_DIR, etc
+#   to dynamically select where the file is so the program can be console independent? Can all of this happen at runtime?
+
+# We should probably update our documentation for code style and create documentation for naming policies to adhere to in Touch Designer so the Py Developers
+#   and TD Designers are on the same page regarding their implementations. 
+# Standardize everything. 
+
+
+# It seems that once we open touch designer, it will block all other processing. It may be good to throw this in its own thread that handles the generation. This removes the need to handle any
+#  signals sent back to teh system since we know that if td closes, it has finished processing and if it finishes processing, that we can dequeue the current object, and start processing on the next object
+
+# Think through what can be edited / what should be static. What is really the best way to implement this. 
+
+# May need to create a virtual environemnt relative to the project path that can be used so Touch Designer can work on any machine.
+#  Currently I am hardcoding values for my laptop in terms of python libraries, python files, etc. 
+# Use this for importing modules: https://nvoid.gitbooks.io/introduction-to-touchdesigner/content/Python/9-6-External-Modules.html

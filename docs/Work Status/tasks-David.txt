@@ -1,1 +1,12 @@
+// Status of work for David
 
+* Review code and code standards
+
+// Future Work
+
+* Add caching
+* Add more scalable approach to user generation requests
+* Work on logging and storage management
+* Update documentation
+* Update Windows and Mac intergration and connectivity
+* Revise code architecture (modularize and better coding standards)
