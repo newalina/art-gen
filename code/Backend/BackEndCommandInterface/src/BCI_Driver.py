@@ -176,11 +176,11 @@ def artGeneration():
         logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Appending generation request to queue")
         curLen = len(artSubSystem.generatedOutput_)
 
-        # artSubSystem.appendGenerationRequest([modelSelection, slider1Value, slider2Value, slider3Value, slider4Value, slider5Value, slider6Value])
+        artSubSystem.appendGenerationRequest([modelSelection, slider1Value, slider2Value, slider3Value, slider4Value, slider5Value, slider6Value])
 
-        # # wait for the art to be generated
-        # while len(artSubSystem.generatedOutput_) == curLen:
-        #     pass
+        # wait for the art to be generated
+        while len(artSubSystem.generatedOutput_) == curLen:
+            pass
 
         logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation completed")
 
