@@ -6,46 +6,62 @@ import Axios from "axios";
 
 const ControlPanel = () => {
   // potential candidate databases:
-  const databaseList = ["Melting Sea Ice", "Social Displacement", "Gas Levels", "Rising Temperatures", "Ocean Temperatures"];
+  const databaseList = [
+    "Melting Sea Ice",
+    "Social Displacement",
+    "Gas Levels",
+    "Rising Temperatures",
+    "Ocean Temperatures",
+  ];
   const sliderConfigurations = {
     "Melting Sea Ice": [
-      { name: "Horizontal Spread", min: 0.0001, max: 0.001, defaultValue: 0.0001 },
-      { name: "Vertical Spread", min: 0.0001, max: 0.001, defaultValue: 0.0001 },
+      {
+        name: "Horizontal Spread",
+        min: 0.0001,
+        max: 0.001,
+        defaultValue: 0.0001,
+      },
+      {
+        name: "Vertical Spread",
+        min: 0.0001,
+        max: 0.001,
+        defaultValue: 0.0001,
+      },
       { name: "Entropy", min: 0.999, max: 1, defaultValue: 0.999 },
-      { name: "Texture", min: 0, max: 100, defaultValue: 0 }
+      { name: "Texture", min: 0, max: 100, defaultValue: 0 },
     ],
     "Social Displacement": [
       { name: "Speed", min: 1, max: 8, defaultValue: 1 },
       { name: "Distance", min: 1, max: 5, defaultValue: 1 },
-      { name: "Generation", min: 0.1, max: 1, defaultValue: 0.1 }
+      { name: "Generation", min: 0.1, max: 1, defaultValue: 0.1 },
     ],
     "Gas Levels": [
       { name: "Density", min: 6, max: 10, defaultValue: 6 },
       { name: "Speed", min: 0.1, max: 0.5, defaultValue: 0.1 },
-      { name: "Color inversion", min: 1, max: 2, defaultValue: 1 }      
+      { name: "Color inversion", min: 1, max: 2, defaultValue: 1 },
     ],
     "Rising Temperatures": [
       { name: "Height", min: 1, max: 3, defaultValue: 1 },
       { name: "Smoothness", min: 0.1, max: 10, defaultValue: 0.1 },
-      { name: "Entropy", min: 0.1, max: 0.7, defaultValue: 0.1 }
+      { name: "Entropy", min: 0.1, max: 0.7, defaultValue: 0.1 },
     ],
     "Ocean Temperatures": [
       { name: "Size", min: 1, max: 5, defaultValue: 1 },
       { name: "Entropy", min: 0.1, max: 3, defaultValue: 0.1 },
-      { name: "Distance", min: 0, max: 100, defaultValue: 0 }
-    ]
+      { name: "Distance", min: 0, max: 100, defaultValue: 0 },
+    ],
   };
   const [selectedDatabase, setSelectedDatabase] = useState("Melting Sea Ice");
   const [mediaPopupOpen, setMediaPopupOpen] = useState(false);
   const [vidURL, setVidURL] = useState("");
-    // potential user input params:
+  // potential user input params:
   const [parameter1, setParameter1] = useState();
   const [parameter2, setParameter2] = useState();
   const [parameter3, setParameter3] = useState();
   const [parameter4, setParameter4] = useState();
 
   useEffect(() => {
-    const sliders = sliderConfigurations[selectedDatabase]
+    const sliders = sliderConfigurations[selectedDatabase];
     if (sliders[0]) setParameter1(sliders[0].defaultValue);
     if (sliders[1]) setParameter2(sliders[1].defaultValue);
     if (sliders[2]) setParameter3(sliders[2].defaultValue);
@@ -53,17 +69,20 @@ const ControlPanel = () => {
   }, [selectedDatabase]);
 
   const closeMediaPopup = () => {
-      setMediaPopupOpen(false);
+    setMediaPopupOpen(false);
   };
 
   const handleGenerateArt = async () => {
-    Axios.get("http://127.0.0.1:5000/api/artGeneration", {
+    // Axios.get("http://10.38.171.41:80/api/artGeneration", {
+    Axios.get("http://172.20.10.4/api/artGeneration", {
       params: {
-        modelSelection: selectedDatabase,
-        slider1Value: parameter1,
-        slider2Value: parameter2,
-        slider3Value: parameter3,
-        slider4Value: parameter4
+        modelSelection: 4,
+        slider1Value: 20,
+        slider2Value: 40,
+        slider3Value: 80,
+        slider4Value: 1,
+        slider5Value: 1,
+        slider6Value: 1,
       },
     }).then((response) => {
       console.log(response.data.videoUrl);
@@ -78,8 +97,8 @@ const ControlPanel = () => {
       <h3 style={{ color: "white" }}>
         Current Database selection: {selectedDatabase}
         <br />
-        just for debug: Current Parameter selection: Param1: {parameter1}, Param2: {parameter2},
-        Param3: {parameter3}, Param4: {parameter4}
+        just for debug: Current Parameter selection: Param1: {parameter1},
+        Param2: {parameter2}, Param3: {parameter3}, Param4: {parameter4}
       </h3>
 
       <MultipleChoice
@@ -87,18 +106,33 @@ const ControlPanel = () => {
         onValueChange={setSelectedDatabase}
         optionList={databaseList}
       />
-      
+
       {sliderConfigurations[selectedDatabase]?.map((sliderInfo, index) => (
         <SliderWithInput
           key={index}
           name={sliderInfo.name}
-          value={index === 0 ? parameter1 : index === 1 ? parameter2 : index === 2 ? parameter3 : parameter4}
+          value={
+            index === 0
+              ? parameter1
+              : index === 1
+              ? parameter2
+              : index === 2
+              ? parameter3
+              : parameter4
+          }
           min={sliderInfo.min}
           max={sliderInfo.max}
-          onValueChange={index === 0 ? setParameter1 : index === 1 ? setParameter2 : index === 2 ? setParameter3 : setParameter4}
+          onValueChange={
+            index === 0
+              ? setParameter1
+              : index === 1
+              ? setParameter2
+              : index === 2
+              ? setParameter3
+              : setParameter4
+          }
         />
       ))}
-
 
       <button className={styles.generateButton} onClick={handleGenerateArt}>
         generate
@@ -125,10 +159,33 @@ const ControlPanel = () => {
                 />
               </svg>
 
-                <svg onClick={closeMediaPopup} width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 5L19 19M5 19L19 5" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+              <svg
+                onClick={closeMediaPopup}
+                width="36"
+                height="36"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  {" "}
+                  <path
+                    d="M5 5L19 19M5 19L19 5"
+                    stroke="#ffffff"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>{" "}
+                </g>
+              </svg>
 
-
-                <svg
+              <svg
                 width="36"
                 height="36"
                 viewBox="0 0 36 36"
