@@ -20,6 +20,8 @@ from Backend.ArtGenerationDriver.test.AGD_Simulator import AGD_Simulator
 from Backend.Common.src.CMN_Definitions import CMN_LoggingLevels as CMN_LL
 from Backend.Common.src.CMN_Definitions import CMN_LoggingDomain as CMN_LD
 from Backend.Common.src.CMN_ErrorLogging import CMN_Logging
+
+# Main Function
 if __name__ == "__main__":
 
     print("*************************************************************")

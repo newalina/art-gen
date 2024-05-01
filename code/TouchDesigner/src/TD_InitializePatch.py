@@ -21,14 +21,14 @@ import td
 import sys
 from pathlib import Path
 
-# Private Modules
+# Project Modules
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_Directories as AGD_DIR
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_TouchDesignerNodes as AGD_TDN
 from Backend.Common.src.CMN_ErrorLogging import CMN_Logging
 from Backend.Common.src.CMN_Definitions import CMN_LoggingLevels as CMN_LL
 from Backend.Common.src.CMN_Definitions import CMN_LoggingDomain as CMN_LD
 
-# Continue working on this
+# TODO: Continue working on this. remove sys stdout calls when logging works
 TDLog = CMN_Logging(CMN_LL.ERR_LEVEL_ALL, CMN_LD.CMN_LOG_DOMAIN_TD);
 
 #####################################################################

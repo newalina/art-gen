@@ -18,6 +18,7 @@ import sys;
 
 # Project Modules
 
+# TODO: Convert writes to file logging when logging works. 
 
 #####################################################################
 # Function:     onDone

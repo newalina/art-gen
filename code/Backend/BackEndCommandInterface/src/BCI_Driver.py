@@ -4,12 +4,12 @@
 # 
 # Purpose of File: The purpose of this file is run the server, handle api 
 #                   requests to our generation endpoint
-
+#
 # Creation Date: March 20th, 2024
-
+#
 # Author: David Doan, Alec Pratt, Malique Bodie
-      
-# #########################################################################
+#       
+##########################################################################
 
 # Public Modules
 from flask_cors import CORS
@@ -27,8 +27,8 @@ from Backend.Common.src.CMN_Definitions import CMN_LoggingDomain as CMN_LD
 from Backend.Common.src.CMN_ErrorLogging import CMN_Logging
 from Backend.Common.src.CMN_StorageMonitor import CMN_StorageMonitor
 from Backend.BackEndCommandInterface.src.BCI_Definitions import BCI_Directories as BCI_DIR
+from Backend.BackEndCommandInterface.src.BCI_Definitions import BCI_ErrorCodes as BCI_EC
 from Backend.BackEndCommandInterface.src.BCI_Utils import BCI_Utils
-# from BCI_Utils import BCI_Utils
 
 # ############################# INIT MODULES ############################
 # Open the log file
@@ -45,19 +45,7 @@ artSubSystem = AGD_Subsystem(logging)
 
 # ########################### INIT SERVER ################################
 # Initialize the art generation ID
-ART_GENERATION_ID = -1
-
-def get_next_art_generation_id():
-    global ART_GENERATION_ID
-    ART_GENERATION_ID += 1
-    return ART_GENERATION_ID
-
-ENVIRONTMENT_APIS = {
-        'Carbon Dioxide' : 'https://global-warming.org/api/co2-api',
-        'Methane' : 'https://global-warming.org/api/methane-api',
-        'Nitrous Oxide' : 'https://global-warming.org/api/nitrous-oxide-api',
-        'Ocean Temperature' : 'https://global-warming.org/api/ocean-warming-api'
-    }
+ArtGenerationId = -1
 
 # Initialize the Flask app
 logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the Flask Server")
@@ -71,19 +59,15 @@ logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Server started")
 # ############################ DATABASE INIT #############################
 # Initialize Google Cloud Storage client
 logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the Google Cloud Storage Client")
-storageClient = storage.Client.from_service_account_json('gcp-key.json')
+StorageClient = storage.Client.from_service_account_json('gcp-key.json')
 
 # MongoDB connection 
 logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the MongoDB Client")
-MONGO_URI = 'mongodb+srv://malique-bodie:86zb67pNK3U3BgEt@art-gen.bxqjsqp.mongodb.net/?retryWrites=true&w=majority'
-db = MongoClient(MONGO_URI).test # Using test DB 
-collection = db["product"]
+Database = MongoClient(BCI_DIR.BCI_MONGO_URI).test # Using test DB 
+Collection = Database["product"]
 
-# ###############################  GCP ###################################
-
-# Route to connect to Google Cloud API
 # ########################################################################
-# Function:     google_cloud_api
+# Function:     googleCloudApi
 # Purpose:      Uploads media to Google Cloud Storage and updates the user's
 #               media field in the database
 # Requirements: N/A
@@ -98,7 +82,7 @@ collection = db["product"]
 def googleCloudApi():
     if request.method == 'GET':
         # retrieve list of image_id from DB
-        results = collection.find_one({"username": request.args.get('username')})
+        results = Collection.find_one({"username": request.args.get('username')})
         return list(results['media'])
 
     else:
@@ -111,31 +95,29 @@ def googleCloudApi():
         BCI_Utils.trimVideo(source, timeStamp, 10, videoOutputFileName)
         
         # Upload the trimmed video file to Google Cloud Storage
-        videoUrl = BCI_Utils.gcsUploadMedia(videoOutputFileName, 'video/mp4', storageClient)
+        videoUrl = BCI_Utils.gcsUploadMedia(videoOutputFileName, 'video/mp4', StorageClient)
 
         # generate thumbnail
         BCI_Utils.generateThumbnail(source,thumbnailOutputFileName,timeStamp)
 
         # Upload the trimmed video file to Google Cloud Storage
-        thumbnailUrl = BCI_Utils.gcsUploadMedia(thumbnailOutputFileName, 'image/jpg', storageClient)
+        thumbnailUrl = BCI_Utils.gcsUploadMedia(thumbnailOutputFileName, 'image/jpg', StorageClient)
 
         # Format MongoDB output
         newMedia = (thumbnailUrl, videoUrl, isVideo) # (thumbnail, video, is_video)
 
         # check if user exists in db
-        user = collection.find_one({'username': userName})
+        user = Collection.find_one({'username': userName})
         if user is not None:
             # Update user's media field
-            collection.update_one({"username": userName}, {"$push": {"media": newMedia}})
+            Collection.update_one({"username": userName}, {"$push": {"media": newMedia}})
 
         else:
             # Add new user to the db
             user = {'username': userName, 'media': [newMedia]}
-            collection.insert_one(user)
+            Collection.insert_one(user)
             
-        return jsonify({'message': 'Media uploaded successfully', 'username': userName}), 200
-
-# ######################## ART GENERATION ENDPOINT #######################
+        return jsonify({'message': 'Media uploaded successfully', 'username': userName}), BCI_EC.BCI_ERR_200
 
 ##########################################################################
 # Function:     artGeneration
@@ -149,59 +131,65 @@ def googleCloudApi():
 #
 # Outputs:      None, sends the generated art to the frontend
 ##########################################################################
-
-# Helper function to increment and get the current ART_GENERATION_ID
-def get_next_art_generation_id():
-    global ART_GENERATION_ID
-    ART_GENERATION_ID += 1
-    return ART_GENERATION_ID
-
 @app.route('/api/artGeneration', methods=['GET', 'POST'])
 def artGeneration():
-    logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation Endpoint requested")
-    artGenerationId = get_next_art_generation_id()
+    logging.log(CMN_LL.ERR_LEVEL_DEBUG, "BCI_Driver.artGeneration() Art Generation Endpoint requested");
+
+    global ArtGenerationId;
+    ArtGenerationId = ArtGenerationId + 1;
+    artGenerationId = ArtGenerationId;
     
     try:
-        logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Getting user data from request")  
-        modelSelection = slider1Value = slider2Value = slider3Value = slider4Value = slider5Value = slider6Value = 0
+        logging.log(CMN_LL.ERR_LEVEL_DEBUG, "BCI_Driver.artGeneration() Getting data from user request");
+        modelSelection = slider1Value = slider2Value = slider3Value = slider4Value = slider5Value = slider6Value = 0;
         if request.method == 'GET':
-            logging.log(CMN_LL.ERR_LEVEL_DEBUG, "GET request")
-            modelSelection = int(request.args.get('modelSelection'))
-            slider1Value = int(request.args.get('slider1Value'))
-            slider2Value = int(request.args.get('slider2Value'))
-            slider3Value = int(request.args.get('slider3Value'))
-            slider4Value = int(request.args.get('slider4Value'))
-            slider5Value = int(request.args.get('slider5Value'))
-            slider6Value = int(request.args.get('slider6Value'))
+            logging.log(CMN_LL.ERR_LEVEL_DEBUG, "GET request");
+            modelSelection = int(request.args.get('modelSelection'));
+            slider1Value = int(request.args.get('slider1Value'));
+            slider2Value = int(request.args.get('slider2Value'));
+            slider3Value = int(request.args.get('slider3Value'));
+            slider4Value = int(request.args.get('slider4Value'));
+            slider5Value = int(request.args.get('slider5Value'));
+            slider6Value = int(request.args.get('slider6Value'));
 
-            logging.log(CMN_LL.ERR_LEVEL_DEBUG, f"Model Selection: {modelSelection}, Slider 1: {slider1Value}, Slider 2: {slider2Value}, Slider 3: {slider3Value}. Slider 4: {slider4Value}, Slider 5: {slider5Value}, Slider 6: {slider6Value}")
+            logging.log(CMN_LL.ERR_LEVEL_DEBUG, f"BCI_Driver.artGeneration() Model Selection: {modelSelection}, Slider 1: {slider1Value}, Slider 2: {slider2Value}, \
+                        Slider 3: {slider3Value}. Slider 4: {slider4Value}, Slider 5: {slider5Value}, Slider 6: {slider6Value}");
         
-        logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Appending generation request to queue")
-        curLen = len(artSubSystem.generatedOutput_)
+        logging.log(CMN_LL.ERR_LEVEL_DEBUG, "BCI_Driver.artGeneration() Appending generation request to queue");
+        curLen = len(artSubSystem.generatedOutput_);
 
-        artSubSystem.appendGenerationRequest([modelSelection, slider1Value, slider2Value, slider3Value, slider4Value, slider5Value, slider6Value])
+        artSubSystem.appendGenerationRequest([modelSelection, slider1Value, slider2Value, slider3Value, slider4Value, slider5Value, slider6Value]);
 
         # wait for the art to be generated
         while len(artSubSystem.generatedOutput_) == curLen:
-            pass
+            pass;
 
-        logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation completed")
+        logging.log(CMN_LL.ERR_LEVEL_DEBUG, "BCI_Driver.artGeneration() Art Generation completed");
 
-        ffmpeg.input(AGD_DIR.AGD_OUTPUT_FILE_BASE + str(artGenerationId) + '.mov').output(BCI_DIR.BCI_OUTPUT_FILE_BASE + str(artGenerationId) + '.mp4').overwrite_output().run()
-        videoUrl = url_for('get_video', filename=f'artGenerationOutput_{artGenerationId}.mp4',  _external=True)
+        ffmpeg.input(AGD_DIR.AGD_OUTPUT_FILE_BASE + str(artGenerationId) + '.mov').output(BCI_DIR.BCI_OUTPUT_FILE_BASE + str(artGenerationId) + '.mp4').overwrite_output().run();
+        videoUrl = url_for('getVideo', filename=f'artGenerationOutput_{artGenerationId}.mp4',  _external=True);
 
-        logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation sent to frontend")
+        logging.log(CMN_LL.ERR_LEVEL_DEBUG, "BCI_Driver.artGeneration() Art Generation sent to frontend");
 
-        return jsonify({'message': 'Art generated successfully', 'videoUrl': videoUrl}), 200
+        return jsonify({'message': 'Art generated successfully', 'videoUrl': videoUrl}), BCI_EC.BCI_ERR_200;
     except Exception as e:
-        logging.log(CMN_LL.ERR_LEVEL_ERROR, f"An error occurred {e}")
-        return f'An error occurred {e}', 500
+        logging.log(CMN_LL.ERR_LEVEL_ERROR, f"BCI_Driver.artGeneration() An error occurred {e}");
+        return f'An error occurred {e}', BCI_EC.BCI_ERR_500;
 
-# host the videos as urls
+##########################################################################
+# Function:     getVideo
+# Purpose:      Send video data via a URL to the front end
+# Requirements: N/A
+# Inputs:       fileName - File to be send via URL
+# Outputs:      None
+##########################################################################
 @app.route('/videos/<filename>')
-def get_video(fileName):
+def getVideo(fileName):
     response = send_from_directory(BCI_DIR.BCI_DATA_DIR, fileName, mimetype='video/mp4')
     return response
-    
+
+
+
+# Main function wrapper
 if __name__ == '__main__':
     app.run(host='10.38.171.41', debug=True)

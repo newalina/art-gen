@@ -15,7 +15,7 @@
 
 # Public Modules
 from subprocess import run
-import json
+from json import dump
 
 # Project Modules
 from Backend.ArtGenerationDriver.src.AGD_Definitions import AGD_Directories as AGD_DIR
@@ -98,7 +98,7 @@ class AGD_ArtGeneratorUnit:
         errCode = run(executeString, shell=True);
 
         if(errCode.returncode != 0):
-            print("ERROR: Unable to run Touch Designer with exit code: " + str(errCode.returncode));
+            self.logger_.log(CMN_LL.ERR_LEVEL_ERROR, "AGD_ArtGeneratorUnit.startTouchDesigner() Unable to run Touch Designer with exit code: " + str(errCode.returncode))
         
         self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_ArtGeneratorUnit.startTouchDesigner() out")
     
@@ -154,7 +154,7 @@ class AGD_ArtGeneratorUnit:
         jsonData = self.packageJSONData();
 
         with open(str(AGD_DIR.AGD_INPUT_JSON) , "w") as jsonFile:
-            json.dump(jsonData, jsonFile);
+            dump(jsonData, jsonFile);
 
         self.logger_.log(CMN_LL.ERR_LEVEL_TRACE, "AGD_ArtGeneratorUnit.writeToJSON() out")
         return 0;

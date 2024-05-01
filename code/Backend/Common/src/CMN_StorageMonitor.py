@@ -1,15 +1,21 @@
 ##########################################################################
 #
-# File: CMN_StorageMonitor.py
+# File: AGD_Definitions.py
 # 
-# Purpose of File: TODO: Fill in the purpose of this file
+# Purpose of File: The purpose of this file is to maintain storage levels
+#                   on the host machine so that there are not too many
+#                   files saved to disk and consuming valuable memory
+#                   resources.
 #
 # Creation Date: April 20th, 2024
 #
-# Author: Alec Pratt
-# Modifiers: David Doan
+# Author: Alec Pratt, David Doan
 #       
 ##########################################################################
+
+# TODO: Complete this file. As of now, it may not be functional .
+
+# Public Modules
 from enum import IntEnum
 import threading
 import os
