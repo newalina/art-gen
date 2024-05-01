@@ -52,6 +52,13 @@ def get_next_art_generation_id():
     ART_GENERATION_ID += 1
     return ART_GENERATION_ID
 
+ENVIRONTMENT_APIS = {
+        'Carbon Dioxide' : 'https://global-warming.org/api/co2-api',
+        'Methane' : 'https://global-warming.org/api/methane-api',
+        'Nitrous Oxide' : 'https://global-warming.org/api/nitrous-oxide-api',
+        'Ocean Temperature' : 'https://global-warming.org/api/ocean-warming-api'
+    }
+
 # Initialize the Flask app
 logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the Flask Server")
 app = Flask(__name__)
@@ -64,7 +71,7 @@ logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Server started")
 # ############################ DATABASE INIT #############################
 # Initialize Google Cloud Storage client
 logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the Google Cloud Storage Client")
-storage_client = storage.Client.from_service_account_json('gcp-key.json')
+storageClient = storage.Client.from_service_account_json('gcp-key.json')
 
 # MongoDB connection 
 logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the MongoDB Client")
@@ -88,45 +95,45 @@ collection = db["product"]
 #               the user's media field in the database
 # ########################################################################
 @app.route('/api/google-cloud', methods=['GET', 'POST'])
-def google_cloud_api():
+def googleCloudApi():
     if request.method == 'GET':
         # retrieve list of image_id from DB
         results = collection.find_one({"username": request.args.get('username')})
         return list(results['media'])
 
     else:
-        username, source, isVideo, timestamp = request.args.get('username'), request.args.get('source'), bool(request.args.get('isVideo')), int(request.args.get('timestamp')) # isVideo: Bool, username: Str, source: Str, timeStamp: int
+        userName, source, isVideo, timeStamp = request.args.get('username'), request.args.get('source'), bool(request.args.get('isVideo')), int(request.args.get('timestamp')) # isVideo: Bool, username: Str, source: Str, timeStamp: int
         
         # define video and thumbnail files
-        video_output_filename, thumbnail_output_filename  = "trimmed_video.mp4","thumbnail.jpg"        
+        videoOutputFileName, thumbnailOutputFileName  = "trimmed_video.mp4","thumbnail.jpg"        
         
         # trim video
-        BCI_Utils.trim_video(source,timestamp,10,video_output_filename)
+        BCI_Utils.trimVideo(source, timeStamp, 10, videoOutputFileName)
         
         # Upload the trimmed video file to Google Cloud Storage
-        video_url = BCI_Utils.gcs_upload_media(video_output_filename, 'video/mp4')
+        videoUrl = BCI_Utils.gcsUploadMedia(videoOutputFileName, 'video/mp4', storageClient)
 
         # generate thumbnail
-        BCI_Utils.generate_thumbnail(source,thumbnail_output_filename,timestamp)
+        BCI_Utils.generateThumbnail(source,thumbnailOutputFileName,timeStamp)
 
         # Upload the trimmed video file to Google Cloud Storage
-        thumbnail_url = BCI_Utils.gcs_upload_media(thumbnail_output_filename, 'image/jpg')
+        thumbnailUrl = BCI_Utils.gcsUploadMedia(thumbnailOutputFileName, 'image/jpg', storageClient)
 
         # Format MongoDB output
-        new_media = (thumbnail_url,video_url,isVideo) # (thumbnail, video, is_video)
+        newMedia = (thumbnailUrl, videoUrl, isVideo) # (thumbnail, video, is_video)
 
         # check if user exists in db
-        user = collection.find_one({'username': username})
+        user = collection.find_one({'username': userName})
         if user is not None:
             # Update user's media field
-            collection.update_one({"username": username}, {"$push": {"media": new_media}})
+            collection.update_one({"username": userName}, {"$push": {"media": newMedia}})
 
         else:
             # Add new user to the db
-            user = {'username': username, 'media': [new_media]}
+            user = {'username': userName, 'media': [newMedia]}
             collection.insert_one(user)
             
-        return jsonify({'message': 'Media uploaded successfully', 'username': username}), 200
+        return jsonify({'message': 'Media uploaded successfully', 'username': userName}), 200
 
 # ######################## ART GENERATION ENDPOINT #######################
 
@@ -149,10 +156,6 @@ def get_next_art_generation_id():
     ART_GENERATION_ID += 1
     return ART_GENERATION_ID
 
-def convert_mov_to_mp4(input_path, output_path):
-    ret = ffmpeg.input(input_path).output(output_path).overwrite_output().run()
-    print(ret);
-
 @app.route('/api/artGeneration', methods=['GET', 'POST'])
 def artGeneration():
     logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Art Generation Endpoint requested")
@@ -161,7 +164,7 @@ def artGeneration():
     try:
         logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Getting user data from request")  
         modelSelection = slider1Value = slider2Value = slider3Value = slider4Value = slider5Value = slider6Value = 0
-        if request.method == 'POST':
+        if request.method == 'GET':
             logging.log(CMN_LL.ERR_LEVEL_DEBUG, "GET request")
             modelSelection = int(request.args.get('modelSelection'))
             slider1Value = int(request.args.get('slider1Value'))
@@ -196,8 +199,8 @@ def artGeneration():
 
 # host the videos as urls
 @app.route('/videos/<filename>')
-def get_video(filename):
-    response = send_from_directory(BCI_DIR.BCI_DATA_DIR, filename, mimetype='video/mp4')
+def get_video(fileName):
+    response = send_from_directory(BCI_DIR.BCI_DATA_DIR, fileName, mimetype='video/mp4')
     return response
     
 if __name__ == '__main__':

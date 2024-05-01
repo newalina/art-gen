@@ -17,14 +17,6 @@ from moviepy.editor import VideoFileClip
 from PIL import Image
 
 class BCI_Utils:
-
-    environmental_apis = {
-        'Carbon Dioxide' : 'https://global-warming.org/api/co2-api',
-        'Methane' : 'https://global-warming.org/api/methane-api',
-        'Nitrous Oxide' : 'https://global-warming.org/api/nitrous-oxide-api',
-        'Ocean Temperature' : 'https://global-warming.org/api/ocean-warming-api'
-    }
-
     # ********************************************************* API DATA INIT **************************************************
 
     # ##################################################################################################################
@@ -37,18 +29,18 @@ class BCI_Utils:
     #   list: A list of floats containing the formatted data
     # ##################################################################################################################
 
-    def format_data(data_name, data):
+    def formatData(dataName, data):
             out = []
-            if data_name == 'Ocean Temperature':
+            if dataName == 'Ocean Temperature':
                 result = data['result']
                 for key, value in result.items():
                     out.append(float(value))
             else:
-                if data_name == 'Carbon Dioxide':
+                if dataName == 'Carbon Dioxide':
                     key = 'co2'
-                elif data_name == 'Methane':
+                elif dataName == 'Methane':
                     key = 'methane'
-                elif data_name == 'Nitrous Oxide':
+                elif dataName == 'Nitrous Oxide':
                     key = 'nitrous'
                 result = data[key]
                 for dict in result:
@@ -65,25 +57,25 @@ class BCI_Utils:
     # Returns:
     #   None
     # ##################################################################################################################
-    def load_api_data(apis, output_file):
+    def loadApiData(apis, outputFile):
         # Dictionary to store data from each API
-        api_data = {}
+        apiData = {}
 
         # Loop through each API URL
-        for api_name, api_url in apis.items():
+        for apiName, apiUrl in apis.items():
             try:
                 # Make GET request to API
-                response = requests.get(api_url)
+                response = requests.get(apiUrl)
                 data = response.json()  # Extract JSON data from response
-                data = format_data(api_name, data)
+                data = BCI_Utils.formatData(apiName, data)
                 # Store data in dictionary with URL as key
-                api_data[api_name] = data
+                apiData[apiName] = data
             except Exception as e:
-                print(f"Failed to fetch data from {api_url}: {e}")
+                print(f"Failed to fetch data from {apiUrl}: {e}")
 
         # Write API data to JSON file
-        with open(output_file, 'w') as f:
-            json.dump(api_data, f, indent=4)
+        with open(outputFile, 'w') as f:
+            json.dump(apiData, f, indent=4)
 
 
     # ********************************************************* DATABASE FUNCS **************************************************
@@ -98,8 +90,8 @@ class BCI_Utils:
     # Returns:
     #     str: The public URL of the uploaded file.
     # ##################################################################################################################
-    def gcs_upload_media(file, type):
-        bucket = storage_client.bucket('artgen-storage')
+    def gcsUploadMedia(file, type, storageClient):
+        bucket = storageClient.bucket('artgen-storage')
         blob: storage.Blob = bucket.blob(file.split("/")[-1])
         blob.content_type = type 
         blob.upload_from_filename(file)
@@ -118,15 +110,15 @@ class BCI_Utils:
     #     Returns:
     #         None
     # ##################################################################################################################
-    def trim_video(input_file, start_time, duration, output_file):
+    def trimVideo(inputFile, startTime, duration, outputFile):
         # Load the video clip
-        video_clip = VideoFileClip(input_file)
+        videoClip = VideoFileClip(inputFile)
 
         # Trim the video to the specified duration
-        trimmed_clip = video_clip.subclip(start_time, start_time + duration)
+        trimmedClip = videoClip.subclip(startTime, startTime + duration)
 
         # Save the trimmed video
-        trimmed_clip.write_videofile(output_file)
+        trimmedClip.write_videofile(outputFile)
 
     # ##################################################################################################################
     # Generate a thumbnail image for a video at the specified time.
@@ -139,20 +131,20 @@ class BCI_Utils:
     # Returns:
     #     None
     # ##################################################################################################################
-    def generate_thumbnail(video_path, output_path, time):
+    def generateThumbnail(videoPath, outputPath, time):
         # Load the video clip
-        video_clip = VideoFileClip(video_path)
+        videoClip = VideoFileClip(videoPath)
 
         # Capture a frame at the specified time
-        thumbnail = video_clip.get_frame(time)
+        thumbnail = videoClip.get_frame(time)
 
         # Convert frame (numpy array) to image
         thumbnail = Image.fromarray(thumbnail)
 
         # Save the thumbnail image
-        thumbnail.save(output_path)
+        thumbnail.save(outputPath)
 
         # Close the video clip
-        video_clip.close()
+        videoClip.close()
 
     # ********************************************************* API FUNCS **************************************************
