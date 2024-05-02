@@ -1,52 +1,59 @@
 .navbar {
-    height: 35px;  /* Default height */
-    background-color: black;
-    display: flex;
-    /* justify-content: space-around;  */
-    padding: 10px 0;
+  height: 0;
+  background-color: transparent;
+  display: flex;
+  /* justify-content: space-around;  */
+  /* padding: 10px 0; */
 }
 
 .infoIcon {
-    position: absolute;    
-    right: 120px;
-    cursor: pointer;
+  position: absolute;
+  z-index: 1;
+
+  right: 120px;
+  cursor: pointer;
 }
 
 .homeIcon {
-    position: absolute;    
-    left: 10px;
+  position: absolute;
+  z-index: 1;
+
+  left: 10px;
+  cursor: pointer;
 }
 
 .modal {
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .modalContent {
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 18px;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
+  font-family: Redaction35;
+  font-size: large;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 18px;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
 }
 
 .closeButton {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
 }
 
 .closeButton:hover,
 .closeButton:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
 }

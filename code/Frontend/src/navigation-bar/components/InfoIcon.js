@@ -1,10 +1,13 @@
-import React from 'react';
+import React from "react";
 
 const InfoIcon = ({ onClick }) => (
-    <svg onClick={onClick} width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="17" cy="17" r="17" fill="white" fillOpacity="0.2"/>
-        <path d="M15.7131 27V13.9091H18.2614V27H15.7131ZM17 11.8892C16.5568 11.8892 16.1761 11.7415 15.858 11.446C15.5455 11.1449 15.3892 10.7869 15.3892 10.3722C15.3892 9.9517 15.5455 9.59375 15.858 9.29829C16.1761 8.99716 16.5568 8.84659 17 8.84659C17.4432 8.84659 17.821 8.99716 18.1335 9.29829C18.4517 9.59375 18.6108 9.9517 18.6108 10.3722C18.6108 10.7869 18.4517 11.1449 18.1335 11.446C17.821 11.7415 17.4432 11.8892 17 11.8892Z" fill="white"/>
-    </svg>
+  <button
+    onClick={onClick}
+    height="50px"
+    style={{ marginTop: "30px", fontFamily: "Space", fontSize: "18px" }}
+  >
+    i
+  </button>
 );
 
 export default InfoIcon;
