@@ -1,78 +1,14 @@
 @font-face {
-  font-family: by7;
-  src: url("assets/fonts/5by7.ttf");
-}
-@font-face {
-  font-family: by7Light;
-  src: url("assets/fonts/5by7Light.ttf");
-}
-@font-face {
-  font-family: by7_b;
-  src: url("assets/fonts/5by7_b.ttf");
-}
-@font-face {
   font-family: LED;
   src: url("assets/fonts/24\ LED.ttf");
-}
-@font-face {
-  font-family: ABCCamera-Regular;
-  src: url("assets/fonts/ABCCamera-Regular-Trial.otf");
-}
-@font-face {
-  font-family: ABCCamera-Medium;
-  src: url("assets/fonts/ABCCamera-Medium-Trial.otf");
-}
-@font-face {
-  font-family: Barlowfold;
-  src: url("assets/fonts/Barlowfold.otf");
-}
-@font-face {
-  font-family: der75;
-  src: url("assets/fonts/der75.otf");
-}
-@font-face {
-  font-family: Goozee;
-  src: url("assets/fonts/Goozeeoutline.otf");
-}
-@font-face {
-  font-family: Goozette;
-  src: url("assets/fonts/Goozette.otf");
-}
-@font-face {
-  font-family: Redaction10;
-  src: url("assets/fonts/Redaction10-Regular.otf");
-}
-@font-face {
-  font-family: Redaction20;
-  src: url("assets/fonts/Redaction20-Regular.otf");
-}
-@font-face {
-  font-family: Redaction35;
-  src: url("assets/fonts/Redaction35-Regular.otf");
-}
-@font-face {
-  font-family: Redaction50;
-  src: url("assets/fonts/Redaction50-Regular.otf");
 }
 @font-face {
   font-family: Redaction70;
   src: url("assets/fonts/Redaction70-Regular.otf");
 }
 @font-face {
-  font-family: Redaction100;
-  src: url("assets/fonts/Redaction100-Regular.otf");
-}
-@font-face {
   font-family: Space;
   src: url("assets/fonts/Space-Notorious-rounded.otf");
-}
-@font-face {
-  font-family: terminal-grotesque;
-  src: url("assets/fonts/terminal-grotesque.ttf");
-}
-@font-face {
-  font-family: terminal-grotesque-open;
-  src: url("assets/fonts/terminal-grotesque_open.otf");
 }
 
 body {
