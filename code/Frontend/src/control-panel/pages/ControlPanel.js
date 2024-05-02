@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import styles from "./control-panel.module.css";
+import styles from "./ControlPanel.module.css";
 import SliderWithInput from "../components/SliderWithInput";
 import MultipleChoice from "../components/MultipleChoice";
 import Axios from "axios";
 
 const ControlPanel = () => {
-  // potential candidate databases:
   const databaseList = [
     "Melting Sea Ice",
     "Social Displacement",
@@ -16,13 +15,13 @@ const ControlPanel = () => {
   const sliderConfigurations = {
     "Melting Sea Ice": [
       {
-        name: "Horizontal Spread",
+        name: "X-Spread",
         min: 0.0001,
         max: 0.001,
         defaultValue: 0.0001,
       },
       {
-        name: "Vertical Spread",
+        name: "Y-Spread",
         min: 0.0001,
         max: 0.001,
         defaultValue: 0.0001,
@@ -93,13 +92,14 @@ const ControlPanel = () => {
 
   return (
     <div className={styles.container}>
-      <h1 style={{ color: "white" }}>Choose Scene</h1>
-      <h3 style={{ color: "white" }}>
+      <h1 style={{ color: "white", fontSize: "48px" }}>Select Dataset</h1>
+
+      {/* <h3 style={{ color: "white" }}>
         Current Database selection: {selectedDatabase}
         <br />
         just for debug: Current Parameter selection: Param1: {parameter1},
         Param2: {parameter2}, Param3: {parameter3}, Param4: {parameter4}
-      </h3>
+      </h3> */}
 
       <MultipleChoice
         value={selectedDatabase}

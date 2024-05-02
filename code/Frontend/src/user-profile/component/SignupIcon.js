@@ -9,9 +9,10 @@ const SignupIcon = () => (
       marginRight: "20px",
       fontFamily: "Space",
       fontSize: "18px",
+      backgroundColor: "#737e56",
     }}
   >
-    Sign Up
+    sign in
   </button>
 );
 

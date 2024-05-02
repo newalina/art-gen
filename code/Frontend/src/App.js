@@ -9,7 +9,7 @@ import {
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import Home from "./home-page/pages/Home";
-import ControlPanel from "./control-panel/pages/control-panel";
+import ControlPanel from "./control-panel/pages/ControlPanel";
 import UserProfile from "./user-profile/pages/UserProfile";
 import NavBar from "./navigation-bar/components/NavBar";
 import Generator from "./generator/pages/Generator";

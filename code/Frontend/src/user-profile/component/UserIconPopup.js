@@ -25,7 +25,6 @@ function UserIconPopup() {
 
   const handleLoginSuccess = (credentialResponse) => {
     const decodedCredential = jwtDecode(credentialResponse.credential);
-    // console.log(decodedCredential);
     login({
       name: decodedCredential.name,
       email: decodedCredential.email,

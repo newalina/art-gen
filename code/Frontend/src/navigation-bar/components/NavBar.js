@@ -35,35 +35,50 @@ const Navbar = () => {
             <span className={styles.closeButton} onClick={toggleModal}>
               &times;
             </span>
-            <p>Melting. Rising. Displacing. </p>
             <p>
-              Each word understood as part of the implications of climate
-              change, this story we know.
+              <b>Melting. Rising. Displacing. </b>
             </p>
             <p>
-              It is also the story of worlds that become visibly entangled
-              within the hypermedia of socio-environmental data.
+              <b>
+                Each word understood as part of the implications of climate
+                change, this story we know.
+              </b>
             </p>
             <p>
-              REGENERATIVE is an experimental exploration of ways to visualise
-              the innate interconnected nature of worlds damaged by human
-              interactions.
+              <b>
+                It is also the story of worlds that become visibly entangled
+                within the hypermedia of socio-environmental data.
+              </b>
             </p>
-            Our project mediates digital art as alternative realities and
-            evidence of damage.
             <p>
-              Truths and tensions are formed through the dialogue between users
-              and their creations.
+              <b>
+                REGENERATIVE is an experimental exploration of ways to visualise
+                the innate interconnected nature of worlds damaged by human
+                interactions.
+              </b>
             </p>
-            <p>The extent of what you create is beyond our understanding.</p>
             <p>
-              Thanks to Alexander Pratt (<b>backend lead</b> | project
-              architecture), Alina Kim (<b>team lead</b> | project design and
-              direction), David Doan (data processing), Haiyang Wang (research
-              and development), Gus LeTourneau (profile page and media), Malique
-              Bodie (database management), Morgann Thain (research and
-              development), Yingjia Liu (controls page and routing) for making
-              this project possible.
+              <b>
+                Our project mediates digital art as alternative realities and
+                evidence of damage.
+              </b>
+            </p>
+            <p>
+              <b>
+                Truths and tensions are formed through the dialogue between
+                users and their creations.
+              </b>
+            </p>
+            <p>
+              <b>The extent of what you create is beyond our understanding.</b>
+            </p>
+            <p>
+              Thanks to Alexander Pratt (backend lead | project architecture),
+              Alina Kim (team lead | project design and direction), David Doan
+              (data processing), Haiyang Wang (research and development), Gus
+              LeTourneau (profile page and media), Malique Bodie (database
+              management), Morgann Thain (research and development), Yingjia Liu
+              (controls page and routing) for making this project possible.
             </p>
             <p>View our full documentation here.</p>
           </div>

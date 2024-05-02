@@ -4,7 +4,7 @@
   top: 0;
   right: 0;
   margin: 10px;
-  z-index: 100; /* Ensure it's above other elements */
+  z-index: 1; /* Ensure it's above other elements */
 }
 
 .user-icon {
@@ -13,7 +13,7 @@
 
 .user-popup {
   position: fixed;
-  padding: 5px;
+  /* padding: 5px; */
   margin-right: 10px;
   top: 66px;
   right: 0;

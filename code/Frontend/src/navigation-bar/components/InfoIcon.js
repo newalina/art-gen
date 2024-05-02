@@ -3,10 +3,14 @@ import React from "react";
 const InfoIcon = ({ onClick }) => (
   <button
     onClick={onClick}
-    height="50px"
-    style={{ marginTop: "30px", fontFamily: "Space", fontSize: "18px" }}
+    style={{
+      marginTop: "30px",
+      fontFamily: "Space",
+      fontSize: "18px",
+      backgroundColor: "#737e56",
+    }}
   >
-    i
+    about us
   </button>
 );
 
