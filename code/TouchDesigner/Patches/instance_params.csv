@@ -1,0 +1,3 @@
+path,parameter,value,enable
+noise1,amp,1,1
+noise1,harmonic,.5,1

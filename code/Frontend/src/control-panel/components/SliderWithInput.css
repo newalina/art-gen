@@ -1,28 +1,34 @@
 /* Container styles */
 .slider-container {
-  flex-direction: column;   
-  padding: 20px;
+  flex-direction: column;
+  padding: 16px;
   align-items: flex-start;
-  background-color: #FFFFFF;  
+  /* background-color: #ffffff; */
 }
-  
+
 /* Styles for the value display above the slider */
 .value-display {
-  font-size: 25px; 
+  font-size: 25px;
   color: white;
-  margin-bottom: 10px;
+  /* margin-bottom: 20px; */
 }
 
 .slider-box {
   width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-  
+
+.slider {
+  width: 1000px;
+}
+
 /* Styles for the slider */
-input[type="range"] {    
-  width: 100%; 
-  height: 10px; 
-  background: #ddd; 
-  outline: none; 
-  opacity: 0.7; 
+input[type="range"] {
+  width: 100%;
+  height: 10px;
+  background: #ddd;
+  outline: none;
+  opacity: 0.7;
 }
-  

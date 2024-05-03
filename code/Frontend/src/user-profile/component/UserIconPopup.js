@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import { GoogleLogin } from '@react-oauth/google';
+import React, { useState, useRef, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
-import './UserIconPopup.css';
-import SignupIcon from './SignupIcon'
-import UserIcon from './userIcon';
-import { useUser } from '../../context/UserContext';
+import "./UserIconPopup.css";
+import SignupIcon from "./SignupIcon";
+import UserIcon from "./UserIcon";
+import { useUser } from "../../context/UserContext";
 
 function UserIconPopup() {
   const { userInfo, isSignedIn, login, logout } = useUser();
@@ -19,13 +19,12 @@ function UserIconPopup() {
         setShowPopup(false);
       }
     }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [popupRef]);
 
   const handleLoginSuccess = (credentialResponse) => {
     const decodedCredential = jwtDecode(credentialResponse.credential);
-    // console.log(decodedCredential);        
     login({
       name: decodedCredential.name,
       email: decodedCredential.email,
@@ -33,34 +32,54 @@ function UserIconPopup() {
   };
 
   const handleLoginFailure = () => {
-    console.log('Login Failed');
-    // Handle login failure 
+    console.log("Login Failed");
+    // Handle login failure
   };
 
   const handleSignOut = () => {
-    // Here you would also ideally clear the authentication session    
+    // Here you would also ideally clear the authentication session
     logout();
-    history.push('/home');
+    history.push("/home");
   };
 
   const handleGoHome = () => {
-    history.push('/user', {userInfo: userInfo});
-  }
+    history.push("/user", { userInfo: userInfo });
+  };
 
   return (
     <div className="user-icon-container">
-      <div className="user-icon" onClick={() => { setShowPopup(!showPopup); }}>
+      <div
+        className="user-icon"
+        onClick={() => {
+          setShowPopup(!showPopup);
+        }}
+      >
         {isSignedIn ? <UserIcon /> : <SignupIcon />}
       </div>
       {showPopup && (
-        <div className={`user-popup ${isSignedIn ? 'largeVersion' : 'smallVersion'}`} ref={popupRef}>
-          {isSignedIn ? (<h3>My Account:</h3>) : (<h3>Use Gmail to Sign in</h3>)}
+        <div
+          className={`user-popup ${
+            isSignedIn ? "largeVersion" : "smallVersion"
+          }`}
+          ref={popupRef}
+        >
+          {isSignedIn ? <h3>My Account:</h3> : <h3>Sign in with Google</h3>}
           {isSignedIn ? (
             <div>
               <div>Name: {userInfo.name}</div>
               <div>Email: {userInfo.email}</div>
-              <button onClick={handleSignOut} style={{ marginTop: '10px', borderRadius: '10px'}}>Sign Out</button>
-              <button onClick={handleGoHome} style={{ marginTop: '10px', borderRadius: '10px'}}>Home</button>
+              <button
+                onClick={handleGoHome}
+                style={{ marginTop: "10px", borderRadius: "10px" }}
+              >
+                View Gallery
+              </button>
+              <button
+                onClick={handleSignOut}
+                style={{ marginTop: "10px", borderRadius: "10px" }}
+              >
+                Sign Out
+              </button>
             </div>
           ) : (
             <GoogleLogin

@@ -110,4 +110,17 @@ class CMN_ErrorCodes(IntEnum):
     CMN_ERR_OK           = 0;
     CMN_ERR_GENERIC      = 1;
     CMN_ERR_INVALID_DATA = 2;
+
+#####################################################################
+# Enum:         CMN_StorageMonitorErrorCode
+# Enum Type:    IntEnum
+# Description:  This enum contains the error codes that can be sent
+#                and received by the storage monitor.
+# Values:
+#   SM_ERROR_CODE_OK - No error
+#   SM_ERROR_CODE_FULL - Storage is full
+#####################################################################
     
+class CMN_StorageMonitorErrorCode(IntEnum):
+    SM_ERROR_CODE_OK = 0;
+    SM_ERROR_CODE_FULL = 0;

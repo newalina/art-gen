@@ -1,13 +1,26 @@
+@font-face {
+  font-family: LED;
+  src: url("assets/fonts/24\ LED.ttf");
+}
+@font-face {
+  font-family: Redaction70;
+  src: url("assets/fonts/Redaction70-Regular.otf");
+}
+@font-face {
+  font-family: Space;
+  src: url("assets/fonts/Space-Notorious-rounded.otf");
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
