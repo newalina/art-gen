@@ -1,22 +1,39 @@
 import React, {useState} from 'react';
-import { Link } from 'react-router-dom';
 import './Generator.css'
+import { useUser } from "../../context/UserContext";
+import Axios from "axios";
 
 const Generator = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const [isRecording, setIsRecording] = useState(false)
-    const [isScreenshotting, setIsScreenshotting] = useState(false)
+    const [isRecording, setIsRecording] = useState(false);
+    const [isScreenshotting, setIsScreenshotting] = useState(false);
+    const { userInfo, isSignedIn, login, logout } = useUser();
+    let videoURL = '';
 
     var baseURL = 'http://127.0.0.1:5000/api/google-cloud'
+
+    const callGoogleCloudApi = async (user, url, isVid, time) => {
+        Axios.post("http://172.20.10.4/api/google-cloud", {
+            username: user,
+            source: url,
+            isVideo: isVid,
+            timestamp: time
+        }).then((response) => {
+            console.log(response);
+        });
+    };
 
     const cameraButtonHandler = () => {
         let currentTime = document.getElementById('media-player-g').currentTime
         console.log(currentTime)
+        console.log(userInfo.email)
         setIsScreenshotting(true)
 
         setTimeout(() => {
             setIsScreenshotting(false)
         }, "1000");
+
+        callGoogleCloudApi(userInfo.email, videoURL, false, parseInt(currentTime))
 
     }
 
@@ -78,11 +95,12 @@ const Generator = () => {
 
                     </div>
                     <div className={'video-js-container'}>
-                        <div className={'flash-overlay ' + (isScreenshotting ? 'screenshotting' : '')}></div>
-                    <video id="media-player-g" className="video-js video-js-g vjs-default-skin" controls autoPlay muted>
-                        <source className={'source'} src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'} type="video/mp4" />
-                        Your browser does not support the video tag.
-                    </video>
+                        <div className={'flash-underlay'}>
+                            <video id="media-player-g" className={'video-js video-js-g vjs-default-skin-overlay ' + (isScreenshotting ? 'screenshotting' : '')} controls autoPlay muted>
+                                <source className={'source'} src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'} type="video/mp4" />
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
                     </div>
                 </div>
             </div>
