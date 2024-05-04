@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import { Link, useLocation } from "react-router-dom";
 import UserIconPopup from "../../user-profile/component/UserIconPopup";
 import styles from "./NavBar.module.css";
@@ -7,11 +7,24 @@ import InfoIcon from "./InfoIcon";
 
 const Navbar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const modalRef = useRef(null);
 
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   const location = useLocation();
   const isHome = location.pathname === "/home";
+  const handleClickOutside = (event) => { //close modal if click is outside
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+          setIsModalOpen(false);
+      }
+  };
+
+  useEffect(() => {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+      };
+  }, []);
 
   if (isHome) {
     return null;
@@ -31,7 +44,7 @@ const Navbar = () => {
 
       {isModalOpen && (
         <div className={styles.modal}>
-          <div className={styles.modalContent}>
+          <div className={styles.modalContent}  ref={modalRef}>
             <span className={styles.closeButton} onClick={toggleModal}>
               &times;
             </span>
