@@ -26,11 +26,11 @@ function ArtDisplay(props) {
         {props.responseFromApi.map((artwork, index) => (
           <div
             key={index}
-            className="px-8 slide text-center grid-item"
+            className="px-8 slide text-center slider-item"
             onClick={() => props.openMediaPopup(artwork[0], artwork[1])}
           >
             <img
-              className="grid-item-img"
+              className="slider-item-img"
               src={artwork[0]}
               alt={`thumbnail ${index}`}
             />

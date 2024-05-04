@@ -1,10 +1,33 @@
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(3, 1fr); /* first number is column count */
+  gap: 15px; /* space between grid items */
+  transition: all 0.5s ease; /* transition for smooth animation */
 }
 
 .grid-item {
+  display: flex;
+  width: 20vw; /* size of grid item - use VW to make grid dynamic*/
+  height:20vw; /* should match width above */
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.grid-item-img {
+  width: 90%; /* percent of the grid item space the thumbnail covers */
+  height: 90%; /* should match width above */
+  object-fit: cover;
+  cursor: pointer;
+  transition: width 0.5s ease, height 0.5s ease;
+}
+
+.grid-item-img:hover {
+  width: 100%; /* percent of the grid item space the thumbnail covers on hover */
+  height: 100%; /* should match width above */
+}
+
+.slider-item {
   display: flex;
   width: 200px;
   height: 200px;
@@ -13,7 +36,7 @@
   align-items: center;
 }
 
-.grid-item-img {
+.slider-item-img {
   width: 90%;
   height: 90%;
   object-fit: cover;
@@ -21,20 +44,9 @@
   transition: width 0.5s ease, height 0.5s ease;
 }
 
-.grid-item-img:hover {
+.slider-item-img:hover {
   width: 100%;
   height: 100%;
-}
-
-.grid-container {
-  display: grid;
-  gap: 10px;
-  transition: all 0.5s ease; /* Transition for smooth animation */
-}
-
-.grid {
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2px;
 }
 
 .carousel {
