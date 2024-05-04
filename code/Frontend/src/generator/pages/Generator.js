@@ -2,8 +2,11 @@ import React, {useState} from 'react';
 import './Generator.css'
 import { useUser } from "../../context/UserContext";
 import Axios from "axios";
+import { useLocation } from 'react-router-dom';
 
 const Generator = () => {
+    const location = useLocation();
+    const vidURL = location.state && location.state.videoURL; // catch the video url from control-panel
     const [isLoading, setIsLoading] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
     const [isScreenshotting, setIsScreenshotting] = useState(false);
