@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import styles from "./ControlPanel.module.css";
 import SliderWithInput from "../components/SliderWithInput";
 import MultipleChoice from "../components/MultipleChoice";
 import Axios from "axios";
 
 const ControlPanel = () => {
+  const history = useHistory();
+
   const databaseList = [
     "Melting Sea Ice",
     "Social Displacement",
@@ -73,21 +76,24 @@ const ControlPanel = () => {
 
   const handleGenerateArt = async () => {
     // Axios.get("http://10.38.171.41:80/api/artGeneration", {
-    Axios.get("http://172.20.10.4/api/artGeneration", {
-      params: {
-        modelSelection: 4,
-        slider1Value: 20,
-        slider2Value: 40,
-        slider3Value: 80,
-        slider4Value: 1,
-        slider5Value: 1,
-        slider6Value: 1,
-      },
-    }).then((response) => {
-      console.log(response.data.videoUrl);
-      setVidURL(response.data.videoUrl);
-      setMediaPopupOpen(true);
-    });
+    // Axios.get("http://172.20.10.4/api/artGeneration", {
+    //   params: {
+    //     modelSelection: 4,
+    //     slider1Value: 20,
+    //     slider2Value: 40,
+    //     slider3Value: 80,
+    //     slider4Value: 1,
+    //     slider5Value: 1,
+    //     slider6Value: 1,
+    //   },
+    // }).then((response) => {
+    //   console.log(response.data.videoUrl);
+    //   setVidURL(response.data.videoUrl);
+    //   setMediaPopupOpen(true);
+    // });
+
+    // dummy version:
+    history.push("/generator", { videoURL: vidURL });    
   };
 
   return (
