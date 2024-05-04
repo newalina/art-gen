@@ -95,7 +95,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    bottom: 20%;
+    bottom: 5%;
     right: 50%;
     transform: translate(50%);
     z-index: 101;
@@ -148,6 +148,8 @@
 .flash-underlay {
     position:relative;
     height: 65%;
+    top: 50%;
+    transform: translate(0%, -50%);
     z-index: 101;
     opacity: 1;
     background-color: white;
