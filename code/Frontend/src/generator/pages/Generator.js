@@ -6,22 +6,29 @@ import { useLocation } from 'react-router-dom';
 
 const Generator = () => {
     const location = useLocation();
-    const videoURL = location.state && location.state.videoURL; // catch the video url from control-panel
+    let videoURL = location.state && location.state.videoURL; // catch the video url from control-panel
     const [isLoading, setIsLoading] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
     const [isScreenshotting, setIsScreenshotting] = useState(false);
     const { userInfo, isSignedIn, login, logout } = useUser();
+    const TESTING = true;
+
+    if (TESTING) {
+        videoURL = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+    }
 
     var baseURL = 'http://127.0.0.1:5000/api/google-cloud'
 
     const callGoogleCloudApi = async (user, url, isVid, time) => {
-        Axios.post("http://172.20.10.4/api/google-cloud", {
+        Axios.post("http://127.0.0.1:5000/api/google-cloud", {
             username: user,
             source: url,
             isVideo: isVid,
             timestamp: time
         }).then((response) => {
             console.log(response);
+        }).catch((error) => {
+                console.error("Error:", error);
         });
     };
 
