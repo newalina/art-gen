@@ -25,25 +25,33 @@ class BCI_Utils:
     # Requirements: N/A
     # Inputs:       dataName - Name of data being fetched from API
     #               data - The data fetched from API
-    # Outputs:      out - A list of floats containing formatted data  
+    # Outputs:      ranges - A list containing data ranges for each API  
     #####################################################################
-    def formatData(dataName, data):
-            out = [];
-            if dataName == 'Ocean Temperature':
-                result = data['result'];
-                for key, value in result.items():
-                    out.append(float(value));
-            else:
-                if dataName == 'Carbon Dioxide':
-                    key = 'co2';
-                elif dataName == 'Methane':
-                    key = 'methane';
-                elif dataName == 'Nitrous Oxide':
-                    key = 'nitrous';
-                result = data[key];
-                for dict in result:
-                    out.append(float(dict['trend']));
-            return out;
+def formatData(dataName, data):
+        out = []
+        ranges = []
+        if dataName == 'Ocean Temperature':
+            result = data['result']
+            for key, value in result.items():
+                out.append(float(value))
+            ranges.append((min(out),max(out)))
+        elif dataName == 'Sea Ice Extent':
+            result = data['arcticData']['data']
+            for key, value in result.items():
+                out.append(float(value['monthlyMean']))
+            ranges.append((min(out),max(out)))
+        else:
+            if dataName == 'Carbon Dioxide':
+                key = 'co2'
+            elif dataName == 'Methane':
+                key = 'methane'
+            elif dataName == 'Nitrous Oxide':
+                key = 'nitrous'
+            result = data[key]
+            for dict in result:
+                out.append(float(dict['trend']))
+            ranges.append((min(out),max(out)))
+        return ranges 
 
     #####################################################################
     # Method:       loadApiData
@@ -51,8 +59,8 @@ class BCI_Utils:
     #                data to a JSON file.
     # Requirements: N/A
     # Inputs:       apis - A dictionary of API names and URLs
-    #               outputFile - Path to output JSON file
-    # Outputs:      None 
+    # Outputs:      apiData -  A dictionary containing the formatted 
+    #               data for each API
     #####################################################################
     def loadApiData(apis, outputFile):
         # Dictionary to store data from each API
@@ -69,10 +77,7 @@ class BCI_Utils:
                 apiData[apiName] = data;
             except Exception as e:
                 print(f"Failed to fetch data from {apiUrl}: {e}");
-
-        # Write API data to JSON file
-        with open(outputFile, 'w') as f:
-            dump(apiData, f, indent=4)
+        return apiData
 
     #####################################################################
     # Method:       gcsUploadMedia
