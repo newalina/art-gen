@@ -67,6 +67,19 @@ Database = MongoClient(BCI_DIR.BCI_MONGO_URI).test # Using test DB
 Collection = Database["product"]
 
 # ########################################################################
+# Function:     environmentalDataApi
+# Purpose:      Pulls environmental data from various sources, formats the
+#               data and sends to front end for slider usage.
+# Requirements: N/A
+# Inputs:       None
+# Outputs:      Json file containing API data, with ranges.
+# ########################################################################
+@app.route('/api/environmental-data', methods=['GET'])
+def environmentalDataApi():
+    if request.method == 'GET':
+        return jsonify(BCI_Utils.loadApiData(environmental_apis, api_range))
+
+# ########################################################################
 # Function:     googleCloudApi
 # Purpose:      Uploads media to Google Cloud Storage and updates the user's
 #               media field in the database
