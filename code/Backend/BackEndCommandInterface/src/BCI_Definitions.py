@@ -57,5 +57,6 @@ ENVIRONTMENT_API = {
         'Carbon Dioxide' : 'https://global-warming.org/api/co2-api',
         'Methane' : 'https://global-warming.org/api/methane-api',
         'Nitrous Oxide' : 'https://global-warming.org/api/nitrous-oxide-api',
-        'Ocean Temperature' : 'https://global-warming.org/api/ocean-warming-api'
+        'Ocean Temperature' : 'https://global-warming.org/api/ocean-warming-api',
+        'Sea Ice Extent' : "https://global-warming.org/api/arctic-api"
     }
