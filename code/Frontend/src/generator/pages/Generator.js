@@ -6,12 +6,11 @@ import { useLocation } from 'react-router-dom';
 
 const Generator = () => {
     const location = useLocation();
-    const vidURL = location.state && location.state.videoURL; // catch the video url from control-panel
+    const videoURL = location.state && location.state.videoURL; // catch the video url from control-panel
     const [isLoading, setIsLoading] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
     const [isScreenshotting, setIsScreenshotting] = useState(false);
     const { userInfo, isSignedIn, login, logout } = useUser();
-    let videoURL = '';
 
     var baseURL = 'http://127.0.0.1:5000/api/google-cloud'
 
@@ -72,7 +71,7 @@ const Generator = () => {
                     <div className={'video-js-container'}>
                         <div className={'flash-underlay'}>
                             <video id="media-player-g" className={'video-js video-js-g vjs-default-skin-overlay ' + (isScreenshotting ? 'screenshotting' : '')} controls autoPlay muted>
-                                <source className={'source'} src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'} type="video/mp4" />
+                                <source className={'source'} src={videoURL} type="video/mp4" />
                                 Your browser does not support the video tag.
                             </video>
                         </div>

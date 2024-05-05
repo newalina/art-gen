@@ -93,7 +93,7 @@ const ControlPanel = () => {
     // });
 
     // dummy version:
-    history.push("/generator", { videoURL: vidURL });    
+    history.push("/generator", { videoURL: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' });
   };
 
   return (
