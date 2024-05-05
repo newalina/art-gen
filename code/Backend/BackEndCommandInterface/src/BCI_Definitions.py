@@ -32,9 +32,9 @@ from Backend.Common.src.CMN_Definitions import CMN_Directories as CMN_DIR
 #   BCI_MONGO_URI - URL to mongoDb server. 
 #####################################################################
 class BCI_Directories(StrEnum):
-    BCI_DATA_DIR         = CMN_DIR.ROOT_DIR + '/code/Backend/BackEndCommandInterface/data';
-    BCI_OUTPUT_FILE_BASE = BCI_DATA_DIR + '/artGenerationOutput_';
-    BCI_MONGO_URI        = 'mongodb+srv://malique-bodie:86zb67pNK3U3BgEt@art-gen.bxqjsqp.mongodb.net/?retryWrites=true&w=majority';
+    BCI_DATA_DIR         = CMN_DIR.ROOT_DIR + '/code/Backend/BackEndCommandInterface/data'
+    BCI_OUTPUT_FILE_BASE = BCI_DATA_DIR + '/artGenerationOutput_'
+    BCI_MONGO_URI        = 'mongodb+srv://malique-bodie:86zb67pNK3U3BgEt@art-gen.bxqjsqp.mongodb.net/?retryWrites=true&w=majority'
 
 #####################################################################
 # Enum:         BCI_ErrorCodes

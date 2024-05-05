@@ -27,31 +27,31 @@ class BCI_Utils:
     #               data - The data fetched from API
     # Outputs:      ranges - A list containing data ranges for each API  
     #####################################################################
-def formatData(dataName, data):
-        out = []
-        ranges = []
-        if dataName == 'Ocean Temperature':
-            result = data['result']
-            for key, value in result.items():
-                out.append(float(value))
-            ranges.append((min(out),max(out)))
-        elif dataName == 'Sea Ice Extent':
-            result = data['arcticData']['data']
-            for key, value in result.items():
-                out.append(float(value['monthlyMean']))
-            ranges.append((min(out),max(out)))
-        else:
-            if dataName == 'Carbon Dioxide':
-                key = 'co2'
-            elif dataName == 'Methane':
-                key = 'methane'
-            elif dataName == 'Nitrous Oxide':
-                key = 'nitrous'
-            result = data[key]
-            for dict in result:
-                out.append(float(dict['trend']))
-            ranges.append((min(out),max(out)))
-        return ranges 
+    def formatData(dataName, data):
+            out = []
+            ranges = []
+            if dataName == 'Ocean Temperature':
+                result = data['result']
+                for key, value in result.items():
+                    out.append(float(value))
+                ranges.append((min(out),max(out)))
+            elif dataName == 'Sea Ice Extent':
+                result = data['arcticData']['data']
+                for key, value in result.items():
+                    out.append(float(value['monthlyMean']))
+                ranges.append((min(out),max(out)))
+            else:
+                if dataName == 'Carbon Dioxide':
+                    key = 'co2'
+                elif dataName == 'Methane':
+                    key = 'methane'
+                elif dataName == 'Nitrous Oxide':
+                    key = 'nitrous'
+                result = data[key]
+                for dict in result:
+                    out.append(float(dict['trend']))
+                ranges.append((min(out),max(out)))
+            return ranges 
 
     #####################################################################
     # Method:       loadApiData
@@ -64,19 +64,19 @@ def formatData(dataName, data):
     #####################################################################
     def loadApiData(apis, outputFile):
         # Dictionary to store data from each API
-        apiData = {};
+        apiData = {}
 
         # Loop through each API URL
         for apiName, apiUrl in apis.items():
             try:
                 # Make GET request to API
-                response = requests.get(apiUrl);
+                response = requests.get(apiUrl)
                 data = response.json();  # Extract JSON data from response
-                data = BCI_Utils.formatData(apiName, data);
+                data = BCI_Utils.formatData(apiName, data)
                 # Store data in dictionary with URL as key
-                apiData[apiName] = data;
+                apiData[apiName] = data
             except Exception as e:
-                print(f"Failed to fetch data from {apiUrl}: {e}");
+                print(f"Failed to fetch data from {apiUrl}: {e}")
         return apiData
 
     #####################################################################

@@ -12,6 +12,7 @@
 ##########################################################################
 
 # Public Modules
+import certifi
 from flask_cors import CORS
 from google.cloud import storage
 from pymongo import MongoClient
@@ -64,7 +65,7 @@ StorageClient = storage.Client.from_service_account_json('gcp-key.json')
 
 # MongoDB connection 
 logging.log(CMN_LL.ERR_LEVEL_DEBUG, "Starting the MongoDB Client")
-Database = MongoClient(BCI_DIR.BCI_MONGO_URI).test # Using test DB 
+Database = MongoClient(BCI_DIR.BCI_MONGO_URI,tlsCAFile=certifi.where()).test # Using test DB 
 Collection = Database["product"]
 
 # ########################################################################
@@ -97,10 +98,12 @@ def googleCloudApi():
     if request.method == 'GET':
         # retrieve list of image_id from DB
         results = Collection.find_one({"username": request.args.get('username')})
-        return list(results['media'])
+        if results == None:
+            return jsonify({'message': 'User Not Found', 'username': request.args.get('username')})
+        return jsonify(results['media'])
 
     else:
-        userName, source, isVideo, timeStamp = request.args.get('username'), request.args.get('source'), bool(request.args.get('isVideo')), int(request.args.get('timestamp')) # isVideo: Bool, username: Str, source: Str, timeStamp: int
+        userName, source, isVideo, timeStamp = request.args.get('username'), request.args.get('source'), int(request.args.get('isVideo')), int(request.args.get('timestamp')) # isVideo: Bool, username: Str, source: Str, timeStamp: int
         
         # define video and thumbnail files
         videoOutputFileName, thumbnailOutputFileName  = "trimmed_video.mp4","thumbnail.jpg"        

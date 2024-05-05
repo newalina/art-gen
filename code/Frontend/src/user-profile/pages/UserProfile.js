@@ -13,7 +13,8 @@ import { jwtDecode } from "jwt-decode";
 import Axios from "axios";
 
 const UserProfile = () => {
-  const { userInfo, isSignedIn, login, logout } = useUser();  const history = useHistory();
+  const { userInfo, isSignedIn, login, logout } = useUser();
+  const history = useHistory();
   const [userArt, setUserArt] = useState([]);
   const [isGrid, setIsGrid] = useState(true);
   const [mediaPopupOpen, setMediaPopupOpen] = useState(false);
@@ -140,7 +141,7 @@ const UserProfile = () => {
 
   const getUserArt = async (user) => {
     console.log(user)
-    Axios.get("http://172.20.10.4/api/google-cloud", {
+    Axios.get("http://127.0.0.1:5000/api/google-cloud", {
       params: {
         username: user
       }
@@ -168,25 +169,32 @@ const UserProfile = () => {
 
   useEffect(() => {
     if (isSignedIn) {
+<<<<<<< HEAD
       getUserArt(userInfo.email)
       // console.log(userInfo.email)
+=======
+      getUserArt(userInfo.email);
+      console.log(userInfo.email);
+>>>>>>> c070485af25c36276b3becb9ff13e64d343fee52
     }
   }, [userInfo]);
 
   if (!isSignedIn) {
     return (
-        <div className={'container'}>
-          <div className={'sign-in-container'}>
-            <h3>Sign in with Google</h3>
-            <GoogleLogin
-                onSuccess={handleLoginSuccess}
-                onError={handleLoginFailure}
-            />
-          </div>
+      <div className={"container"}>
+        <div className={"sign-in-container"}>
+          <h3>Sign in with Google</h3>
+          <GoogleLogin
+            onSuccess={handleLoginSuccess}
+            onError={handleLoginFailure}
+          />
         </div>
-    )
+      </div>
+    );
+  } else {
+    // user is logged in, so fetch their art:
+    getUserArt(userInfo.email);
   }
-
 
   return (
     <div className={"container"}>
@@ -196,11 +204,13 @@ const UserProfile = () => {
         {isGrid ? <SliderIcon /> : <GridIcon />}
       </div>
 
-      {userArt && <ArtDisplay
-        isGrid={isGrid}
-        responseFromApi={userArt}
-        openMediaPopup={openMediaPopup}
-      />}
+      {userArt && (
+        <ArtDisplay
+          isGrid={isGrid}
+          responseFromApi={userArt}
+          openMediaPopup={openMediaPopup}
+        />
+      )}
 
       <div className="ok">
         <button className={"sign-out-button"} onClick={handleSignout}>
