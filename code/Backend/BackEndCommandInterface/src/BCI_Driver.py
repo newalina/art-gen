@@ -28,6 +28,7 @@ from Backend.Common.src.CMN_ErrorLogging import CMN_Logging
 from Backend.Common.src.CMN_StorageMonitor import CMN_StorageMonitor
 from Backend.BackEndCommandInterface.src.BCI_Definitions import BCI_Directories as BCI_DIR
 from Backend.BackEndCommandInterface.src.BCI_Definitions import BCI_ErrorCodes as BCI_EC
+from Backend.BackEndCommandInterface.src.BCI_Definitions import ENVIRONTMENT_API as BCI_ENV_API
 from Backend.BackEndCommandInterface.src.BCI_Utils import BCI_Utils
 
 # ############################# INIT MODULES ############################
@@ -77,7 +78,7 @@ Collection = Database["product"]
 @app.route('/api/environmental-data', methods=['GET'])
 def environmentalDataApi():
     if request.method == 'GET':
-        return jsonify(BCI_Utils.loadApiData(environmental_apis, api_range))
+        return jsonify(BCI_Utils.loadApiData(BCI_ENV_API, api_range))
 
 # ########################################################################
 # Function:     googleCloudApi
@@ -103,12 +104,13 @@ def googleCloudApi():
         
         # define video and thumbnail files
         videoOutputFileName, thumbnailOutputFileName  = "trimmed_video.mp4","thumbnail.jpg"        
-        
-        # trim video
-        BCI_Utils.trimVideo(source, timeStamp, 10, videoOutputFileName)
-        
-        # Upload the trimmed video file to Google Cloud Storage
-        videoUrl = BCI_Utils.gcsUploadMedia(videoOutputFileName, 'video/mp4', StorageClient)
+
+        if(isVideo):
+            # trim video
+            BCI_Utils.trimVideo(source, timeStamp, 10, videoOutputFileName)
+            
+            # Upload the trimmed video file to Google Cloud Storage
+            videoUrl = BCI_Utils.gcsUploadMedia(videoOutputFileName, 'video/mp4', StorageClient)
 
         # generate thumbnail
         BCI_Utils.generateThumbnail(source,thumbnailOutputFileName,timeStamp)
@@ -116,8 +118,11 @@ def googleCloudApi():
         # Upload the trimmed video file to Google Cloud Storage
         thumbnailUrl = BCI_Utils.gcsUploadMedia(thumbnailOutputFileName, 'image/jpg', StorageClient)
 
-        # Format MongoDB output
-        newMedia = (thumbnailUrl, videoUrl, isVideo) # (thumbnail, video, is_video)
+        if(isVideo):
+            # Format MongoDB output
+            newMedia = (thumbnailUrl, videoUrl, True) # (thumbnail, video, isVideo)
+        else:
+            newMedia = (thumbnailUrl, None, False)
 
         # check if user exists in db
         user = Collection.find_one({'username': userName})
