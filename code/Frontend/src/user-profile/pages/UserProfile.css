@@ -40,3 +40,19 @@
 .sign-out-button:hover {
     background: #252525;
 }
+
+.sign-in-container {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: -5px 0 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    top: 30%;
+    right: 50%;
+    transform: translate(50%, 50%);
+    width: 300px;
+    height: 130px;
+    border-radius: 22px;
+}

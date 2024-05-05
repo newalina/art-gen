@@ -8,10 +8,11 @@ import MediaPopup from "../component/MediaPopup";
 import ArtDisplay from "../component/ArtDisplay";
 import SliderIcon from "../component/SliderIcon";
 import GridIcon from "../component/GridIcon";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 
 const UserProfile = () => {
-  const { userInfo, logout } = useUser();
-  const history = useHistory();
+  const { userInfo, isSignedIn, login, logout } = useUser();  const history = useHistory();
   const [isGrid, setIsGrid] = useState(true);
   const [mediaPopupOpen, setMediaPopupOpen] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState(null);
@@ -135,6 +136,32 @@ const UserProfile = () => {
       false,
     ],
   ];
+
+  const handleLoginSuccess = (credentialResponse) => {
+    const decodedCredential = jwtDecode(credentialResponse.credential);
+    login({
+      name: decodedCredential.name,
+      email: decodedCredential.email,
+    });
+  };
+
+  const handleLoginFailure = () => {
+    console.log("Login Failed");
+  };
+
+  if (!isSignedIn) {
+    return (
+      <div className={'container'}>
+          <div className={'sign-in-container'}>
+              <h3>Sign in with Google</h3>
+              <GoogleLogin
+                  onSuccess={handleLoginSuccess}
+                  onError={handleLoginFailure}
+              />
+          </div>
+      </div>
+    )
+  }
 
   return (
     <div className={"container"}>
