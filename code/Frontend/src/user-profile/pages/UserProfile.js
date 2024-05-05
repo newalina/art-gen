@@ -10,17 +10,18 @@ import SliderIcon from "../component/SliderIcon";
 import GridIcon from "../component/GridIcon";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import Axios from "axios";
 
 const UserProfile = () => {
   const { userInfo, isSignedIn, login, logout } = useUser();  const history = useHistory();
+  const [userArt, setUserArt] = useState([]);
   const [isGrid, setIsGrid] = useState(true);
   const [mediaPopupOpen, setMediaPopupOpen] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [mediaIsVideo, setMediaIsVideo] = useState(true);
 
-  let player = null;
-
   useEffect(() => {
+    let player = null;
     // Initialize Video.js player when the media popup opens
     if (mediaPopupOpen && selectedMedia && mediaIsVideo) {
       player = videojs("media-player");
@@ -31,7 +32,7 @@ const UserProfile = () => {
         player.dispose();
       }
     };
-  }, [mediaPopupOpen, selectedMedia]);
+  }, [mediaPopupOpen, selectedMedia, mediaIsVideo]);
 
   useEffect(() => {
     // Lock scroll when the media popup is open
@@ -137,6 +138,19 @@ const UserProfile = () => {
     ],
   ];
 
+  const getUserArt = async (user) => {
+    Axios.get("http://172.20.10.4/api/google-cloud", {
+      username: user
+    }).then((response) => {
+      console.log(response);
+      // setUserArt(responseFromApi)
+    }).catch((error) => {
+      console.error("Error occurred during the request:", error);
+    });
+    setTimeout(() => { // simulate art grid population after response
+      setUserArt(responseFromApi)
+    }, "3000");
+  };
   const handleLoginSuccess = (credentialResponse) => {
     const decodedCredential = jwtDecode(credentialResponse.credential);
     login({
@@ -151,16 +165,18 @@ const UserProfile = () => {
 
   if (!isSignedIn) {
     return (
-      <div className={'container'}>
+        <div className={'container'}>
           <div className={'sign-in-container'}>
-              <h3>Sign in with Google</h3>
-              <GoogleLogin
-                  onSuccess={handleLoginSuccess}
-                  onError={handleLoginFailure}
-              />
+            <h3>Sign in with Google</h3>
+            <GoogleLogin
+                onSuccess={handleLoginSuccess}
+                onError={handleLoginFailure}
+            />
           </div>
-      </div>
+        </div>
     )
+  } else { // user is logged in, so fetch their art:
+    getUserArt(userInfo.email)
   }
 
   return (
@@ -171,11 +187,11 @@ const UserProfile = () => {
         {isGrid ? <SliderIcon /> : <GridIcon />}
       </div>
 
-      <ArtDisplay
+      {userArt && <ArtDisplay
         isGrid={isGrid}
-        responseFromApi={responseFromApi}
+        responseFromApi={userArt}
         openMediaPopup={openMediaPopup}
-      />
+      />}
 
       <div className="ok">
         <button className={"sign-out-button"} onClick={handleSignout}>
