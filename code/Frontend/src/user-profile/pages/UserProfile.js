@@ -170,7 +170,6 @@ const UserProfile = () => {
   useEffect(() => {
     if (isSignedIn) {
       getUserArt(userInfo.email);
-      console.log(userInfo.email);
     }
   }, [userInfo]);
 
@@ -186,9 +185,6 @@ const UserProfile = () => {
         </div>
       </div>
     );
-  } else {
-    // user is logged in, so fetch their art:
-    getUserArt(userInfo.email);
   }
 
   return (
