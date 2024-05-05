@@ -9,7 +9,7 @@ function ArtDisplay(props) {
           <div
             key={index}
             className="grid-item"
-            onClick={() => props.openMediaPopup(artwork[0], artwork[1])}
+            onClick={() => props.openMediaPopup(artwork[0], artwork[1], artwork[2])}
           >
             <img
               className="grid-item-img"
@@ -27,7 +27,7 @@ function ArtDisplay(props) {
           <div
             key={index}
             className="px-8 slide text-center slider-item"
-            onClick={() => props.openMediaPopup(artwork[0], artwork[1])}
+            onClick={() => props.openMediaPopup(artwork[0], artwork[1], artwork[2])}
           >
             <img
               className="slider-item-img"

@@ -51,11 +51,11 @@ function MediaPopup(props) {
                     </div>
                     {props.mediaIsVideo ?
                         (<video id="media-player" className="video-js vjs-default-skin" controls autoPlay>
-                            <source className={'source'} src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'} type="video/mp4" />
+                            <source className={'source'} src={props.source} type="video/mp4" />
                             Your browser does not support the video tag.
                         </video>) :
                         (<div className="media-image">
-                            <img src={'https://randompicturegenerator.com/img/picture-generator/52e2d5404c55ab14f1dc8460962e33791c3ad6e04e5074417c2d78d19748cd_640.jpg'} />
+                            <img src={props.source} />
                         </div>)
                     }
                 </div>
