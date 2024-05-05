@@ -13,7 +13,8 @@ import { jwtDecode } from "jwt-decode";
 import Axios from "axios";
 
 const UserProfile = () => {
-  const { userInfo, isSignedIn, login, logout } = useUser();  const history = useHistory();
+  const { userInfo, isSignedIn, login, logout } = useUser();
+  const history = useHistory();
   const [userArt, setUserArt] = useState([]);
   const [isGrid, setIsGrid] = useState(true);
   const [mediaPopupOpen, setMediaPopupOpen] = useState(false);
@@ -139,16 +140,19 @@ const UserProfile = () => {
   ];
 
   const getUserArt = async (user) => {
-    Axios.get("http://172.20.10.4/api/google-cloud", {
-      username: user
-    }).then((response) => {
-      console.log(response);
-      // setUserArt(responseFromApi)
-    }).catch((error) => {
-      console.error("Error occurred during the request:", error);
-    });
-    setTimeout(() => { // simulate art grid population after response
-      setUserArt(responseFromApi)
+    Axios.get("http://127.0.0.1:5000/api/google-cloud", {
+      username: user,
+    })
+      .then((response) => {
+        console.log(response);
+        // setUserArt(responseFromApi)
+      })
+      .catch((error) => {
+        console.error("Error occurred during the request:", error);
+      });
+    setTimeout(() => {
+      // simulate art grid population after response
+      setUserArt(responseFromApi);
     }, "3000");
   };
   const handleLoginSuccess = (credentialResponse) => {
@@ -165,18 +169,19 @@ const UserProfile = () => {
 
   if (!isSignedIn) {
     return (
-        <div className={'container'}>
-          <div className={'sign-in-container'}>
-            <h3>Sign in with Google</h3>
-            <GoogleLogin
-                onSuccess={handleLoginSuccess}
-                onError={handleLoginFailure}
-            />
-          </div>
+      <div className={"container"}>
+        <div className={"sign-in-container"}>
+          <h3>Sign in with Google</h3>
+          <GoogleLogin
+            onSuccess={handleLoginSuccess}
+            onError={handleLoginFailure}
+          />
         </div>
-    )
-  } else { // user is logged in, so fetch their art:
-    getUserArt(userInfo.email)
+      </div>
+    );
+  } else {
+    // user is logged in, so fetch their art:
+    getUserArt(userInfo.email);
   }
 
   return (
@@ -187,11 +192,13 @@ const UserProfile = () => {
         {isGrid ? <SliderIcon /> : <GridIcon />}
       </div>
 
-      {userArt && <ArtDisplay
-        isGrid={isGrid}
-        responseFromApi={userArt}
-        openMediaPopup={openMediaPopup}
-      />}
+      {userArt && (
+        <ArtDisplay
+          isGrid={isGrid}
+          responseFromApi={userArt}
+          openMediaPopup={openMediaPopup}
+        />
+      )}
 
       <div className="ok">
         <button className={"sign-out-button"} onClick={handleSignout}>
