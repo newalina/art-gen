@@ -167,6 +167,13 @@ const UserProfile = () => {
     console.log("Login Failed");
   };
 
+  useEffect(() => {
+    if (isSignedIn) {
+      getUserArt(userInfo.email);
+      console.log(userInfo.email);
+    }
+  }, [userInfo]);
+
   if (!isSignedIn) {
     return (
       <div className={"container"}>
