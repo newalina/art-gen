@@ -139,8 +139,11 @@ const UserProfile = () => {
   ];
 
   const getUserArt = async (user) => {
+    console.log(user)
     Axios.get("http://172.20.10.4/api/google-cloud", {
-      username: user
+      params: {
+        username: user
+      }
     }).then((response) => {
       console.log(response);
       // setUserArt(responseFromApi)
@@ -166,7 +169,7 @@ const UserProfile = () => {
   useEffect(() => {
     if (isSignedIn) {
       getUserArt(userInfo.email)
-      console.log(userInfo.email)
+      // console.log(userInfo.email)
     }
   }, [userInfo]);
 
