@@ -12,12 +12,14 @@
 ##########################################################################
 
 # Public Modules
+import os
 import certifi
 from flask_cors import CORS
 from google.cloud import storage
 from pymongo import MongoClient
 from flask import Flask, jsonify, request, send_from_directory, url_for
 import ffmpeg
+import time
 
 # Project Modules
 from Backend.ArtGenerationDriver.src.AGD_Subsystem import AGD_Subsystem
@@ -104,9 +106,9 @@ def googleCloudApi():
 
     else:
         userName, source, isVideo, timeStamp = request.args.get('username'), request.args.get('source'), int(request.args.get('isVideo')), int(request.args.get('timestamp')) # isVideo: Bool, username: Str, source: Str, timeStamp: int
-        
+
         # define video and thumbnail files
-        videoOutputFileName, thumbnailOutputFileName  = "trimmed_video.mp4","thumbnail.jpg"        
+        videoOutputFileName, thumbnailOutputFileName  = f"{userName}_{int(time.time())}_video.mp4", f"{userName}_{int(time.time())}_thumb.jpg"        
 
         if(isVideo):
             # trim video
@@ -114,12 +116,14 @@ def googleCloudApi():
             
             # Upload the trimmed video file to Google Cloud Storage
             videoUrl = BCI_Utils.gcsUploadMedia(videoOutputFileName, 'video/mp4', StorageClient)
+            os.remove(videoOutputFileName)
 
         # generate thumbnail
         BCI_Utils.generateThumbnail(source,thumbnailOutputFileName,timeStamp)
 
         # Upload the trimmed video file to Google Cloud Storage
         thumbnailUrl = BCI_Utils.gcsUploadMedia(thumbnailOutputFileName, 'image/jpg', StorageClient)
+        os.remove(thumbnailOutputFileName)
 
         if(isVideo):
             # Format MongoDB output
