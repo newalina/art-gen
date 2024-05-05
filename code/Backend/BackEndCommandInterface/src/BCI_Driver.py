@@ -104,7 +104,7 @@ def googleCloudApi():
 
     else:
         userName, source, isVideo, timeStamp = request.args.get('username'), request.args.get('source'), int(request.args.get('isVideo')), int(request.args.get('timestamp')) # isVideo: Bool, username: Str, source: Str, timeStamp: int
-        
+
         # define video and thumbnail files
         videoOutputFileName, thumbnailOutputFileName  = "trimmed_video.mp4","thumbnail.jpg"        
 
