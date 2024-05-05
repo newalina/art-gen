@@ -20,16 +20,20 @@ const Generator = () => {
     var baseURL = 'http://127.0.0.1:5000/api/google-cloud'
 
     const callGoogleCloudApi = async (user, url, isVid, time) => {
-        Axios.post("http://127.0.0.1:5000/api/google-cloud", {
+        const params = new URLSearchParams({
             username: user,
             source: url,
             isVideo: isVid,
             timestamp: time
-        }).then((response) => {
-            console.log(response);
-        }).catch((error) => {
-                console.error("Error:", error);
         });
+
+        Axios.post("http://127.0.0.1:5000/api/google-cloud?" + params.toString())
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
     };
 
     const cameraButtonHandler = () => {
@@ -42,7 +46,7 @@ const Generator = () => {
             setIsScreenshotting(false)
         }, "1000");
 
-        callGoogleCloudApi(userInfo.email, videoURL, false, parseInt(currentTime))
+        callGoogleCloudApi(userInfo.email, videoURL, 0, parseInt(currentTime))
 
     }
 
@@ -56,7 +60,7 @@ const Generator = () => {
             setIsRecording(false)
         }
 
-        callGoogleCloudApi(userInfo.email, videoURL, true, parseInt(currentTime))
+        callGoogleCloudApi(userInfo.email, videoURL, 1, parseInt(currentTime))
     }
 
 
