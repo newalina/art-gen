@@ -169,13 +169,8 @@ const UserProfile = () => {
 
   useEffect(() => {
     if (isSignedIn) {
-<<<<<<< HEAD
-      getUserArt(userInfo.email)
-      // console.log(userInfo.email)
-=======
       getUserArt(userInfo.email);
       console.log(userInfo.email);
->>>>>>> c070485af25c36276b3becb9ff13e64d343fee52
     }
   }, [userInfo]);
 
