@@ -81,7 +81,7 @@ Collection = Database["product"]
 @app.route('/api/environmental-data', methods=['GET'])
 def environmentalDataApi():
     if request.method == 'GET':
-        return jsonify(BCI_Utils.loadApiData(BCI_ENV_API, api_range))
+        return jsonify(BCI_Utils.loadApiData(BCI_ENV_API))
 
 # ########################################################################
 # Function:     googleCloudApi
