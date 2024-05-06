@@ -17,6 +17,7 @@ import requests
 from google.cloud import storage
 from moviepy.editor import VideoFileClip
 from PIL import Image
+from Backend.BackEndCommandInterface.src.BCI_Definitions import MODEL_RANGES
 
 class BCI_Utils:
     #####################################################################
@@ -141,3 +142,18 @@ class BCI_Utils:
 
         # Close the video clip
         videoClip.close()
+
+    def mapValue(value, min_value2, max_value2):
+        # Normalize the value to the range [0, 1] based on the first range
+        normalized_value = (value) / 99
+        
+        # Map the normalized value to the second range
+        mapped_value = normalized_value * (max_value2 - min_value2) + min_value2
+        
+        return mapped_value
+    
+    def mapSliderValue(model_name, values):
+        mapped_values = values
+        for i, (min,max) in enumerate(MODEL_RANGES[model_name]):
+            mapped_values[i] =  BCI_Utils.mapValue(values[i],min,max)
+        return mapped_values

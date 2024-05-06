@@ -60,3 +60,33 @@ ENVIRONTMENT_API = {
         'Ocean Temperature' : 'https://global-warming.org/api/ocean-warming-api',
         'Sea Ice Extent' : "https://global-warming.org/api/arctic-api"
     }
+
+MODEL_RANGES = {
+    '1': [
+        (0.0001, 0.001),
+        (0.0001, 0.001),
+        (0.999, 1),
+        (0, 100)
+    ],
+
+    '2': [
+        (1, 8),
+        (1, 5),
+        (0.1, 1)
+    ],
+
+    '3' : [
+        (6, 10),
+        (0.1, 0.5),
+    ],
+    '4': [
+        (1, 3),
+        (0.1,10),
+        (0.1, 0.7),
+    ],
+    '5': [
+        (1, 5),
+        (0.1, 3),
+        (0, 100),
+    ]
+}
