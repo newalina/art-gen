@@ -9,51 +9,52 @@ const ControlPanel = () => {
   const history = useHistory();
 
   const databaseList = [
-    "Melting Sea Ice",
+    "Sea Ice Extent",
     "Social Displacement",
     "Gas Levels",
     "Rising Temperatures",
     "Ocean Temperatures",
   ];
-  const sliderConfigurations = {
-    "Melting Sea Ice": [
-      {
-        name: "X-Spread",
-        min: 0.0001,
-        max: 0.001,
-        defaultValue: 0.0001,
-      },
-      {
-        name: "Y-Spread",
-        min: 0.0001,
-        max: 0.001,
-        defaultValue: 0.0001,
-      },
-      { name: "Entropy", min: 0.999, max: 1, defaultValue: 0.999 },
-      { name: "Texture", min: 0, max: 100, defaultValue: 0 },
-    ],
-    "Social Displacement": [
-      { name: "Speed", min: 1, max: 8, defaultValue: 1 },
-      { name: "Distance", min: 1, max: 5, defaultValue: 1 },
-      { name: "Generation", min: 0.1, max: 1, defaultValue: 0.1 },
-    ],
-    "Gas Levels": [
-      { name: "Density", min: 6, max: 10, defaultValue: 6 },
-      { name: "Speed", min: 0.1, max: 0.5, defaultValue: 0.1 },
-      { name: "Color inversion", min: 1, max: 2, defaultValue: 1 },
-    ],
-    "Rising Temperatures": [
-      { name: "Height", min: 1, max: 3, defaultValue: 1 },
-      { name: "Smoothness", min: 0.1, max: 10, defaultValue: 0.1 },
-      { name: "Entropy", min: 0.1, max: 0.7, defaultValue: 0.1 },
-    ],
-    "Ocean Temperatures": [
-      { name: "Size", min: 1, max: 5, defaultValue: 1 },
-      { name: "Entropy", min: 0.1, max: 3, defaultValue: 0.1 },
-      { name: "Distance", min: 0, max: 100, defaultValue: 0 },
-    ],
-  };
-  const [selectedDatabase, setSelectedDatabase] = useState("Melting Sea Ice");
+  // const sliderConfigurations = {
+  //   "Melting Sea Ice": [
+  //     {
+  //       name: "X-Spread",
+  //       min: 0.0001,
+  //       max: 0.001,
+  //       defaultValue: 0.0001,
+  //     },
+  //     {
+  //       name: "Y-Spread",
+  //       min: 0.0001,
+  //       max: 0.001,
+  //       defaultValue: 0.0001,
+  //     },
+  //     { name: "Entropy", min: 0.999, max: 1, defaultValue: 0.999 },
+  //     { name: "Texture", min: 0, max: 100, defaultValue: 0 },
+  //   ],
+  //   "Social Displacement": [
+  //     { name: "Speed", min: 1, max: 8, defaultValue: 1 },
+  //     { name: "Distance", min: 1, max: 5, defaultValue: 1 },
+  //     { name: "Generation", min: 0.1, max: 1, defaultValue: 0.1 },
+  //   ],
+  //   "Gas Levels": [
+  //     { name: "Density", min: 6, max: 10, defaultValue: 6 },
+  //     { name: "Speed", min: 0.1, max: 0.5, defaultValue: 0.1 },
+  //     { name: "Color inversion", min: 1, max: 2, defaultValue: 1 },
+  //   ],
+  //   "Rising Temperatures": [
+  //     { name: "Height", min: 1, max: 3, defaultValue: 1 },
+  //     { name: "Smoothness", min: 0.1, max: 10, defaultValue: 0.1 },
+  //     { name: "Entropy", min: 0.1, max: 0.7, defaultValue: 0.1 },
+  //   ],
+  //   "Ocean Temperatures": [
+  //     { name: "Size", min: 1, max: 5, defaultValue: 1 },
+  //     { name: "Entropy", min: 0.1, max: 3, defaultValue: 0.1 },
+  //     { name: "Distance", min: 0, max: 100, defaultValue: 0 },
+  //   ],
+  // };
+  const [selectedDatabase, setSelectedDatabase] = useState("Sea Ice Extent");
+  const [sliderConfigurations, setSliderConfigurations] = useState({});
   const [mediaPopupOpen, setMediaPopupOpen] = useState(false);
   const [vidURL, setVidURL] = useState("");
   // potential user input params:
@@ -61,14 +62,42 @@ const ControlPanel = () => {
   const [parameter2, setParameter2] = useState();
   const [parameter3, setParameter3] = useState();
   const [parameter4, setParameter4] = useState();
+  const [parameters, setParameters] = useState([]);
+
+  useEffect(() => {
+    Axios.get("http://172.20.10.4/api/getConfig")
+      .then((response) => {
+        setSliderConfigurations(response.data);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch slider configurations:', error);
+      });
+  }, []);
+
+
+  // useEffect(() => {
+  //   const sliders = sliderConfigurations[selectedDatabase];   
+  //   if (sliders[0]) setParameter1(sliders[0].defaultValue);
+  //   if (sliders[1]) setParameter2(sliders[1].defaultValue);
+  //   if (sliders[2]) setParameter3(sliders[2].defaultValue);
+  //   if (sliders[3]) setParameter4(sliders[3].defaultValue);
+  // }, [selectedDatabase]);
 
   useEffect(() => {
     const sliders = sliderConfigurations[selectedDatabase];
-    if (sliders[0]) setParameter1(sliders[0].defaultValue);
-    if (sliders[1]) setParameter2(sliders[1].defaultValue);
-    if (sliders[2]) setParameter3(sliders[2].defaultValue);
-    if (sliders[3]) setParameter4(sliders[3].defaultValue);
-  }, [selectedDatabase]);
+    if (sliders) {
+      setParameters(sliders.map(slider => slider.defaultValue));
+    }
+  }, [selectedDatabase, sliderConfigurations]);
+
+  const handleValueChange = (index, newValue) => {
+    setParameters((prev) => {
+      const updated = [...prev];
+      updated[index] = newValue;
+      return updated;
+    });
+  };
+
 
   const closeMediaPopup = () => {
     setMediaPopupOpen(false);
@@ -113,7 +142,7 @@ const ControlPanel = () => {
         optionList={databaseList}
       />
 
-      {sliderConfigurations[selectedDatabase]?.map((sliderInfo, index) => (
+      {/* {sliderConfigurations[selectedDatabase]?.map((sliderInfo, index) => (
         <SliderWithInput
           key={index}
           name={sliderInfo.name}
@@ -138,7 +167,19 @@ const ControlPanel = () => {
               : setParameter4
           }
         />
+      ))} */}
+
+      {sliderConfigurations[selectedDatabase]?.map((slider, index) => (
+        <SliderWithInput
+          key={index}
+          name={slider.name}
+          value={parameters[index]}
+          min={slider.min}
+          max={slider.max}
+          onValueChange={(value) => handleValueChange(index, value)}
+        />
       ))}
+
 
       <button className={styles.generateButton} onClick={handleGenerateArt}>
         generate
