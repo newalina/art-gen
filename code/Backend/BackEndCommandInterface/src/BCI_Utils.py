@@ -29,30 +29,54 @@ class BCI_Utils:
     # Outputs:      ranges - A list containing data ranges for each API  
     #####################################################################
     def formatData(dataName, data):
-            out = []
-            ranges = []
-            if dataName == 'Ocean Temperature':
-                result = data['result']
-                for key, value in result.items():
-                    out.append(float(value))
-                ranges.append((min(out),max(out)))
-            elif dataName == 'Sea Ice Extent':
-                result = data['arcticData']['data']
-                for key, value in result.items():
-                    out.append(float(value['monthlyMean']))
-                ranges.append((min(out),max(out)))
-            else:
-                if dataName == 'Carbon Dioxide':
-                    key = 'co2'
-                elif dataName == 'Methane':
-                    key = 'methane'
-                elif dataName == 'Nitrous Oxide':
-                    key = 'nitrous'
-                result = data[key]
-                for dict in result:
-                    out.append(float(dict['trend']))
-                ranges.append((min(out),max(out)))
-            return ranges 
+                out = []
+                ranges = []
+                if dataName == 'Ocean Temperature':
+                    result = data['result']
+                    for key, value in result.items():
+                        out.append(float(value))
+                    ranges.append((min(out),max(out)))
+                elif dataName == 'Sea Ice Extent':
+                    print("here")
+                    anom = []
+                    monthlyMean = []
+                    val = []
+                    result = data['arcticData']['data']
+                    for key, value in result.items(): # {"197901": {"value":20.81,"anom":1.79,"monthlyMean":19.02}
+                        anom.append(float(value['anom']))
+                        monthlyMean.append(float(value['monthlyMean']))
+                        val.append(float(value['value']))
+                    #ranges.append((min(out),max(out)))
+                    ranges = [({
+                        "name": 'Monthly Mean',
+                        "min": min(monthlyMean),
+                        "max": max(monthlyMean),
+                        "defaultValue": min(monthlyMean)
+                    },
+                    {
+                        "name": 'Anomoly',
+                        "min": min(anom),
+                        "max": max(anom),
+                        "defaultValue": min(anom)
+                    },
+                    {
+                        "name": 'Current Value',
+                        "min": min(val),
+                        "max": max(val),
+                        "defaultValue": min(val)
+                    })]
+                else:
+                    if dataName == 'Carbon Dioxide':
+                        key = 'co2'
+                    elif dataName == 'Methane':
+                        key = 'methane'
+                    elif dataName == 'Nitrous Oxide':
+                        key = 'nitrous'
+                    result = data[key]
+                    for dict in result:
+                        out.append(float(dict['trend']))
+                    ranges.append((min(out),max(out)))
+                return ranges
 
     #####################################################################
     # Method:       loadApiData
