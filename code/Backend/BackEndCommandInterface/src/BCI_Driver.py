@@ -108,11 +108,14 @@ def googleCloudApi():
         userName, source, isVideo, timeStamp = request.args.get('username'), request.args.get('source'), int(request.args.get('isVideo')), int(request.args.get('timestamp')) # isVideo: Bool, username: Str, source: Str, timeStamp: int
 
         # define video and thumbnail files
-        videoOutputFileName, thumbnailOutputFileName  = f"{userName}_{int(time.time())}_video.mp4", f"{userName}_{int(time.time())}_thumb.jpg"        
+        videoOutputFileName, thumbnailOutputFileName  = BCI_DIR.BCI_DATA_DIR + f"/{userName}_{int(time.time())}_video.mp4", BCI_DIR.BCI_DATA_DIR + f"/{userName}_{int(time.time())}_thumb.jpg"
+
+        print(videoOutputFileName);
+        print(thumbnailOutputFileName);
 
         if(isVideo):
             # trim video
-            BCI_Utils.trimVideo(source, timeStamp, 10, videoOutputFileName)
+            BCI_Utils.trimVideo(source, 0, 5, videoOutputFileName)
             
             # Upload the trimmed video file to Google Cloud Storage
             videoUrl = BCI_Utils.gcsUploadMedia(videoOutputFileName, 'video/mp4', StorageClient)
@@ -188,8 +191,12 @@ def artGeneration():
         # wait for the art to be generated
         while len(artSubSystem.generatedOutput_) == curLen:
             pass;
-
+        
         logging.log(CMN_LL.ERR_LEVEL_DEBUG, "BCI_Driver.artGeneration() Art Generation completed");
+
+        print(AGD_DIR.AGD_OUTPUT_FILE_BASE + str(artGenerationId) + '.mov')
+        print(BCI_DIR.BCI_OUTPUT_FILE_BASE + str(artGenerationId) + '.mp4')
+
 
         ffmpeg.input(AGD_DIR.AGD_OUTPUT_FILE_BASE + str(artGenerationId) + '.mov').output(BCI_DIR.BCI_OUTPUT_FILE_BASE + str(artGenerationId) + '.mp4').overwrite_output().run();
         videoUrl = url_for('getVideo', filename=f'artGenerationOutput_{artGenerationId}.mp4',  _external=True);
@@ -205,15 +212,15 @@ def artGeneration():
 # Function:     getVideo
 # Purpose:      Send video data via a URL to the front end
 # Requirements: N/A
-# Inputs:       fileName - File to be send via URL
+# Inputs:       filename - File to be send via URL
 # Outputs:      None
 ##########################################################################
 @app.route('/videos/<filename>')
-def getVideo(fileName):
-    response = send_from_directory(BCI_DIR.BCI_DATA_DIR, fileName, mimetype='video/mp4')
+def getVideo(filename):
+    response = send_from_directory(BCI_DIR.BCI_DATA_DIR, filename, mimetype='video/mp4')
+
+    print(response)
     return response
-
-
 
 # Main function wrapper
 if __name__ == '__main__':

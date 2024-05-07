@@ -112,10 +112,11 @@ class BCI_Utils:
         videoClip = VideoFileClip(inputFile)
 
         # Trim the video to the specified duration
-        trimmedClip = videoClip.subclip(startTime, startTime + duration)
+        #trimmedClip = videoClip.subclip(startTime, startTime + duration)
 
         # Save the trimmed video
-        trimmedClip.write_videofile(outputFile)
+        #trimmedClip.write_videofile(outputFile)
+        videoClip.write_videofile(outputFile);
 
     #####################################################################
     # Method:       generateThumbnail
